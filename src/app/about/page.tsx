@@ -149,7 +149,7 @@ export default function AboutPage() {
       <section
         className="relative h-[50vh] min-h-[400px] flex items-center justify-center"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://cdn.imweb.me/thumbnail/20231227/c4736089110ba.jpg')",
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero/d490de3afedf5.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#3d4a3d",

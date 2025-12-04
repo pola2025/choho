@@ -17,7 +17,7 @@ export default function RoomsPage() {
       <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center bg-neutral-900">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-60"
-          style={{ backgroundImage: "url('https://cdn.imweb.me/thumbnail/20231227/534aa65eac23d.jpg')" }}
+          style={{ backgroundImage: "url('/images/hero/04a35b7640f54.webp')" }}
         />
         <div className="relative z-10 text-center text-white px-4">
           <p className="text-sm tracking-widest mb-2 opacity-80">SINCE 1947</p>

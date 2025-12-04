@@ -70,13 +70,25 @@ export function JournalPreview() {
               className="group"
             >
               <article
-                className="card-premium p-5 sm:p-6 h-full flex flex-col"
+                className="card-premium overflow-hidden h-full flex flex-col"
                 style={{
                   animationDelay: `${index * 100}ms`,
                 }}
               >
+                {/* Thumbnail */}
+                {journal.thumbnail && (
+                  <div className="relative aspect-[16/10] overflow-hidden">
+                    <img
+                      src={journal.thumbnail}
+                      alt={journal.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                )}
+
+                <div className="p-5 sm:p-6 flex-grow flex flex-col">
                 {/* Category Badge */}
-                <div className="mb-4">
+                <div className="mb-3">
                   <span
                     className={cn(
                       "inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full",
@@ -98,9 +110,10 @@ export function JournalPreview() {
                 </p>
 
                 {/* Date */}
-                <div className="flex items-center gap-2 text-xs text-neutral-400 pt-4 border-t border-border">
+                <div className="flex items-center gap-2 text-xs text-neutral-400 pt-4 border-t border-border mt-auto">
                   <Calendar className="w-3.5 h-3.5" />
                   <span>{journal.createdAt}</span>
+                </div>
                 </div>
               </article>
             </Link>

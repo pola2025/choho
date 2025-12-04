@@ -60,7 +60,7 @@ const menuData = {
     title: "OTHERS",
     icon: IceCream,
     items: [
-      { name: "아이스크림", price: "7.0" },
+      { name: "아이스크림", price: "7.5" },
       { name: "딸기요거트스무디", price: "8.0" },
       { name: "커피콩빵 (10개)", price: "5.0" },
       { name: "시루가", price: "0.5" },
@@ -72,14 +72,14 @@ const menuData = {
 
 // 갤러리 이미지
 const galleryImages = [
-  { src: "https://cdn.imweb.me/thumbnail/20231227/967a2c566530a.jpg", alt: "카페 외관" },
-  { src: "https://cdn.imweb.me/thumbnail/20231227/c4736089110ba.jpg", alt: "카페 내부" },
-  { src: "https://cdn.imweb.me/thumbnail/20231227/bf5138ddec73a.jpg", alt: "야외 테라스" },
-  { src: "https://cdn.imweb.me/thumbnail/20231227/e78fdb82a45e7.jpg", alt: "거위 가족" },
-  { src: "https://cdn.imweb.me/thumbnail/20231227/98b3199e554fa.jpg", alt: "음료" },
-  { src: "https://cdn.imweb.me/thumbnail/20231227/4815421975aaa.jpg", alt: "베이커리" },
-  { src: "https://cdn.imweb.me/thumbnail/20231227/659a296632931.jpg", alt: "야경" },
-  { src: "https://cdn.imweb.me/thumbnail/20231227/c261f180ed066.jpg", alt: "정원" },
+  { src: "/images/cafe/exterior-1.webp", alt: "카페 외관 전경" },
+  { src: "/images/cafe/exterior-2.webp", alt: "카페 입구" },
+  { src: "/images/cafe/terrace.webp", alt: "야외 테라스" },
+  { src: "/images/cafe/interior-1.webp", alt: "카페 내부 전경" },
+  { src: "/images/cafe/interior-2.webp", alt: "카페 내부 좌석" },
+  { src: "/images/cafe/interior-4.webp", alt: "카페 바" },
+  { src: "/images/cafe/bakery.webp", alt: "베이커리" },
+  { src: "/images/cafe/walnut-cake.webp", alt: "커피콩빵" },
 ];
 
 function MenuSection({
@@ -141,7 +141,7 @@ export default function CafePage() {
       <section
         className="relative h-[50vh] min-h-[400px] flex items-center justify-center"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://cdn.imweb.me/thumbnail/20231227/967a2c566530a.jpg')",
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/hero/610df693d3781.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#4a5c4a",
@@ -200,7 +200,7 @@ export default function CafePage() {
               <strong>6세부터 1인1메뉴입니다.</strong>
               <br />
               <span className="text-xs">
-                음료의 양은 1인 1잔입니다. / 음식(시루가) 및 외부 음식 반입 시 음료 1잔 추가 구매가 필요합니다.
+                음료의 양은 1인 1잔입니다.
               </span>
             </p>
           </div>

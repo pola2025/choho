@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, MapPin, Instagram, ChevronUp, Mail, Clock } from "lucide-react";
+import { Phone, MapPin, ChevronUp, Mail, Clock } from "lucide-react";
 import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
 
 export function Footer() {
@@ -52,15 +52,6 @@ export function Footer() {
 
             {/* Social Links */}
             <div className="flex gap-3">
-              <a
-                href="https://www.instagram.com/choho_pension"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/10 hover:bg-gradient-to-br hover:from-purple-500 hover:via-pink-500 hover:to-orange-500 flex items-center justify-center transition-all duration-300"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-5 h-5 text-white/70 hover:text-white" />
-              </a>
               <a
                 href={`tel:${SITE_CONFIG.phone}`}
                 className="w-10 h-10 rounded-full bg-white/10 hover:bg-emerald-500 flex items-center justify-center transition-all duration-300"

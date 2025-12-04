@@ -1,39 +1,32 @@
 "use client";
 
-import { Car, Building2, Coffee, KeyRound, Clock, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { Clock } from "lucide-react";
 
 const steps = [
   {
-    icon: Car,
     step: 1,
     title: "주차",
     description: "펜션 주차장에 주차해주세요",
-    color: "from-blue-500 to-blue-600",
-    bgColor: "bg-blue-500/10",
+    image: "/images/checkin/1.webp",
   },
   {
-    icon: Building2,
     step: 2,
     title: "본관 방문",
     description: "본관으로 이동해주세요",
-    color: "from-green-500 to-green-600",
-    bgColor: "bg-green-500/10",
+    image: "/images/checkin/2.webp",
   },
   {
-    icon: Coffee,
     step: 3,
     title: "카페 체크인",
     description: "초리골164 카페에서 체크인",
-    color: "from-amber-500 to-amber-600",
-    bgColor: "bg-amber-500/10",
+    image: "/images/checkin/3.webp",
   },
   {
-    icon: KeyRound,
     step: 4,
     title: "입실",
     description: "객실 키를 받고 입실해주세요",
-    color: "from-purple-500 to-purple-600",
-    bgColor: "bg-purple-500/10",
+    image: "/images/checkin/4.webp",
   },
 ];
 
@@ -42,10 +35,6 @@ export function CheckinGuide() {
     <section className="relative py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-
-      {/* Decorative Elements */}
-      <div className="absolute top-20 right-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-20 w-48 h-48 bg-accent/5 rounded-full blur-3xl" />
 
       <div className="relative max-w-6xl mx-auto">
         {/* Header */}
@@ -73,72 +62,37 @@ export function CheckinGuide() {
           </div>
         </div>
 
-        {/* Steps - Desktop Timeline */}
-        <div className="hidden lg:block relative">
-          {/* Connection Line */}
-          <div className="absolute top-16 left-[12.5%] right-[12.5%] h-1 bg-gradient-to-r from-blue-200 via-green-200 via-amber-200 to-purple-200 rounded-full" />
-
-          <div className="grid grid-cols-4 gap-6">
-            {steps.map((item, index) => (
-              <div key={item.step} className="relative">
-                {/* Step Card */}
-                <div className="group card-premium p-6 text-center h-full">
-                  {/* Icon Circle */}
-                  <div
-                    className={`relative w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <item.icon className="w-8 h-8 text-white" />
-                    {/* Step Number */}
-                    <div className="absolute -top-2 -right-2 w-7 h-7 bg-white rounded-full shadow-md flex items-center justify-center">
-                      <span className="text-xs font-bold text-neutral-900">
-                        {item.step}
-                      </span>
-                    </div>
+        {/* Steps Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map((item) => (
+            <div key={item.step} className="group">
+              <div className="card-premium overflow-hidden h-full">
+                {/* Image */}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  {/* Step Badge */}
+                  <div className="absolute top-3 left-3 w-8 h-8 bg-white/95 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center">
+                    <span className="text-sm font-bold text-primary">
+                      {item.step}
+                    </span>
                   </div>
+                </div>
 
-                  {/* Content */}
-                  <h3 className="font-bold text-neutral-900 mb-2 text-lg group-hover:text-primary transition-colors">
+                {/* Content */}
+                <div className="p-4 sm:p-5">
+                  <h3 className="font-bold text-neutral-900 mb-1 text-lg group-hover:text-primary transition-colors">
                     {item.title}
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     {item.description}
                   </p>
                 </div>
-
-                {/* Arrow (except last) */}
-                {index < steps.length - 1 && (
-                  <div className="absolute top-1/2 -right-3 transform -translate-y-1/2 z-10 hidden xl:block">
-                    <ArrowRight className="w-6 h-6 text-neutral-300" />
-                  </div>
-                )}
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Steps - Mobile/Tablet */}
-        <div className="lg:hidden grid grid-cols-2 gap-4 sm:gap-6">
-          {steps.map((item) => (
-            <div key={item.step} className="group card-premium p-5 sm:p-6 text-center">
-              {/* Icon */}
-              <div
-                className={`relative w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}
-              >
-                <item.icon className="w-7 h-7 text-white" />
-                <div className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow-sm flex items-center justify-center">
-                  <span className="text-xs font-bold text-neutral-900">
-                    {item.step}
-                  </span>
-                </div>
-              </div>
-
-              {/* Content */}
-              <h3 className="font-bold text-neutral-900 mb-1 text-base">
-                {item.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                {item.description}
-              </p>
             </div>
           ))}
         </div>

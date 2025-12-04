@@ -21,11 +21,39 @@ export interface SiteImages {
 export const defaultSiteImages: SiteImages = {
   hero: [
     {
-      id: "hero-main",
-      name: "메인 히어로",
-      src: "https://cdn.imweb.me/thumbnail/20231227/534aa65eac23d.jpg",
-      usedIn: ["Hero.tsx", "rooms/page.tsx"],
-      description: "메인 페이지 히어로 배경",
+      id: "hero-1",
+      name: "겨울 전경 1",
+      src: "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08362.webp",
+      usedIn: ["Hero.tsx"],
+      description: "겨울 시즌 히어로 이미지",
+    },
+    {
+      id: "hero-2",
+      name: "겨울 전경 2",
+      src: "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08370.webp",
+      usedIn: ["Hero.tsx"],
+      description: "겨울 시즌 히어로 이미지",
+    },
+    {
+      id: "hero-3",
+      name: "겨울 전경 3",
+      src: "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08371.webp",
+      usedIn: ["Hero.tsx"],
+      description: "겨울 시즌 히어로 이미지",
+    },
+    {
+      id: "hero-4",
+      name: "겨울 전경 4",
+      src: "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08373.webp",
+      usedIn: ["Hero.tsx"],
+      description: "겨울 시즌 히어로 이미지",
+    },
+    {
+      id: "hero-5",
+      name: "겨울 전경 5",
+      src: "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08376.webp",
+      usedIn: ["Hero.tsx"],
+      description: "겨울 시즌 히어로 이미지",
     },
   ],
   gallery: [
@@ -56,7 +84,6 @@ export const defaultSiteImages: SiteImages = {
     { id: "room-forestmini-2", name: "Forest Mini 테라스", src: "https://cdn.imweb.me/thumbnail/20240722/3872552ba3257.jpg", usedIn: ["data.ts"], room: "Forest Mini" },
   ],
   facilities: [
-    { id: "facility-breakfast", name: "조식", src: "https://cdn.imweb.me/thumbnail/20231227/d73522fdf8e44.jpg", usedIn: ["Facilities.tsx"] },
     { id: "facility-bbq", name: "바베큐", src: "https://cdn.imweb.me/upload/S202110067f162833b69cd/58bb12f425faa.jpg", usedIn: ["Facilities.tsx"] },
   ],
 };

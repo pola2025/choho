@@ -15,7 +15,7 @@ export default function LocationPage() {
       <section
         className="relative h-[40vh] min-h-[300px] flex items-center justify-center"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://cdn.imweb.me/thumbnail/20231227/b3d0b94aaf2aa.jpg')",
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero/442eeb10cfffb.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#3d4a3d",
@@ -122,7 +122,7 @@ export default function LocationPage() {
               <div
                 className="w-full h-[400px] bg-neutral-200"
                 style={{
-                  backgroundImage: "url('https://cdn.imweb.me/thumbnail/20231227/c261f180ed066.jpg')",
+                  backgroundImage: "url('/images/location/map.webp')",
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}

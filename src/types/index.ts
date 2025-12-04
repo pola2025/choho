@@ -40,8 +40,10 @@ export interface Journal {
   category: "notice" | "guide" | "event";
   title: string;
   excerpt: string;
+  content: string;
   createdAt: string;
   thumbnail?: string;
+  images?: string[];
 }
 
 export interface MenuItem {

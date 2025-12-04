@@ -4,7 +4,9 @@ import { useState } from "react";
 import { RoomCard } from "./RoomCard";
 import { rooms } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { Home, Users, Sparkles } from "lucide-react";
+import { Home, Users, Sparkles, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SITE_CONFIG } from "@/lib/constants";
 
 const filters = [
   { id: "all", label: "전체", icon: Sparkles },
@@ -23,7 +25,7 @@ export function RoomList() {
   });
 
   return (
-    <section className="relative py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section id="rooms" className="relative py-20 scroll-mt-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-gradient-section" />
 
@@ -48,11 +50,24 @@ export function RoomList() {
             <br className="hidden sm:block" />
             당신만의 특별한 시간을 선물합니다
           </p>
+
+          {/* CTA Button */}
+          <div className="flex justify-center mt-8">
+            <a
+                href={SITE_CONFIG.social.naver}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-bold text-green-800 bg-green-100/80 backdrop-blur-md border border-green-200/50 rounded-full shadow-lg hover:bg-green-200/90 hover:shadow-xl hover:scale-105 transition-all duration-300"
+              >
+                <Calendar className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                <span>실시간 예약 확인</span>
+              </a>
+          </div>
         </div>
 
         {/* Filter Pills */}
         <div className="flex justify-center mb-10 sm:mb-12">
-          <div className="inline-flex p-1.5 bg-white rounded-full shadow-soft border border-border">
+          <div className="inline-flex p-1.5 bg-neutral-100 rounded-full shadow-soft border border-neutral-200">
             {filters.map((filter) => {
               const Icon = filter.icon;
               return (
@@ -60,10 +75,10 @@ export function RoomList() {
                   key={filter.id}
                   onClick={() => setActiveFilter(filter.id)}
                   className={cn(
-                    "flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300",
+                    "flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-full transition-all duration-300",
                     activeFilter === filter.id
-                      ? "bg-primary text-white shadow-md"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      ? "bg-green-600 text-white shadow-md"
+                      : "text-neutral-700 hover:text-green-700 hover:bg-green-50"
                   )}
                 >
                   <Icon className="w-4 h-4" />

@@ -9,13 +9,13 @@ export const rooms: Room[] = [
     capacity: { standard: 4, maximum: 6 },
     area: 20,
     description: "아름다운 호수를 바라보며 즐기는 특별한 휴식. 숲과 호수를 만날 수 있는 객실입니다.",
-    thumbnail: "https://cdn.imweb.me/upload/S202110067f162833b69cd/04e7f9566ee81.jpg",
+    thumbnail: "/images/rooms/lakeview/main.webp",
     images: [
-      { src: "https://cdn.imweb.me/thumbnail/20231227/33b7b5a1c1d9c.jpg", alt: "호수뷰 객실 전경" },
-      { src: "https://cdn.imweb.me/thumbnail/20231227/5813e8a445dcd.jpg", alt: "호수뷰 객실 내부" },
-      { src: "https://cdn.imweb.me/thumbnail/20231227/ec404e547ee96.jpg", alt: "호수뷰 객실 침실" },
-      { src: "https://cdn.imweb.me/thumbnail/20231227/969b5f7afc30b.jpg", alt: "호수뷰 객실 거실" },
-      { src: "https://cdn.imweb.me/thumbnail/20231227/cd1a71ba83636.jpg", alt: "호수뷰 객실 욕실" },
+      { src: "/images/rooms/lakeview/33b7b5a1c1d9c.webp", alt: "호수뷰 객실 전경" },
+      { src: "/images/rooms/lakeview/5813e8a445dcd.webp", alt: "호수뷰 객실 내부" },
+      { src: "/images/rooms/lakeview/ec404e547ee96.webp", alt: "호수뷰 객실 침실" },
+      { src: "/images/rooms/lakeview/969b5f7afc30b.webp", alt: "호수뷰 객실 거실" },
+      { src: "/images/rooms/lakeview/cd1a71ba83636.webp", alt: "호수뷰 객실 욕실" },
     ],
     amenities: {
       provided: [
@@ -66,12 +66,12 @@ export const rooms: Room[] = [
     capacity: { standard: 2, maximum: 4 },
     area: 12,
     description: "숲속 산새 소리와 함께 하는 힐링 스테이. 숲속에서 즐기는 편안한 휴식을 위한 침대 객실입니다.",
-    thumbnail: "https://cdn.imweb.me/thumbnail/20240722/8527defd0b7fc.jpg",
+    thumbnail: "/images/rooms/forest/main.webp",
     images: [
-      { src: "https://cdn.imweb.me/thumbnail/20240722/47296e2b83ada.jpg", alt: "Forest 객실 전경" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/33431c681c979.jpg", alt: "Forest 객실 내부" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/58b3a64dfaa81.jpg", alt: "Forest 객실 테라스" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/91d0c190c02f6.jpg", alt: "Forest 객실 욕실" },
+      { src: "/images/rooms/forest/0062fb88ef43a.webp", alt: "Forest 객실 전경" },
+      { src: "/images/rooms/forest/10e393b267d20.webp", alt: "Forest 객실 내부" },
+      { src: "/images/rooms/forest/15fddc2a64e6c.webp", alt: "Forest 객실 테라스" },
+      { src: "/images/rooms/forest/2779cfff43741.webp", alt: "Forest 객실 욕실" },
     ],
     amenities: {
       provided: [
@@ -122,11 +122,11 @@ export const rooms: Room[] = [
     capacity: { standard: 2, maximum: 2 },
     area: 8,
     description: "초리골 숲에서 보내는 프라이빗한 휴식. 2인만을 위한 아늑한 침대 객실입니다.",
-    thumbnail: "https://cdn.imweb.me/thumbnail/20240722/15b8624e8ed80.jpg",
+    thumbnail: "/images/rooms/forest-mini/main.webp",
     images: [
-      { src: "https://cdn.imweb.me/thumbnail/20240722/36cf4885a8137.jpg", alt: "Forest Mini 객실 전경" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/ed6d714929445.jpg", alt: "Forest Mini 객실 내부" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/3872552ba3257.jpg", alt: "Forest Mini 객실 테라스" },
+      { src: "/images/rooms/forest-mini/022d94fa1e442.webp", alt: "Forest Mini 객실 전경" },
+      { src: "/images/rooms/forest-mini/0397a69dd4d14.webp", alt: "Forest Mini 객실 내부" },
+      { src: "/images/rooms/forest-mini/0c3490a0b45aa.webp", alt: "Forest Mini 객실 테라스" },
     ],
     amenities: {
       provided: [
@@ -146,7 +146,7 @@ export const rooms: Room[] = [
       extraPerson: [
         "36개월 미만 아동 추가인원 요금 미부과 (인원에는 포함)",
         "36개월 이상 추가인원 포함 요금부과",
-        "최대 2인 객실",
+        "어른 2인, 유아 1명 추가 불가",
       ],
       refund: [
         { days: "7-9일 전", rate: "90%" },
@@ -177,12 +177,12 @@ export const rooms: Room[] = [
     capacity: { standard: 5, maximum: 5 },
     area: 12,
     description: "가족과 함께 즐기는 편안한 휴식. 어른 4명 + 아이 1명만 이용 가능한 온돌 객실입니다.",
-    thumbnail: "https://cdn.imweb.me/thumbnail/20240722/8527defd0b7fc.jpg",
+    thumbnail: "/images/rooms/forest-family/main.webp",
     images: [
-      { src: "https://cdn.imweb.me/thumbnail/20240722/47296e2b83ada.jpg", alt: "Forest 패밀리 객실 전경" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/33431c681c979.jpg", alt: "Forest 패밀리 객실 내부" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/58b3a64dfaa81.jpg", alt: "Forest 패밀리 객실 테라스" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/91d0c190c02f6.jpg", alt: "Forest 패밀리 객실 욕실" },
+      { src: "/images/rooms/forest-family/20230428_131830.webp", alt: "Forest 패밀리 객실 전경" },
+      { src: "/images/rooms/forest-family/20230428_131914.webp", alt: "Forest 패밀리 객실 내부" },
+      { src: "/images/rooms/forest-family/20230428_132005.webp", alt: "Forest 패밀리 객실 테라스" },
+      { src: "/images/rooms/forest-family/20230428_132047.webp", alt: "Forest 패밀리 객실 욕실" },
     ],
     amenities: {
       provided: [
@@ -233,11 +233,11 @@ export const rooms: Room[] = [
     capacity: { standard: 3, maximum: 3 },
     area: 8,
     description: "합리적으로 쉴 수 있는 객실. 어른 2명 + 아이 1명만 이용 가능한 온돌 객실입니다.",
-    thumbnail: "https://cdn.imweb.me/thumbnail/20240722/15b8624e8ed80.jpg",
+    thumbnail: "/images/rooms/forest-mini-family/main.webp",
     images: [
-      { src: "https://cdn.imweb.me/thumbnail/20240722/36cf4885a8137.jpg", alt: "Forest Mini 패밀리 객실 전경" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/ed6d714929445.jpg", alt: "Forest Mini 패밀리 객실 내부" },
-      { src: "https://cdn.imweb.me/thumbnail/20240722/3872552ba3257.jpg", alt: "Forest Mini 패밀리 객실 테라스" },
+      { src: "/images/rooms/forest-mini-family/20230428_132325_1.webp", alt: "Forest Mini 패밀리 객실 전경" },
+      { src: "/images/rooms/forest-mini-family/20230428_132427_1.webp", alt: "Forest Mini 패밀리 객실 내부" },
+      { src: "/images/rooms/forest-mini-family/20230428_132548_1.webp", alt: "Forest Mini 패밀리 객실 테라스" },
     ],
     amenities: {
       provided: [
@@ -284,32 +284,36 @@ export const rooms: Room[] = [
 
 export const journals: Journal[] = [
   {
-    id: "1",
-    category: "guide",
-    title: "초호 200% 즐기는 법",
-    excerpt: "초호펜션에서의 완벽한 하루를 위한 가이드",
-    createdAt: "2025-08-21",
-  },
-  {
-    id: "2",
-    category: "guide",
-    title: "근처 찐맛집 Best 5",
-    excerpt: "초호펜션 주변 현지인 추천 맛집 모음",
-    createdAt: "2025-05-29",
-  },
-  {
-    id: "3",
+    id: "winter-notice-2025",
     category: "notice",
-    title: "2025 여름 시즌 안내",
-    excerpt: "수영장 오픈 및 바베큐 이용 안내",
-    createdAt: "2025-06-01",
+    title: "겨울철 이용 안내",
+    excerpt: "동파 방지 물소리 및 테라스 그릴 사용 안내입니다.",
+    content: `겨울철 수도배관 동파 방지를 위해 물소리가 객실에서 들릴 수 있습니다.
+
+초호펜션 객실 테라스는 한파에 캠핑버너그릴 착화가 안될 수 있습니다.
+
+한파에는 별도안내 드리고 있으니 관리자 연락부탁드립니다.
+
+문의: 010-7932-0029`,
+    createdAt: "2025-12-05",
+    thumbnail: "/images/rooms/forest/main.webp",
+    images: [],
   },
   {
-    id: "4",
-    category: "event",
-    title: "레이트체크아웃 이벤트",
-    excerpt: "평일 예약 시 12시까지 무료 연장",
-    createdAt: "2025-07-15",
+    id: "ice-wall-2025",
+    category: "notice",
+    title: "2025년 12월 4일 빙벽 개시!",
+    excerpt: "한파와 눈소식에 초호쉼터 빙벽이 오픈되었습니다.",
+    content: `한파와 눈소식에 초호쉼터 빙벽이 오픈되었습니다.
+
+25년 12월 4일 현재 사진입니다.
+
+올 겨울 초호펜션에서 특별한 빙벽 체험을 즐겨보세요!`,
+    createdAt: "2025-12-04",
+    thumbnail: "/images/journal/ice-wall/ice-wall-thumb.webp",
+    images: [
+      "/images/journal/ice-wall/ice-wall-2.webp",
+    ],
   },
 ];
 

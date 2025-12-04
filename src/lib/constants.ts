@@ -16,11 +16,11 @@ export const SITE_CONFIG = {
 };
 
 export const NAV_ITEMS = [
-  { label: "Home", href: "/" },
-  { label: "Rooms", href: "/rooms" },
-  { label: "Cafe", href: "/cafe" },
-  { label: "About", href: "/about" },
-  { label: "Location", href: "/location" },
+  { label: "초호펜션", href: "/" },
+  { label: "객실정보", href: "/rooms" },
+  { label: "초리골164카페", href: "/cafe" },
+  { label: "초호역사", href: "/about" },
+  { label: "오시는길", href: "/location" },
 ] as const;
 
 export const ROOM_TYPES = [

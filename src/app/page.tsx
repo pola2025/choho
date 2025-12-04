@@ -5,9 +5,8 @@ import {
   CheckinGuide,
   Facilities,
   JournalPreview,
-  Gallery,
-  InstagramTags,
 } from "@/components/sections";
+import { CombinedWinterPopup } from "@/components/CombinedWinterPopup";
 
 export default function Home() {
   return (
@@ -18,8 +17,7 @@ export default function Home() {
       <CheckinGuide />
       <Facilities />
       <JournalPreview />
-      <Gallery />
-      <InstagramTags />
+      <CombinedWinterPopup />
     </main>
   );
 }
