@@ -64,7 +64,7 @@ export const defaultSiteImages: SiteImages = {
 // 이미지 ID로 특정 이미지 찾기
 export function findImageById(images: SiteImages, id: string): SiteImage | null {
   for (const category of Object.values(images)) {
-    const found = category.find((img) => img.id === id);
+    const found = category.find((img: SiteImage) => img.id === id);
     if (found) return found;
   }
   return null;

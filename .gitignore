@@ -45,3 +45,5 @@ credentials/
 
 # Playwright screenshots (optional dev files)
 .playwright-mcp/
+
+.vercel
