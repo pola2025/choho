@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Menu, X, Calendar } from "lucide-react";
 import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
@@ -25,8 +26,8 @@ export function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         isScrolled
-          ? "bg-white/95 backdrop-blur-md border-b border-border shadow-soft"
-          : "bg-transparent"
+          ? "bg-white/95 backdrop-blur-xl border-b border-primary/10 shadow-lg shadow-primary/5"
+          : "bg-gradient-to-b from-black/50 to-transparent"
       )}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,14 +37,30 @@ export function Header() {
             href="/"
             className="group flex items-center gap-2 transition-transform hover:scale-105"
           >
-            <span
-              className={cn(
-                "text-2xl font-bold transition-colors duration-300",
-                isScrolled ? "text-primary" : "text-white"
-              )}
-            >
-              草湖
-            </span>
+            <div className="relative h-10 w-10 sm:h-12 sm:w-12">
+              {/* White logo for transparent header */}
+              <Image
+                src="/images/logo-white.webp"
+                alt={SITE_CONFIG.name}
+                fill
+                className={cn(
+                  "object-contain transition-opacity duration-300",
+                  isScrolled ? "opacity-0" : "opacity-100"
+                )}
+                priority
+              />
+              {/* Main logo for scrolled header */}
+              <Image
+                src="/images/logo-main.webp"
+                alt={SITE_CONFIG.name}
+                fill
+                className={cn(
+                  "object-contain transition-opacity duration-300",
+                  isScrolled ? "opacity-100" : "opacity-0"
+                )}
+                priority
+              />
+            </div>
             <span
               className={cn(
                 "text-sm font-medium hidden sm:inline transition-colors duration-300",
