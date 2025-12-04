@@ -1,0 +1,461 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  /* ============================================
+   * 초호펜션 디자인 시스템 - 컬러 가이드
+   * 메인 컬러: 녹색 (자연, 숲, 힐링)
+   * ============================================ */
+
+  --radius: 0.625rem;
+
+  /* 배경 & 전경 */
+  --background: 0 0% 100%;
+  --foreground: 150 10% 15%;
+
+  /* 카드 */
+  --card: 0 0% 100%;
+  --card-foreground: 150 10% 15%;
+
+  /* 팝오버 */
+  --popover: 0 0% 100%;
+  --popover-foreground: 150 10% 15%;
+
+  /* Primary: 숲의 녹색 (Forest Green) */
+  --primary: 152 60% 28%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Primary 그라데이션 */
+  --primary-50: 150 60% 96%;
+  --primary-100: 150 55% 90%;
+  --primary-200: 150 50% 80%;
+  --primary-300: 150 50% 65%;
+  --primary-400: 152 55% 45%;
+  --primary-500: 152 60% 28%;
+  --primary-600: 152 65% 22%;
+  --primary-700: 152 70% 18%;
+  --primary-800: 152 75% 14%;
+  --primary-900: 152 80% 10%;
+
+  /* Secondary: 우드 브라운 (Wood Brown) */
+  --secondary: 30 40% 35%;
+  --secondary-foreground: 0 0% 100%;
+
+  /* Muted: 연한 그린 그레이 */
+  --muted: 150 15% 95%;
+  --muted-foreground: 150 10% 45%;
+
+  /* Accent: 골드 (포인트) */
+  --accent: 45 85% 55%;
+  --accent-foreground: 150 10% 15%;
+
+  /* Destructive */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* 경계 & 입력 */
+  --border: 150 15% 88%;
+  --input: 150 15% 88%;
+  --ring: 152 60% 28%;
+
+  /* 추가 시맨틱 컬러 */
+  --success: 152 60% 40%;
+  --warning: 45 90% 50%;
+  --info: 200 80% 50%;
+}
+
+.dark {
+  --background: 150 15% 8%;
+  --foreground: 150 10% 95%;
+  --card: 150 15% 10%;
+  --card-foreground: 150 10% 95%;
+  --popover: 150 15% 10%;
+  --popover-foreground: 150 10% 95%;
+  --primary: 152 55% 45%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 30 35% 45%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 150 10% 18%;
+  --muted-foreground: 150 10% 60%;
+  --accent: 45 80% 50%;
+  --accent-foreground: 150 10% 15%;
+  --destructive: 0 62% 35%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 150 10% 20%;
+  --input: 150 10% 20%;
+  --ring: 152 55% 45%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  }
+}
+
+/* ============================================
+ * 애니메이션 키프레임
+ * ============================================ */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+}
+
+@keyframes draw-line {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* ============================================
+ * 애니메이션 유틸리티 클래스
+ * ============================================ */
+
+@layer utilities {
+  /* 기본 애니메이션 */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.6s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.4s ease-out forwards;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  /* 지연 클래스 */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+  .delay-700 { animation-delay: 700ms; }
+  .delay-800 { animation-delay: 800ms; }
+
+  /* 그라디언트 텍스트 */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gradient-text-gold {
+    background: linear-gradient(135deg, hsl(45 85% 55%) 0%, hsl(35 90% 45%) 50%, hsl(45 85% 55%) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* 글래스모피즘 */
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* 호버 효과 */
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  }
+
+  .hover-scale {
+    transition: transform 0.3s ease;
+  }
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+
+  .hover-glow {
+    transition: box-shadow 0.3s ease;
+  }
+  .hover-glow:hover {
+    box-shadow: 0 0 30px rgba(34, 120, 74, 0.3);
+  }
+
+  /* 그라디언트 배경 */
+  .bg-gradient-hero {
+    background: linear-gradient(135deg,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.3) 50%,
+      rgba(34, 120, 74, 0.2) 100%
+    );
+  }
+
+  .bg-gradient-warm {
+    background: linear-gradient(180deg,
+      hsl(45 30% 97%) 0%,
+      hsl(30 25% 95%) 100%
+    );
+  }
+
+  .bg-gradient-nature {
+    background: linear-gradient(180deg,
+      transparent 0%,
+      hsl(150 60% 96%) 100%
+    );
+  }
+
+  .bg-gradient-section {
+    background: linear-gradient(180deg,
+      hsl(150 20% 98%) 0%,
+      hsl(150 15% 96%) 50%,
+      hsl(150 20% 98%) 100%
+    );
+  }
+
+  /* 섀도우 */
+  .shadow-soft {
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+  }
+
+  .shadow-elevated {
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.05),
+      0 10px 20px -2px rgba(0, 0, 0, 0.08),
+      0 20px 40px -4px rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-glow-primary {
+    box-shadow: 0 0 40px rgba(34, 120, 74, 0.15);
+  }
+
+  .shadow-glow-gold {
+    box-shadow: 0 0 30px rgba(217, 164, 48, 0.2);
+  }
+
+  /* 텍스트 그림자 */
+  .text-shadow {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  /* 스크롤 트리거용 초기 상태 */
+  .scroll-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .scroll-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 섹션 디바이더 */
+  .section-divider {
+    position: relative;
+  }
+
+  .section-divider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(180deg, hsl(var(--background)) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* 장식 요소 */
+  .decorative-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
+    border-radius: 1px;
+  }
+
+  .decorative-dot {
+    width: 8px;
+    height: 8px;
+    background: hsl(var(--accent));
+    border-radius: 50%;
+  }
+
+  /* 카드 스타일 확장 */
+  .card-premium {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid hsl(var(--border));
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+  }
+
+  .card-premium:hover {
+    border-color: hsl(var(--primary) / 0.3);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.06),
+      0 12px 28px rgba(0, 0, 0, 0.08);
+    transform: translateY(-4px);
+  }
+}
+
+/* ============================================
+ * 접근성: 모션 감소 설정 존중
+ * ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

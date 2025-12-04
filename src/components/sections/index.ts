@@ -1,0 +1,9 @@
+export { Hero } from "./Hero";
+export { Welcome } from "./Welcome";
+export { RoomList } from "./RoomList";
+export { RoomCard } from "./RoomCard";
+export { CheckinGuide } from "./CheckinGuide";
+export { Facilities } from "./Facilities";
+export { JournalPreview } from "./JournalPreview";
+export { Gallery } from "./Gallery";
+export { InstagramTags } from "./InstagramTags";

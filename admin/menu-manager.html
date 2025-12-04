@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>초리골164 카페 메뉴 관리</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .category-card { transition: all 0.2s; }
+    .category-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .menu-item { transition: background-color 0.2s; }
+    .menu-item:hover { background-color: #f9fafb; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- 헤더 -->
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">☕ 초리골164 카페 메뉴 관리</h1>
+      <p class="text-gray-600 mt-2">메뉴 이름과 가격을 수정하고 홈페이지에 적용합니다.</p>
+      <div class="flex gap-4 mt-4">
+        <a href="image-manager.html" class="text-blue-600 hover:underline">🏞️ 이미지 관리 →</a>
+      </div>
+    </header>
+
+    <!-- 액션 버튼 -->
+    <div class="flex gap-4 mb-6">
+      <button id="btn-add-item" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700">
+        + 메뉴 추가
+      </button>
+      <button id="btn-export" class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700">
+        📋 코드 내보내기
+      </button>
+      <button id="btn-reset" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300">
+        🔄 초기화
+      </button>
+    </div>
+
+    <!-- 메뉴 카테고리 -->
+    <div class="grid gap-6">
+      <!-- COFFEE -->
+      <div class="category-card bg-white rounded-xl shadow-sm p-6" data-category="coffee">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-amber-800">☕ COFFEE</h2>
+          <button class="add-category-item px-3 py-1 text-sm bg-amber-100 text-amber-800 rounded hover:bg-amber-200">
+            + 추가
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="text-left text-sm text-gray-500 border-b">
+                <th class="pb-2 w-1/2">메뉴명</th>
+                <th class="pb-2 w-1/6 text-center">HOT</th>
+                <th class="pb-2 w-1/6 text-center">ICED</th>
+                <th class="pb-2 w-1/6 text-center">관리</th>
+              </tr>
+            </thead>
+            <tbody id="menu-coffee" class="divide-y">
+              <!-- 동적 생성 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- LATTE -->
+      <div class="category-card bg-white rounded-xl shadow-sm p-6" data-category="latte">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-green-800">🥛 LATTE</h2>
+          <button class="add-category-item px-3 py-1 text-sm bg-green-100 text-green-800 rounded hover:bg-green-200">
+            + 추가
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="text-left text-sm text-gray-500 border-b">
+                <th class="pb-2 w-1/2">메뉴명</th>
+                <th class="pb-2 w-1/6 text-center">HOT</th>
+                <th class="pb-2 w-1/6 text-center">ICED</th>
+                <th class="pb-2 w-1/6 text-center">관리</th>
+              </tr>
+            </thead>
+            <tbody id="menu-latte" class="divide-y">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TEA -->
+      <div class="category-card bg-white rounded-xl shadow-sm p-6" data-category="tea">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-emerald-800">🍵 TEA</h2>
+          <button class="add-category-item px-3 py-1 text-sm bg-emerald-100 text-emerald-800 rounded hover:bg-emerald-200">
+            + 추가
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="text-left text-sm text-gray-500 border-b">
+                <th class="pb-2 w-1/3">메뉴명</th>
+                <th class="pb-2 w-1/6 text-center">HOT</th>
+                <th class="pb-2 w-1/6 text-center">ICED</th>
+                <th class="pb-2 w-1/6">뱃지</th>
+                <th class="pb-2 w-1/6 text-center">관리</th>
+              </tr>
+            </thead>
+            <tbody id="menu-tea" class="divide-y">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ADE -->
+      <div class="category-card bg-white rounded-xl shadow-sm p-6" data-category="ade">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-orange-800">🍊 ADE</h2>
+          <button class="add-category-item px-3 py-1 text-sm bg-orange-100 text-orange-800 rounded hover:bg-orange-200">
+            + 추가
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="text-left text-sm text-gray-500 border-b">
+                <th class="pb-2 w-1/3">메뉴명</th>
+                <th class="pb-2 w-1/6 text-center">HOT</th>
+                <th class="pb-2 w-1/6 text-center">ICED</th>
+                <th class="pb-2 w-1/6">뱃지</th>
+                <th class="pb-2 w-1/6 text-center">관리</th>
+              </tr>
+            </thead>
+            <tbody id="menu-ade" class="divide-y">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- OTHERS -->
+      <div class="category-card bg-white rounded-xl shadow-sm p-6" data-category="others">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold text-purple-800">🍦 OTHERS</h2>
+          <button class="add-category-item px-3 py-1 text-sm bg-purple-100 text-purple-800 rounded hover:bg-purple-200">
+            + 추가
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="text-left text-sm text-gray-500 border-b">
+                <th class="pb-2 w-2/3">메뉴명</th>
+                <th class="pb-2 w-1/6 text-center">가격</th>
+                <th class="pb-2 w-1/6 text-center">관리</th>
+              </tr>
+            </thead>
+            <tbody id="menu-others" class="divide-y">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 코드 내보내기 모달 -->
+    <div id="export-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+      <div class="bg-white rounded-xl max-w-4xl w-full mx-4 max-h-[80vh] overflow-hidden">
+        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+          <h3 class="text-xl font-bold">📋 메뉴 코드 내보내기</h3>
+          <button id="close-modal" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="p-6 overflow-auto max-h-[60vh]">
+          <p class="text-sm text-gray-600 mb-4">
+            아래 코드를 <code class="bg-gray-100 px-2 py-1 rounded">src/app/cafe/page.tsx</code> 파일의 <code class="bg-gray-100 px-2 py-1 rounded">menuData</code> 부분에 붙여넣으세요.
+          </p>
+          <pre id="export-code" class="bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto whitespace-pre-wrap"></pre>
+        </div>
+        <div class="p-6 border-t border-gray-200 flex justify-end gap-4">
+          <button id="copy-code" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700">
+            📋 복사하기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 안내사항 -->
+    <div class="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+      <p class="text-sm text-amber-800">
+        <strong>📌 안내사항</strong><br>
+        • 가격은 천원 단위입니다. (예: 6.0 = 6,000원)<br>
+        • HOT/ICED가 없는 메뉴는 "-"로 표시됩니다.<br>
+        • "별도" 가격은 별도 문의가 필요한 항목입니다.<br>
+        • 변경사항은 자동 저장됩니다.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // 초기 메뉴 데이터 (현재 홈페이지와 동일)
+    const initialMenuData = {
+      coffee: {
+        title: "COFFEE",
+        items: [
+          { name: "아메리카노", hot: "6.0", iced: "6.5" },
+          { name: "카페라떼", hot: "6.5", iced: "7.0" },
+          { name: "바닐라라떼", hot: "7.0", iced: "7.5" },
+          { name: "헤이즐넛라떼", hot: "7.0", iced: "7.5" },
+          { name: "카라멜마끼아또", hot: "7.0", iced: "7.5" },
+          { name: "아포카토", hot: null, iced: "8.0" },
+          { name: "디카페인", hot: "+0.5", iced: "+0.5" },
+        ],
+      },
+      latte: {
+        title: "LATTE",
+        items: [
+          { name: "아이스초리골흑임자라떼(S)", hot: null, iced: "8.0" },
+          { name: "제주말차라떼", hot: "7.0", iced: "7.5" },
+          { name: "고구마라떼", hot: "7.0", iced: null },
+          { name: "딸기라떼", hot: null, iced: "7.5" },
+          { name: "초코라떼", hot: "7.0", iced: "7.5" },
+          { name: "샷추가", hot: "+0.5", iced: "+0.5" },
+        ],
+      },
+      tea: {
+        title: "TEA",
+        items: [
+          { name: "캐모마일", hot: "7.0", iced: "7.5" },
+          { name: "히비스커스", hot: "7.0", iced: "7.5" },
+          { name: "복숭아 아이스티", hot: null, iced: "7.0" },
+          { name: "유자차", hot: "7.0", iced: "7.5" },
+          { name: "생강차", hot: "7.0", iced: null },
+          { name: "레몬차", hot: null, iced: "7.5", badge: "수제" },
+          { name: "레몬콜라다", hot: "8.0", iced: "8.0" },
+        ],
+      },
+      ade: {
+        title: "ADE",
+        items: [
+          { name: "레몬베리에이드", hot: null, iced: "8.0", badge: "수제 베리청 + 자몽청(제주)" },
+          { name: "자몽에이드", hot: null, iced: "7.5" },
+          { name: "청포도에이드", hot: null, iced: "8.0", badge: "수제" },
+          { name: "레몬에이드", hot: null, iced: "8.0", badge: "수제" },
+        ],
+      },
+      others: {
+        title: "OTHERS",
+        items: [
+          { name: "아이스크림", price: "7.0" },
+          { name: "딸기요거트스무디", price: "8.0" },
+          { name: "커피콩빵 (10개)", price: "5.0" },
+          { name: "시루가", price: "0.5" },
+          { name: "잉어밥/알파카먹이", price: "1.0" },
+          { name: "베이커리", price: "별도" },
+        ],
+      },
+    };
+
+    // 저장된 데이터 또는 초기 데이터 로드
+    let menuData = JSON.parse(localStorage.getItem('menuData')) || JSON.parse(JSON.stringify(initialMenuData));
+
+    // 메뉴 렌더링
+    function renderMenu() {
+      // Coffee
+      renderCategoryMenu('coffee', menuData.coffee.items, true);
+      // Latte
+      renderCategoryMenu('latte', menuData.latte.items, true);
+      // Tea
+      renderCategoryMenu('tea', menuData.tea.items, true, true);
+      // Ade
+      renderCategoryMenu('ade', menuData.ade.items, true, true);
+      // Others
+      renderOthersMenu();
+    }
+
+    function renderCategoryMenu(category, items, hasHotIced = true, hasBadge = false) {
+      const tbody = document.getElementById(`menu-${category}`);
+      tbody.innerHTML = items.map((item, index) => `
+        <tr class="menu-item" data-category="${category}" data-index="${index}">
+          <td class="py-3">
+            <input type="text" class="item-name w-full px-2 py-1 border border-transparent rounded hover:border-gray-300 focus:border-blue-500 focus:outline-none"
+                   value="${item.name}" data-field="name">
+          </td>
+          ${hasHotIced ? `
+            <td class="py-3 text-center">
+              <input type="text" class="item-hot w-16 px-2 py-1 text-center border border-transparent rounded hover:border-gray-300 focus:border-blue-500 focus:outline-none"
+                     value="${item.hot || ''}" placeholder="-" data-field="hot">
+            </td>
+            <td class="py-3 text-center">
+              <input type="text" class="item-iced w-16 px-2 py-1 text-center border border-transparent rounded hover:border-gray-300 focus:border-blue-500 focus:outline-none"
+                     value="${item.iced || ''}" placeholder="-" data-field="iced">
+            </td>
+          ` : ''}
+          ${hasBadge ? `
+            <td class="py-3">
+              <input type="text" class="item-badge w-full px-2 py-1 text-sm border border-transparent rounded hover:border-gray-300 focus:border-blue-500 focus:outline-none"
+                     value="${item.badge || ''}" placeholder="뱃지" data-field="badge">
+            </td>
+          ` : ''}
+          <td class="py-3 text-center">
+            <button class="delete-item text-red-500 hover:text-red-700 text-sm">삭제</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // 이벤트 바인딩
+      tbody.querySelectorAll('input').forEach(input => {
+        input.addEventListener('change', handleInputChange);
+      });
+
+      tbody.querySelectorAll('.delete-item').forEach(btn => {
+        btn.addEventListener('click', handleDeleteItem);
+      });
+    }
+
+    function renderOthersMenu() {
+      const tbody = document.getElementById('menu-others');
+      tbody.innerHTML = menuData.others.items.map((item, index) => `
+        <tr class="menu-item" data-category="others" data-index="${index}">
+          <td class="py-3">
+            <input type="text" class="item-name w-full px-2 py-1 border border-transparent rounded hover:border-gray-300 focus:border-blue-500 focus:outline-none"
+                   value="${item.name}" data-field="name">
+          </td>
+          <td class="py-3 text-center">
+            <input type="text" class="item-price w-20 px-2 py-1 text-center border border-transparent rounded hover:border-gray-300 focus:border-blue-500 focus:outline-none"
+                   value="${item.price}" data-field="price">
+          </td>
+          <td class="py-3 text-center">
+            <button class="delete-item text-red-500 hover:text-red-700 text-sm">삭제</button>
+          </td>
+        </tr>
+      `).join('');
+
+      tbody.querySelectorAll('input').forEach(input => {
+        input.addEventListener('change', handleInputChange);
+      });
+
+      tbody.querySelectorAll('.delete-item').forEach(btn => {
+        btn.addEventListener('click', handleDeleteItem);
+      });
+    }
+
+    function handleInputChange(e) {
+      const row = e.target.closest('tr');
+      const category = row.dataset.category;
+      const index = parseInt(row.dataset.index);
+      const field = e.target.dataset.field;
+      let value = e.target.value.trim();
+
+      // 빈 값 처리
+      if (field === 'hot' || field === 'iced') {
+        value = value === '' || value === '-' ? null : value;
+      }
+
+      menuData[category].items[index][field] = value;
+      saveData();
+    }
+
+    function handleDeleteItem(e) {
+      if (!confirm('이 메뉴를 삭제하시겠습니까?')) return;
+
+      const row = e.target.closest('tr');
+      const category = row.dataset.category;
+      const index = parseInt(row.dataset.index);
+
+      menuData[category].items.splice(index, 1);
+      saveData();
+      renderMenu();
+    }
+
+    function saveData() {
+      localStorage.setItem('menuData', JSON.stringify(menuData));
+    }
+
+    // 카테고리별 아이템 추가
+    document.querySelectorAll('.add-category-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.category-card');
+        const category = card.dataset.category;
+
+        if (category === 'others') {
+          menuData.others.items.push({ name: "새 메뉴", price: "0.0" });
+        } else if (category === 'tea' || category === 'ade') {
+          menuData[category].items.push({ name: "새 메뉴", hot: null, iced: "0.0", badge: "" });
+        } else {
+          menuData[category].items.push({ name: "새 메뉴", hot: "0.0", iced: "0.0" });
+        }
+
+        saveData();
+        renderMenu();
+      });
+    });
+
+    // 코드 내보내기
+    document.getElementById('btn-export').addEventListener('click', () => {
+      const code = generateExportCode();
+      document.getElementById('export-code').textContent = code;
+      document.getElementById('export-modal').classList.remove('hidden');
+      document.getElementById('export-modal').classList.add('flex');
+    });
+
+    document.getElementById('close-modal').addEventListener('click', () => {
+      document.getElementById('export-modal').classList.add('hidden');
+      document.getElementById('export-modal').classList.remove('flex');
+    });
+
+    document.getElementById('copy-code').addEventListener('click', () => {
+      const code = document.getElementById('export-code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('copy-code');
+        btn.textContent = '✓ 복사됨!';
+        setTimeout(() => btn.textContent = '📋 복사하기', 2000);
+      });
+    });
+
+    function generateExportCode() {
+      const formatItem = (item, hasBadge = false) => {
+        if ('price' in item) {
+          return `      { name: "${item.name}", price: "${item.price}" }`;
+        }
+
+        let str = `      { name: "${item.name}", hot: ${item.hot ? `"${item.hot}"` : 'null'}, iced: ${item.iced ? `"${item.iced}"` : 'null'}`;
+        if (hasBadge && item.badge) {
+          str += `, badge: "${item.badge}"`;
+        }
+        str += ' }';
+        return str;
+      };
+
+      return `// 메뉴 데이터 - src/app/cafe/page.tsx에 붙여넣기
+const menuData = {
+  coffee: {
+    title: "COFFEE",
+    icon: Coffee,
+    items: [
+${menuData.coffee.items.map(item => formatItem(item)).join(',\n')}
+    ],
+  },
+  latte: {
+    title: "LATTE",
+    icon: Coffee,
+    items: [
+${menuData.latte.items.map(item => formatItem(item)).join(',\n')}
+    ],
+  },
+  tea: {
+    title: "TEA",
+    icon: Leaf,
+    items: [
+${menuData.tea.items.map(item => formatItem(item, true)).join(',\n')}
+    ],
+  },
+  ade: {
+    title: "ADE",
+    icon: GlassWater,
+    items: [
+${menuData.ade.items.map(item => formatItem(item, true)).join(',\n')}
+    ],
+  },
+  others: {
+    title: "OTHERS",
+    icon: IceCream,
+    items: [
+${menuData.others.items.map(item => formatItem(item)).join(',\n')}
+    ],
+  },
+};`;
+    }
+
+    // 초기화 버튼
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (!confirm('모든 변경사항을 초기화하시겠습니까?\n현재 홈페이지에 적용된 메뉴로 되돌립니다.')) return;
+
+      menuData = JSON.parse(JSON.stringify(initialMenuData));
+      saveData();
+      renderMenu();
+    });
+
+    // 모달 외부 클릭 시 닫기
+    document.getElementById('export-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'export-modal') {
+        e.target.classList.add('hidden');
+        e.target.classList.remove('flex');
+      }
+    });
+
+    // 초기 렌더링
+    renderMenu();
+  </script>
+</body>
+</html>
