@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Snowflake, AlertTriangle, Phone } from "lucide-react";
+import { X, Snowflake, AlertTriangle, Phone, Coffee } from "lucide-react";
 
 export function CombinedWinterPopup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -170,6 +170,22 @@ export function CombinedWinterPopup() {
                       초리골 겨울축제장에서 소음이 골짜기를 따라 들려올 수 있습니다.
                       <br />
                       <span className="text-purple-500">* 펜션시설 내 아닌 마을 내 소음</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+                <div className="flex items-start gap-2">
+                  <Coffee className="flex-shrink-0 w-5 h-5 text-emerald-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-semibold text-emerald-900 text-sm mb-0.5">
+                      초리골164 음료 무료쿠폰 제공
+                    </h3>
+                    <p className="text-xs text-emerald-700 leading-relaxed">
+                      기준인원 + 결제된 추가인원에게 제공
+                      <br />
+                      <span className="text-emerald-500">* 베이커리 불가 / 카페 휴무일 사용 불가</span>
                     </p>
                   </div>
                 </div>
