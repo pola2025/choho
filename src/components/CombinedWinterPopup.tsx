@@ -156,6 +156,24 @@ export function CombinedWinterPopup() {
                   </div>
                 </div>
               </div>
+
+              <div className="bg-purple-50 border border-purple-200 rounded-xl p-3">
+                <div className="flex items-start gap-2">
+                  <span className="flex-shrink-0 w-5 h-5 bg-purple-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                    3
+                  </span>
+                  <div>
+                    <h3 className="font-semibold text-purple-900 text-sm mb-0.5">
+                      조설기(눈만드는기계) 작동소음 안내
+                    </h3>
+                    <p className="text-xs text-purple-700 leading-relaxed">
+                      초리골 겨울축제장에서 소음이 골짜기를 따라 들려올 수 있습니다.
+                      <br />
+                      <span className="text-purple-500">* 펜션시설 내 아닌 마을 내 소음</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Contact Button */}
