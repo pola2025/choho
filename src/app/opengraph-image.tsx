@@ -9,6 +9,8 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image() {
+  const backgroundUrl = "https://www.chorigol.co.kr/images/og-background.webp";
+
   return new ImageResponse(
     (
       <div
@@ -19,11 +21,24 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #3d5a3d 0%, #2d4a2d 50%, #1d3a1d 100%)",
           position: "relative",
         }}
       >
-        {/* 배경 패턴 */}
+        {/* 배경 이미지 */}
+        <img
+          src={backgroundUrl}
+          alt=""
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+
+        {/* 어두운 오버레이 */}
         <div
           style={{
             position: "absolute",
@@ -31,9 +46,7 @@ export default async function Image() {
             left: 0,
             right: 0,
             bottom: 0,
-            opacity: 0.1,
-            backgroundImage: "radial-gradient(circle at 25% 25%, white 2px, transparent 2px)",
-            backgroundSize: "60px 60px",
+            background: "rgba(0, 0, 0, 0.45)",
           }}
         />
 
@@ -45,13 +58,15 @@ export default async function Image() {
             alignItems: "center",
             justifyContent: "center",
             padding: "40px",
+            position: "relative",
+            zIndex: 10,
           }}
         >
           {/* Since 표시 - 상단 */}
           <div
             style={{
               fontSize: 16,
-              color: "rgba(255,255,255,0.7)",
+              color: "rgba(255,255,255,0.8)",
               letterSpacing: 6,
               marginBottom: 16,
             }}
@@ -66,7 +81,7 @@ export default async function Image() {
               fontWeight: 700,
               color: "white",
               marginBottom: 12,
-              textShadow: "0 4px 20px rgba(0,0,0,0.3)",
+              textShadow: "0 4px 20px rgba(0,0,0,0.5)",
             }}
           >
             草湖
@@ -79,7 +94,7 @@ export default async function Image() {
               fontWeight: 700,
               color: "white",
               marginBottom: 12,
-              textShadow: "0 2px 10px rgba(0,0,0,0.3)",
+              textShadow: "0 2px 10px rgba(0,0,0,0.5)",
             }}
           >
             초호펜션
@@ -89,8 +104,9 @@ export default async function Image() {
           <div
             style={{
               fontSize: 24,
-              color: "rgba(255,255,255,0.9)",
+              color: "rgba(255,255,255,0.95)",
               marginBottom: 24,
+              textShadow: "0 2px 8px rgba(0,0,0,0.5)",
             }}
           >
             서울에서 1시간, 파주 초리골의 힐링 펜션
@@ -101,7 +117,7 @@ export default async function Image() {
             style={{
               width: 80,
               height: 3,
-              background: "rgba(255,255,255,0.6)",
+              background: "rgba(255,255,255,0.7)",
               marginBottom: 24,
               borderRadius: 2,
             }}
@@ -119,11 +135,12 @@ export default async function Image() {
                 key={tag}
                 style={{
                   padding: "10px 24px",
-                  background: "rgba(255,255,255,0.15)",
+                  background: "rgba(255,255,255,0.2)",
                   borderRadius: 30,
                   fontSize: 18,
                   color: "white",
-                  border: "1px solid rgba(255,255,255,0.3)",
+                  border: "1px solid rgba(255,255,255,0.4)",
+                  backdropFilter: "blur(4px)",
                 }}
               >
                 {tag}
