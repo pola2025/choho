@@ -47,13 +47,25 @@ export default async function Image() {
             padding: "40px",
           }}
         >
+          {/* Since 표시 - 상단 */}
+          <div
+            style={{
+              fontSize: 16,
+              color: "rgba(255,255,255,0.7)",
+              letterSpacing: 6,
+              marginBottom: 16,
+            }}
+          >
+            SINCE 1947
+          </div>
+
           {/* 한자 로고 */}
           <div
             style={{
-              fontSize: 120,
+              fontSize: 100,
               fontWeight: 700,
               color: "white",
-              marginBottom: 20,
+              marginBottom: 12,
               textShadow: "0 4px 20px rgba(0,0,0,0.3)",
             }}
           >
@@ -63,10 +75,10 @@ export default async function Image() {
           {/* 메인 타이틀 */}
           <div
             style={{
-              fontSize: 56,
+              fontSize: 52,
               fontWeight: 700,
               color: "white",
-              marginBottom: 16,
+              marginBottom: 12,
               textShadow: "0 2px 10px rgba(0,0,0,0.3)",
             }}
           >
@@ -76,7 +88,7 @@ export default async function Image() {
           {/* 서브 타이틀 */}
           <div
             style={{
-              fontSize: 28,
+              fontSize: 24,
               color: "rgba(255,255,255,0.9)",
               marginBottom: 24,
             }}
@@ -109,7 +121,7 @@ export default async function Image() {
                   padding: "10px 24px",
                   background: "rgba(255,255,255,0.15)",
                   borderRadius: 30,
-                  fontSize: 20,
+                  fontSize: 18,
                   color: "white",
                   border: "1px solid rgba(255,255,255,0.3)",
                 }}
@@ -117,19 +129,6 @@ export default async function Image() {
                 {tag}
               </div>
             ))}
-          </div>
-
-          {/* Since 표시 */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: 40,
-              fontSize: 18,
-              color: "rgba(255,255,255,0.7)",
-              letterSpacing: 4,
-            }}
-          >
-            SINCE 1947
           </div>
         </div>
       </div>
