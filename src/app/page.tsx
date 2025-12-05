@@ -8,6 +8,7 @@ import {
   JournalPreview,
 } from "@/components/sections";
 import { CombinedWinterPopup } from "@/components/CombinedWinterPopup";
+import { FAQJsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "초호펜션 | 초리골164 - 파주 힐링 펜션",
@@ -47,14 +48,17 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="-mt-16">
-      <Hero />
-      <Welcome />
-      <RoomList />
-      <CheckinGuide />
-      <Facilities />
-      <JournalPreview />
-      <CombinedWinterPopup />
-    </main>
+    <>
+      <FAQJsonLd />
+      <main className="-mt-16">
+        <Hero />
+        <Welcome />
+        <RoomList />
+        <CheckinGuide />
+        <Facilities />
+        <JournalPreview />
+        <CombinedWinterPopup />
+      </main>
+    </>
   );
 }

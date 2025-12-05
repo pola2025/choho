@@ -200,6 +200,52 @@ export function HotelRoomJsonLd({ room }: { room: RoomData }) {
   );
 }
 
+// FAQ 스키마
+export function FAQJsonLd() {
+  const faqs = [
+    {
+      question: "체크인/체크아웃 시간은 어떻게 되나요?",
+      answer: "체크인은 오후 3시, 체크아웃은 오전 11시입니다.",
+    },
+    {
+      question: "주차가 가능한가요?",
+      answer: "네, 자체 주차장을 무료로 이용하실 수 있습니다.",
+    },
+    {
+      question: "반려동물 입실이 가능한가요?",
+      answer: "죄송합니다. 반려동물은 입실이 불가합니다.",
+    },
+    {
+      question: "바베큐가 가능한가요?",
+      answer: "네, 바베큐 가능합니다. 야외 바베큐 공간을 이용하실 수 있습니다.",
+    },
+    {
+      question: "추가 인원 요금은 얼마인가요?",
+      answer: "추가 인원 요금은 1박당 15,000원입니다.",
+    },
+  ];
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 // 객실 목록 스키마 (rooms 페이지용)
 export function RoomListJsonLd({ rooms }: { rooms: RoomData[] }) {
   const schema = {
