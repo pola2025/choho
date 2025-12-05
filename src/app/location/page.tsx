@@ -6,6 +6,9 @@ import { CopyButton } from "@/components/ui/CopyButton";
 export const metadata: Metadata = {
   title: "찾아오시는 길 | 초호펜션",
   description: "초호펜션 오시는 길 안내. 경기도 파주시 법원읍 초리골길 134. 서울에서 1시간 거리의 힐링 공간.",
+  alternates: {
+    canonical: "/location",
+  },
 };
 
 export default function LocationPage() {
@@ -15,7 +18,7 @@ export default function LocationPage() {
       <section
         className="relative h-[40vh] min-h-[300px] flex items-center justify-center"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero/442eeb10cfffb.webp')",
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero/location-hero.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#3d4a3d",

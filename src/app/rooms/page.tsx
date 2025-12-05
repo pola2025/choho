@@ -8,6 +8,9 @@ import { rooms } from "@/lib/data";
 export const metadata: Metadata = {
   title: "객실 안내 | 초호펜션",
   description: "초호펜션의 객실을 소개합니다. 호수뷰 객실, Forest, Forest Mini 등 자연과 함께하는 편안한 휴식 공간을 만나보세요.",
+  alternates: {
+    canonical: "/rooms",
+  },
 };
 
 export default function RoomsPage() {
@@ -17,7 +20,7 @@ export default function RoomsPage() {
       <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center bg-neutral-900">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-60"
-          style={{ backgroundImage: "url('/images/hero/04a35b7640f54.webp')" }}
+          style={{ backgroundImage: "url('/images/hero/rooms-hero.webp')" }}
         />
         <div className="relative z-10 text-center text-white px-4">
           <p className="text-sm tracking-widest mb-2 opacity-80">SINCE 1947</p>

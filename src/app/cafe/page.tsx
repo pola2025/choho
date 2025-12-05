@@ -4,6 +4,9 @@ import { Coffee, Leaf, GlassWater, IceCream } from "lucide-react";
 export const metadata: Metadata = {
   title: "초리골164 카페 | 초호펜션",
   description: "넓은 야외공간과 뉴트로한 외관의 카페, 초리골164. 귀여운 거위가족과 함께 이색적인 힐링카페를 만나보세요.",
+  alternates: {
+    canonical: "/cafe",
+  },
 };
 
 // 메뉴 데이터

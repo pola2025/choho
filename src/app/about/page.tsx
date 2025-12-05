@@ -4,6 +4,9 @@ import Image from "next/image";
 export const metadata: Metadata = {
   title: "초호 소개 | 초호펜션",
   description: "1947년부터 이어온 초호의 이야기. 나누고 베푸는 마음으로 초리골에서 실천된 초호정의 기적을 만나보세요.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 // 타임라인 데이터 (이미지 포함)
