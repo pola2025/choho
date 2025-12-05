@@ -75,6 +75,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: BASE_URL,
   },
+  verification: {
+    other: {
+      "naver-site-verification": "84f86e6ecd6a7a63c7262e65236afe34115c947a",
+    },
+  },
   category: "travel",
 };
 
