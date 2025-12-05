@@ -147,3 +147,89 @@ export function BreadcrumbJsonLd({ items }: { items: BreadcrumbItem[] }) {
     />
   );
 }
+
+// HotelRoom 스키마 (객실 정보)
+interface RoomData {
+  name: string;
+  slug: string;
+  description: string;
+  capacity: { standard: number; maximum: number };
+  area: number;
+  thumbnail: string;
+  type: "bed" | "ondol";
+}
+
+export function HotelRoomJsonLd({ room }: { room: RoomData }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "HotelRoom",
+    name: room.name,
+    description: room.description,
+    url: `${BASE_URL}/rooms/${room.slug}`,
+    image: `${BASE_URL}${room.thumbnail}`,
+    occupancy: {
+      "@type": "QuantitativeValue",
+      minValue: 1,
+      maxValue: room.capacity.maximum,
+    },
+    bed: {
+      "@type": "BedDetails",
+      typeOfBed: room.type === "bed" ? "퀸사이즈 침대" : "온돌",
+      numberOfBeds: 1,
+    },
+    floorSize: {
+      "@type": "QuantitativeValue",
+      value: room.area,
+      unitCode: "PY",
+      unitText: "평",
+    },
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: "전자레인지", value: true },
+      { "@type": "LocationFeatureSpecification", name: "냉장고", value: true },
+      { "@type": "LocationFeatureSpecification", name: "전기인덕션", value: true },
+      { "@type": "LocationFeatureSpecification", name: "수건", value: true },
+      { "@type": "LocationFeatureSpecification", name: "어메니티", value: true },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+// 객실 목록 스키마 (rooms 페이지용)
+export function RoomListJsonLd({ rooms }: { rooms: RoomData[] }) {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "초호펜션 객실 목록",
+    description: "초호펜션의 모든 객실 안내",
+    numberOfItems: rooms.length,
+    itemListElement: rooms.map((room, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "HotelRoom",
+        name: room.name,
+        description: room.description,
+        url: `${BASE_URL}/rooms/${room.slug}`,
+        image: `${BASE_URL}${room.thumbnail}`,
+        occupancy: {
+          "@type": "QuantitativeValue",
+          minValue: 1,
+          maxValue: room.capacity.maximum,
+        },
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

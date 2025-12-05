@@ -4,6 +4,7 @@ import { Users, Maximize } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { rooms } from "@/lib/data";
+import { RoomListJsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
   title: "객실 안내 | 초호펜션",
@@ -15,8 +16,10 @@ export const metadata: Metadata = {
 
 export default function RoomsPage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section */}
+    <>
+      <RoomListJsonLd rooms={rooms} />
+      <main className="min-h-screen">
+        {/* Hero Section */}
       <section className="relative h-[40vh] min-h-[300px] flex items-center justify-center bg-neutral-900">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-60"
@@ -115,6 +118,7 @@ export default function RoomsPage() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
