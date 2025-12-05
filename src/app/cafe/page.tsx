@@ -43,16 +43,17 @@ const menuData = {
       { name: "유자차", hot: "7.0", iced: "7.5" },
       { name: "생강차", hot: "7.0", iced: null },
       { name: "레몬차", hot: null, iced: "7.5", badge: "수제" },
-      { name: "레몬콜라다", hot: "8.0", iced: "8.0" },
+      { name: "유자콜라다", hot: "7.5", iced: "8.0" },
     ],
   },
   ade: {
     title: "ADE",
     icon: GlassWater,
+    badge: "수제 레몬청 + 라즈베리",
     items: [
-      { name: "레몬베리에이드", hot: null, iced: "8.0", badge: "수제 베리청 + 자몽청(제주)" },
+      { name: "레몬베리에이드", hot: null, iced: "8.0" },
       { name: "자몽에이드", hot: null, iced: "7.5" },
-      { name: "청포도에이드", hot: null, iced: "8.0", badge: "수제" },
+      { name: "유자베리에이드", hot: null, iced: "8.0" },
       { name: "레몬에이드", hot: null, iced: "8.0", badge: "수제" },
     ],
   },
@@ -63,7 +64,7 @@ const menuData = {
       { name: "아이스크림", price: "7.5" },
       { name: "딸기요거트스무디", price: "8.0" },
       { name: "커피콩빵 (10개)", price: "5.0" },
-      { name: "시루가", price: "0.5" },
+      { name: "샷추가", price: "0.5" },
       { name: "잉어밥/알파카먹이", price: "1.0" },
       { name: "베이커리", price: "별도" },
     ],
@@ -141,7 +142,7 @@ export default function CafePage() {
       <section
         className="relative h-[50vh] min-h-[400px] flex items-center justify-center"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/hero/610df693d3781.webp')",
+          backgroundImage: "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/hero/cafe-hero.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#4a5c4a",
@@ -203,6 +204,61 @@ export default function CafePage() {
                 음료의 양은 1인 1잔입니다.
               </span>
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Animal Friends Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-primary/5">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-primary mb-2">동물친구들</h2>
+            <p className="text-muted-foreground text-sm">
+              초리골164에는 귀여운 거위, 알파카, 토끼 친구들이 살고 있어요
+            </p>
+          </div>
+
+          {/* Animal Gallery */}
+          <div className="grid grid-cols-3 gap-3 mb-8">
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-md group">
+              <img
+                src="/images/cafe/animal-goose.webp"
+                alt="초리골164의 거위"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                <p className="text-white text-sm font-medium text-center">거위</p>
+              </div>
+            </div>
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-md group">
+              <img
+                src="/images/cafe/animal-alpaca.webp"
+                alt="초리골164의 알파카"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                <p className="text-white text-sm font-medium text-center">알파카</p>
+              </div>
+            </div>
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-md group">
+              <img
+                src="/images/cafe/animal-rabbit.webp"
+                alt="초리골164의 토끼"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                <p className="text-white text-sm font-medium text-center">토끼</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Notice */}
+          <div className="relative rounded-2xl overflow-hidden shadow-lg">
+            <img
+              src="/images/cafe/animal-notice.webp"
+              alt="동물친구들은 눈으로만 감상해 주세요 - 동물을 쫓거나 만지면 안 돼요, 과자나 따로 먹이를 주면 안 돼요, 보호자께서는 꼭 자녀분들을 지켜봐 주세요"
+              className="w-full h-auto"
+            />
           </div>
         </div>
       </section>
