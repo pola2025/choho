@@ -46,11 +46,20 @@ export const metadata: Metadata = {
     siteName: "초호펜션",
     locale: "ko_KR",
     type: "website",
+    images: [
+      {
+        url: "/images/og-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "초호펜션 - 파주 초리골의 힐링 펜션",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "초호펜션 | 초리골164",
     description: "서울에서 1시간, 자연 속 힐링 펜션",
+    images: ["/images/og-image.webp"],
   },
   robots: {
     index: true,
