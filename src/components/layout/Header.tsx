@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
-import { Menu, X, Calendar } from "lucide-react";
+import { Menu, X, Calendar, ChevronRight } from "lucide-react";
 import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
+    <>
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 sm:h-24">
@@ -53,5 +54,24 @@ export function Header() {
         </div>
       </nav>
     </header>
+
+    {/* Late Checkout Banner */}
+    <div className="fixed top-20 sm:top-24 left-0 right-0 z-40 bg-[#3d8b40] text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+        <p className="text-sm sm:text-base text-center">
+          <span className="font-bold">Forest, Forest mini</span> 레이트체크아웃 이벤트는 네이버예약 이용시에만 참여 가능합니다.
+        </p>
+        <a
+          href={SITE_CONFIG.social.naver}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 px-4 py-1.5 bg-white text-[#3d8b40] rounded-full text-sm font-bold hover:bg-green-50 transition-colors whitespace-nowrap"
+        >
+          네이버예약 바로가기
+          <ChevronRight className="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+    </>
   );
 }
