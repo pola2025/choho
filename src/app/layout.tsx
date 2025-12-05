@@ -46,20 +46,11 @@ export const metadata: Metadata = {
     siteName: "초호펜션",
     locale: "ko_KR",
     type: "website",
-    images: [
-      {
-        url: "/images/gallery-1.webp",
-        width: 1200,
-        height: 630,
-        alt: "초호펜션 전경",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "초호펜션 | 초리골164",
     description: "서울에서 1시간, 자연 속 힐링 펜션",
-    images: ["/images/gallery-1.webp"],
   },
   robots: {
     index: true,
