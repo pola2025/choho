@@ -1,6 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { TreePine, Clock, Flower2, PawPrint, Leaf } from "lucide-react";
+
+// YouTube 영상 ID
+const YOUTUBE_VIDEO_ID = "j5gMc3QxURA";
 
 const features = [
   {
@@ -34,17 +38,44 @@ const features = [
 ];
 
 export function Welcome() {
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <section className="relative py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-warm" />
+      {/* Background - YouTube 영상 */}
+      {!isMobile && (
+        <div className="absolute inset-0 overflow-hidden">
+          <iframe
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-[56.25vw] pointer-events-none"
+            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}&playsinline=1&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+            title="Background Video"
+            allow="autoplay; encrypted-media"
+            allowFullScreen={false}
+          />
+        </div>
+      )}
+
+      {/* 어두운 오버레이 */}
+      <div className="absolute inset-0 bg-black/30" />
+
+      {/* 모바일: 기존 그라디언트 배경 */}
+      {isMobile && <div className="absolute inset-0 bg-gradient-warm -z-10" />}
 
       {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 opacity-20">
-        <Leaf className="w-32 h-32 text-primary rotate-45" />
+      <div className="absolute top-20 left-10 opacity-10">
+        <Leaf className="w-32 h-32 text-white rotate-45" />
       </div>
-      <div className="absolute bottom-20 right-10 opacity-20">
-        <Leaf className="w-24 h-24 text-primary -rotate-12" />
+      <div className="absolute bottom-20 right-10 opacity-10">
+        <Leaf className="w-24 h-24 text-white -rotate-12" />
       </div>
 
       <div className="relative max-w-6xl mx-auto">
@@ -52,24 +83,24 @@ export function Welcome() {
         <div className="text-center mb-16 sm:mb-20">
           {/* Decorative Line */}
           <div className="flex items-center justify-center gap-4 mb-6">
-            <span className="w-12 h-[2px] bg-gradient-to-r from-transparent to-primary/50" />
-            <Leaf className="w-5 h-5 text-primary" />
-            <span className="w-12 h-[2px] bg-gradient-to-l from-transparent to-primary/50" />
+            <span className="w-12 h-[2px] bg-gradient-to-r from-transparent to-white/50" />
+            <Leaf className="w-5 h-5 text-white" />
+            <span className="w-12 h-[2px] bg-gradient-to-l from-transparent to-white/50" />
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 drop-shadow-lg">
             Welcome to{" "}
-            <span className="gradient-text">초호펜션</span>
+            <span className="text-green-300">초호펜션</span>
           </h2>
 
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-white/90 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
             1947년부터 이어온 초호의 이야기가 담긴 곳,
             <br className="hidden sm:block" />
             바쁜 일상에서 벗어나 자연과 함께하는 특별한 시간을 선물합니다.
           </p>
         </div>
 
-        {/* Features Grid */}
+        {/* Features Grid - 원래 카드 디자인 복원 */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {features.map((feature, index) => (
             <div
@@ -107,7 +138,7 @@ export function Welcome() {
 
         {/* Bottom Decorative Quote */}
         <div className="mt-16 sm:mt-20 text-center">
-          <p className="text-sm sm:text-base text-muted-foreground italic">
+          <p className="text-sm sm:text-base text-white/80 italic drop-shadow-md">
             &ldquo;자연이 주는 평온함 속에서 진정한 휴식을 경험하세요&rdquo;
           </p>
         </div>
