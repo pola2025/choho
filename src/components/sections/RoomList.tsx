@@ -67,7 +67,7 @@ export function RoomList() {
 
         {/* Filter Pills */}
         <div className="flex justify-center mb-10 sm:mb-12">
-          <div className="inline-flex p-1.5 bg-neutral-100 rounded-full shadow-soft border border-neutral-200">
+          <div className="inline-flex p-1 sm:p-1.5 bg-neutral-100 rounded-full shadow-soft border border-neutral-200">
             {filters.map((filter) => {
               const Icon = filter.icon;
               return (
@@ -75,13 +75,13 @@ export function RoomList() {
                   key={filter.id}
                   onClick={() => setActiveFilter(filter.id)}
                   className={cn(
-                    "flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-full transition-all duration-300",
+                    "flex items-center gap-1 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold rounded-full transition-all duration-300 whitespace-nowrap",
                     activeFilter === filter.id
                       ? "bg-green-600 text-white shadow-md"
                       : "text-neutral-700 hover:text-green-700 hover:bg-green-50"
                   )}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span>{filter.label}</span>
                 </button>
               );
