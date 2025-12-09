@@ -57,9 +57,9 @@ export function RoomList() {
                 href={SITE_CONFIG.social.naver}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 px-8 py-4 text-lg font-bold text-green-800 bg-green-100/80 backdrop-blur-md border border-green-200/50 rounded-full shadow-lg hover:bg-green-200/90 hover:shadow-xl hover:scale-105 transition-all duration-300"
+                className="group inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-3 sm:py-4 text-sm sm:text-lg font-bold text-green-800 bg-green-100/80 backdrop-blur-md border border-green-200/50 rounded-full shadow-lg hover:bg-green-200/90 hover:shadow-xl hover:scale-105 transition-all duration-300 whitespace-nowrap"
               >
-                <Calendar className="w-6 h-6 group-hover:rotate-12 transition-transform" />
+                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 group-hover:rotate-12 transition-transform" />
                 <span>실시간 예약 확인</span>
               </a>
           </div>
