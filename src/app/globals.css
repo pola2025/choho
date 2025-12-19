@@ -207,6 +207,13 @@
   to { stroke-dashoffset: 0; }
 }
 
+@keyframes fall {
+  0% { transform: translateY(-10px); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(520px); opacity: 0; }
+}
+
 /* ============================================
  * 애니메이션 유틸리티 클래스
  * ============================================ */

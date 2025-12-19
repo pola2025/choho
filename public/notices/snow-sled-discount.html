@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=800">
+  <title>눈썰매장 입장권 할인</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      width: 800px;
+      height: 800px;
+    }
+
+    body {
+      width: 800px;
+      height: 800px;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 50%, #90CAF9 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 눈 내리는 효과 */
+    .snowflakes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .snowflake {
+      position: absolute;
+      color: white;
+      font-size: 1.5rem;
+      text-shadow: 0 0 10px rgba(255,255,255,0.8);
+      animation: fall 8s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-20px) rotate(0deg); }
+      100% { transform: translateY(820px) rotate(360deg); }
+    }
+
+    .snowflake:nth-child(1) { left: 5%; animation-delay: 0s; font-size: 1.2rem; }
+    .snowflake:nth-child(2) { left: 15%; animation-delay: 1s; font-size: 1.8rem; }
+    .snowflake:nth-child(3) { left: 25%; animation-delay: 2s; font-size: 1rem; }
+    .snowflake:nth-child(4) { left: 35%; animation-delay: 0.5s; font-size: 1.5rem; }
+    .snowflake:nth-child(5) { left: 45%; animation-delay: 1.5s; font-size: 2rem; }
+    .snowflake:nth-child(6) { left: 55%; animation-delay: 2.5s; font-size: 1.3rem; }
+    .snowflake:nth-child(7) { left: 65%; animation-delay: 0.8s; font-size: 1.6rem; }
+    .snowflake:nth-child(8) { left: 75%; animation-delay: 1.8s; font-size: 1.1rem; }
+    .snowflake:nth-child(9) { left: 85%; animation-delay: 2.2s; font-size: 1.7rem; }
+    .snowflake:nth-child(10) { left: 95%; animation-delay: 0.3s; font-size: 1.4rem; }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 상단 배지 */
+    .badge {
+      background: #FF5722;
+      color: white;
+      padding: 12px 35px;
+      border-radius: 30px;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(255,87,34,0.4);
+    }
+
+    /* 눈썰매 아이콘 */
+    .sled-icon {
+      font-size: 140px;
+      margin-bottom: 30px;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+    }
+
+    /* 메인 타이틀 */
+    .title {
+      font-size: 60px;
+      font-weight: 800;
+      color: #1565C0;
+      text-align: center;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 0 white, -2px -2px 0 white, 2px -2px 0 white, -2px 2px 0 white;
+      line-height: 1.2;
+    }
+
+    /* 설명 박스 */
+    .desc-box {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 50px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      text-align: center;
+      max-width: 650px;
+    }
+
+    .desc-text {
+      font-size: 26px;
+      color: #333;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .highlight {
+      color: #1565C0;
+      font-weight: 700;
+    }
+
+    /* 로고 */
+    .logo {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #1565C0;
+    }
+
+    /* 산 배경 */
+    .mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      z-index: 1;
+    }
+
+    .mountain {
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+    }
+
+    .mountain-1 {
+      left: -50px;
+      border-width: 0 200px 180px 200px;
+      border-color: transparent transparent #E8F5E9 transparent;
+    }
+
+    .mountain-2 {
+      left: 250px;
+      border-width: 0 180px 150px 180px;
+      border-color: transparent transparent #C8E6C9 transparent;
+    }
+
+    .mountain-3 {
+      right: -100px;
+      border-width: 0 220px 200px 220px;
+      border-color: transparent transparent #E8F5E9 transparent;
+    }
+  </style>
+</head>
+<body>
+  <!-- 눈 효과 -->
+  <div class="snowflakes">
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+    <div class="snowflake">❅</div>
+    <div class="snowflake">❆</div>
+    <div class="snowflake">❄</div>
+  </div>
+
+  <!-- 산 배경 -->
+  <div class="mountains">
+    <div class="mountain mountain-1"></div>
+    <div class="mountain mountain-2"></div>
+    <div class="mountain mountain-3"></div>
+  </div>
+
+  <div class="container">
+    <div class="badge">🎿 이벤트</div>
+
+    <div class="sled-icon">🛷</div>
+
+    <h1 class="title">눈썰매장 입장권 할인</h1>
+
+    <div class="desc-box">
+      <p class="desc-text">
+        <span class="highlight">초호펜션</span> 이용고객님께<br>
+        <span class="highlight">초리골 눈썰매장</span> 입장권을<br>
+        할인된 가격으로 제공해드립니다!
+      </p>
+    </div>
+
+    <div class="logo">초호펜션</div>
+  </div>
+</body>
+</html>

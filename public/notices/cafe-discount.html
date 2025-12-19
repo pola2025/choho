@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=800">
+  <title>카페 음료 10% 할인</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 800px;
+      height: 800px;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 50%, #FFE082 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 커피빈 패턴 */
+    .coffee-beans {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.1;
+    }
+
+    .bean {
+      position: absolute;
+      font-size: 40px;
+      color: #4E342E;
+    }
+
+    .bean:nth-child(1) { top: 5%; left: 10%; transform: rotate(15deg); }
+    .bean:nth-child(2) { top: 15%; right: 15%; transform: rotate(-20deg); }
+    .bean:nth-child(3) { top: 70%; left: 5%; transform: rotate(45deg); }
+    .bean:nth-child(4) { top: 80%; right: 10%; transform: rotate(-30deg); }
+    .bean:nth-child(5) { bottom: 15%; left: 20%; transform: rotate(60deg); }
+    .bean:nth-child(6) { top: 40%; left: 3%; transform: rotate(-45deg); }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 상단 배지 */
+    .badge {
+      background: #6D4C41;
+      color: white;
+      padding: 12px 35px;
+      border-radius: 30px;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(109,76,65,0.4);
+    }
+
+    /* 커피 아이콘 그룹 */
+    .icon-group {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .icon-item {
+      font-size: 90px;
+      filter: drop-shadow(0 8px 15px rgba(0,0,0,0.15));
+    }
+
+    /* 메인 타이틀 */
+    .title {
+      font-size: 56px;
+      font-weight: 800;
+      color: #4E342E;
+      text-align: center;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    /* 할인 강조 */
+    .discount-highlight {
+      font-size: 80px;
+      font-weight: 900;
+      color: #D84315;
+      margin-bottom: 30px;
+    }
+
+    .discount-highlight span {
+      font-size: 50px;
+    }
+
+    /* 설명 박스 */
+    .desc-box {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 50px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+      text-align: center;
+      max-width: 650px;
+    }
+
+    .desc-text {
+      font-size: 26px;
+      color: #333;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    .highlight {
+      color: #D84315;
+      font-weight: 700;
+    }
+
+    .cafe-name {
+      color: #6D4C41;
+      font-weight: 700;
+    }
+
+    /* 로고 */
+    .logo {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #5D4037;
+    }
+
+    /* 장식 원 */
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .deco-1 {
+      width: 200px;
+      height: 200px;
+      top: -50px;
+      right: -50px;
+    }
+
+    .deco-2 {
+      width: 150px;
+      height: 150px;
+      bottom: -30px;
+      left: -30px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 장식 -->
+  <div class="deco-circle deco-1"></div>
+  <div class="deco-circle deco-2"></div>
+
+  <!-- 커피빈 패턴 -->
+  <div class="coffee-beans">
+    <span class="bean">☕</span>
+    <span class="bean">☕</span>
+    <span class="bean">☕</span>
+    <span class="bean">☕</span>
+    <span class="bean">☕</span>
+    <span class="bean">☕</span>
+  </div>
+
+  <div class="container">
+    <div class="badge">☕ 이벤트</div>
+
+    <div class="icon-group">
+      <span class="icon-item">🥤</span>
+      <span class="icon-item">☕</span>
+      <span class="icon-item">🧋</span>
+    </div>
+
+    <h1 class="title">카페 음료</h1>
+    <div class="discount-highlight">10<span>%</span> 할인</div>
+
+    <div class="desc-box">
+      <p class="desc-text">
+        <span class="highlight">눈썰매장 팔찌</span> 지참시<br>
+        <span class="cafe-name">초리골164 베이커리 카페</span>에서<br>
+        음료 & 커피 <span class="highlight">10% 할인!</span>
+      </p>
+    </div>
+
+    <div class="logo">초호펜션</div>
+  </div>
+</body>
+</html>

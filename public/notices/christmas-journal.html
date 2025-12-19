@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=800">
+  <title>크리스마스 이벤트</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 800px;
+      height: 800px;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(180deg, #1B5E20 0%, #2E7D32 40%, #388E3C 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 별 효과 */
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      color: #FFD54F;
+      animation: twinkle 2s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .star:nth-child(1) { top: 8%; left: 10%; font-size: 20px; animation-delay: 0s; }
+    .star:nth-child(2) { top: 12%; right: 15%; font-size: 16px; animation-delay: 0.5s; }
+    .star:nth-child(3) { top: 20%; left: 25%; font-size: 14px; animation-delay: 1s; }
+    .star:nth-child(4) { top: 15%; right: 30%; font-size: 18px; animation-delay: 0.3s; }
+    .star:nth-child(5) { top: 25%; left: 8%; font-size: 12px; animation-delay: 0.8s; }
+    .star:nth-child(6) { top: 5%; left: 50%; font-size: 24px; animation-delay: 0.2s; }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 상단 배지 */
+    .badge {
+      background: #C62828;
+      color: white;
+      padding: 12px 35px;
+      border-radius: 30px;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 15px rgba(198,40,40,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 크리스마스 아이콘 */
+    .xmas-icons {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .xmas-icon {
+      font-size: 80px;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+    }
+
+    /* 메인 타이틀 */
+    .main-title {
+      font-size: 64px;
+      font-weight: 900;
+      color: white;
+      text-align: center;
+      margin-bottom: 40px;
+      line-height: 1.2;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+    }
+
+    /* 컨텐츠 카드 */
+    .content-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 24px;
+      padding: 40px 50px;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+      text-align: center;
+      max-width: 650px;
+    }
+
+    .gift-icon {
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+
+    .desc-text {
+      font-size: 26px;
+      color: #333;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    .highlight {
+      color: #C62828;
+      font-weight: 700;
+    }
+
+    .cafe-name {
+      color: #1B5E20;
+      font-weight: 700;
+    }
+
+    .gift-name {
+      display: inline-block;
+      background: #FFEBEE;
+      color: #C62828;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      margin-top: 15px;
+      font-size: 24px;
+    }
+
+    /* 로고 */
+    .logo {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #A5D6A7;
+    }
+
+    /* 장식 */
+    .ornament {
+      position: absolute;
+      font-size: 50px;
+      opacity: 0.6;
+    }
+
+    .ornament-1 { bottom: 100px; left: 30px; }
+    .ornament-2 { bottom: 80px; right: 50px; }
+    .ornament-3 { top: 100px; right: 30px; }
+
+    /* 하단 눈 */
+    .snow-ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(180deg, transparent 0%, rgba(255,255,255,0.3) 100%);
+    }
+  </style>
+</head>
+<body>
+  <!-- 별 효과 -->
+  <div class="stars">
+    <span class="star">⭐</span>
+    <span class="star">✨</span>
+    <span class="star">⭐</span>
+    <span class="star">✨</span>
+    <span class="star">⭐</span>
+    <span class="star">🌟</span>
+  </div>
+
+  <!-- 장식 -->
+  <span class="ornament ornament-1">🎁</span>
+  <span class="ornament ornament-2">🔔</span>
+  <span class="ornament ornament-3">🎀</span>
+
+  <!-- 하단 눈 -->
+  <div class="snow-ground"></div>
+
+  <div class="container">
+    <div class="badge">
+      <span>🎅</span>
+      <span>이벤트</span>
+    </div>
+
+    <div class="xmas-icons">
+      <span class="xmas-icon">🎄</span>
+      <span class="xmas-icon">🦙</span>
+      <span class="xmas-icon">🎁</span>
+    </div>
+
+    <h1 class="main-title">크리스마스 이벤트</h1>
+
+    <div class="content-card">
+      <div class="gift-icon">🎁</div>
+      <p class="desc-text">
+        <span class="highlight">크리스마스</span>에<br>
+        <span class="cafe-name">초리골164 베이커리 카페</span><br>
+        이용고객님께<br>
+      </p>
+      <div class="gift-name">🦙 알파카 미니피규어 키링 증정!</div>
+    </div>
+
+    <div class="logo">초호펜션</div>
+  </div>
+</body>
+</html>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Snowflake, AlertTriangle, Phone, Coffee, Ticket, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, Snowflake, AlertTriangle, Phone, Coffee, Ticket, ChevronLeft, ChevronRight, Clock } from "lucide-react";
 
 export function CombinedWinterPopup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,11 +38,11 @@ export function CombinedWinterPopup() {
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % 3);
+    setCurrentSlide((prev) => (prev + 1) % 4);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + 3) % 3);
+    setCurrentSlide((prev) => (prev - 1 + 4) % 4);
   };
 
   if (!isOpen) return null;
@@ -83,7 +83,7 @@ export function CombinedWinterPopup() {
   );
 
   const WinterNoticeCard = () => (
-    <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden h-full">
+    <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden h-full mt-6 md:mt-7">
       <div
         className="absolute inset-0 opacity-10"
         style={{
@@ -156,46 +156,60 @@ export function CombinedWinterPopup() {
   );
 
   const SledTicketCard = () => (
-    <div className="relative bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden h-full">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }} />
+    <div className="relative bg-gradient-to-b from-sky-400 via-sky-500 to-blue-700 rounded-xl sm:rounded-2xl shadow-2xl overflow-visible h-full mt-6 md:mt-7">
+      {/* 눈 내리는 효과 */}
+      <div className="absolute inset-0 rounded-xl sm:rounded-2xl overflow-hidden pointer-events-none">
+        <div className="absolute w-2 h-2 bg-white rounded-full opacity-80 animate-[fall_3s_linear_infinite]" style={{left: '10%', animationDelay: '0s'}} />
+        <div className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-60 animate-[fall_4s_linear_infinite]" style={{left: '25%', animationDelay: '1s'}} />
+        <div className="absolute w-2 h-2 bg-white rounded-full opacity-70 animate-[fall_3.5s_linear_infinite]" style={{left: '40%', animationDelay: '0.5s'}} />
+        <div className="absolute w-1 h-1 bg-white rounded-full opacity-80 animate-[fall_4.5s_linear_infinite]" style={{left: '55%', animationDelay: '2s'}} />
+        <div className="absolute w-2 h-2 bg-white rounded-full opacity-60 animate-[fall_3s_linear_infinite]" style={{left: '70%', animationDelay: '1.5s'}} />
+        <div className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-70 animate-[fall_4s_linear_infinite]" style={{left: '85%', animationDelay: '0.8s'}} />
+        <div className="absolute w-1 h-1 bg-white rounded-full opacity-90 animate-[fall_3.2s_linear_infinite]" style={{left: '15%', animationDelay: '2.5s'}} />
+        <div className="absolute w-2 h-2 bg-white rounded-full opacity-50 animate-[fall_5s_linear_infinite]" style={{left: '60%', animationDelay: '0.3s'}} />
       </div>
-      <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
+      {/* 산/눈썰매장 배경 */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 rounded-b-xl sm:rounded-b-2xl overflow-hidden">
+        <div className="absolute bottom-0 left-0 w-0 h-0 border-l-[100px] border-r-[100px] border-b-[80px] border-l-transparent border-r-transparent border-b-white/30" style={{left: '-20px'}} />
+        <div className="absolute bottom-0 w-0 h-0 border-l-[80px] border-r-[80px] border-b-[60px] border-l-transparent border-r-transparent border-b-white/20" style={{left: '60px'}} />
+        <div className="absolute bottom-0 right-0 w-0 h-0 border-l-[120px] border-r-[120px] border-b-[90px] border-l-transparent border-r-transparent border-b-white/30" style={{right: '-40px'}} />
+      </div>
+      {/* 상단 중앙 아이콘 - 박스 바깥 */}
+      <div className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 z-20">
+        <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-sky-500">
+          <span className="text-2xl md:text-3xl">🛷</span>
+        </div>
+      </div>
+      <div className="relative z-10 p-4 md:p-6 pt-8 md:pt-10 h-full flex flex-col justify-between">
         <div>
-          <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-              <Ticket className="w-6 h-6 md:w-7 md:h-7 text-white" />
-            </div>
-            <div className="flex-1">
-              <span className="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-yellow-400 text-yellow-900 text-xs md:text-sm font-bold rounded-full mb-1">
-                할인 혜택
-              </span>
-              <h2 className="text-lg md:text-2xl font-bold text-white leading-tight">
-                눈썰매장 입장권 할인
-              </h2>
-            </div>
+          <div className="text-center mb-3 md:mb-4">
+            <span className="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-yellow-400 text-yellow-900 text-xs md:text-sm font-bold rounded-full mb-1">
+              ❄️ 겨울 할인
+            </span>
+            <h2 className="text-lg md:text-2xl font-bold text-white leading-tight drop-shadow-lg">
+              눈썰매장 입장권 할인
+            </h2>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 mb-3 md:mb-4">
-            <p className="text-white font-medium text-base md:text-lg mb-2">
-              초호펜션 이용고객
+          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 md:p-5 mb-3 md:mb-4 shadow-lg">
+            <p className="text-blue-700 font-bold text-base md:text-lg mb-2 text-center">
+              🎿 초호펜션 이용고객
             </p>
-            <p className="text-white/90 text-sm md:text-base leading-relaxed">
+            <p className="text-neutral-700 text-sm md:text-base leading-relaxed text-center font-medium">
               초리골 눈썰매장 입장권을<br/>
-              <span className="text-yellow-300 font-bold">할인된 가격</span>으로 구매하실 수 있습니다!
+              <span className="text-blue-600 font-bold text-lg">할인된 가격</span>으로<br/>
+              구매할 수 있습니다!
             </p>
           </div>
         </div>
         <div className="space-y-2 md:space-y-3">
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2.5 md:p-3 text-center">
-            <p className="text-white/90 text-xs md:text-sm">
-              관리자 연락 또는 펜션예약시 신청바랍니다
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2.5 md:p-3 text-center shadow">
+            <p className="text-neutral-700 text-xs md:text-sm font-medium">
+              ⛷️ 관리자 연락 또는 펜션 예약시<br/>신청바랍니다
             </p>
           </div>
           <button
             onClick={handleCall}
-            className="w-full py-3 md:py-4 bg-white text-blue-600 font-bold rounded-xl text-center hover:bg-white/90 transition-colors flex items-center justify-center gap-2 text-sm md:text-base"
+            className="w-full py-3 md:py-4 bg-white text-blue-600 font-bold rounded-xl text-center hover:bg-white/90 transition-colors flex items-center justify-center gap-2 text-sm md:text-base shadow-lg"
           >
             <Phone className="w-4 h-4 md:w-5 md:h-5" />
             지금 신청하기
@@ -205,48 +219,117 @@ export function CombinedWinterPopup() {
     </div>
   );
 
-  const CafeDiscountCard = () => (
-    <div className="relative bg-gradient-to-br from-amber-600 to-orange-700 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden h-full">
-      <div className="absolute inset-0 opacity-20">
+  const LateCheckinCard = () => (
+    <div className="relative bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl sm:rounded-2xl shadow-2xl overflow-visible h-full mt-6 md:mt-7">
+      {/* 배경 패턴 */}
+      <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`,
         }} />
       </div>
-      <div className="relative z-10 p-4 md:p-6 h-full flex flex-col justify-between">
+      {/* 상단 중앙 아이콘 - 박스 바깥 */}
+      <div className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 z-20">
+        <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg animate-pulse border-4 border-emerald-500">
+          <Clock className="w-6 h-6 md:w-7 md:h-7 text-emerald-600" />
+        </div>
+      </div>
+      <div className="relative z-10 p-4 md:p-6 pt-8 md:pt-10 h-full flex flex-col justify-between">
         <div>
-          <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-4">
-            <div className="w-12 h-12 md:w-14 md:h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-              <Coffee className="w-6 h-6 md:w-7 md:h-7 text-white" />
-            </div>
-            <div className="flex-1">
-              <span className="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-yellow-400 text-yellow-900 text-xs md:text-sm font-bold rounded-full mb-1">
-                카페 할인
-              </span>
-              <h2 className="text-lg md:text-2xl font-bold text-white leading-tight">
-                음료 & 커피 10% 할인
-              </h2>
-            </div>
+          <div className="text-center mb-3 md:mb-4">
+            <span className="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-red-500 text-white text-xs md:text-sm font-bold rounded-full mb-1">
+              📢 필독
+            </span>
+            <h2 className="text-lg md:text-2xl font-bold text-white leading-tight">
+              입실시간 안내
+            </h2>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-5 mb-3 md:mb-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Snowflake className="w-5 h-5 text-white/80" />
-              <p className="text-white font-medium text-base md:text-lg">
-                눈내리는 초리골 눈썰매장
+
+          {/* 시간 강조 박스 */}
+          <div className="bg-white rounded-xl p-4 md:p-5 mb-3 md:mb-4 text-center shadow-lg">
+            <p className="text-emerald-600 text-sm md:text-base font-medium mb-1">저녁</p>
+            <p className="text-5xl md:text-6xl font-black text-red-500 tracking-tight">
+              18:00
+            </p>
+            <p className="text-neutral-600 text-sm md:text-base font-medium mt-1">이후 입실 시</p>
+          </div>
+
+          {/* 경고 박스 */}
+          <div className="bg-white rounded-xl p-3 md:p-4 mb-3 md:mb-4 shadow-lg">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 text-red-500" />
+              <p className="text-red-600 font-bold text-lg md:text-xl">
+                관리자 사전 연락 필수!
               </p>
             </div>
-            <p className="text-white/90 text-sm md:text-base leading-relaxed">
-              눈썰매장 <span className="text-yellow-300 font-bold">팔찌 지참</span>시<br/>
-              초리골164베이커리 카페에서<br/>
-              음료&커피 <span className="text-yellow-300 font-bold text-xl md:text-2xl">10% 할인!</span>
+            <p className="text-neutral-700 text-sm md:text-base text-center font-medium leading-relaxed">
+              저녁 6시 이후 입실 예정이신<br/>
+              고객님께서는 반드시 사전에<br/>
+              미리 연락바랍니다.
             </p>
           </div>
         </div>
-        <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 md:p-4 text-center">
+
+        <button
+          onClick={handleCall}
+          className="w-full py-3 md:py-4 bg-white text-emerald-600 font-bold rounded-xl text-center hover:bg-white/90 transition-colors flex items-center justify-center gap-2 text-sm md:text-base shadow-lg"
+        >
+          <Phone className="w-4 h-4 md:w-5 md:h-5" />
+          010-7932-0029
+        </button>
+      </div>
+    </div>
+  );
+
+  const CafeDiscountCard = () => (
+    <div className="relative bg-gradient-to-b from-sky-400 via-cyan-500 to-blue-600 rounded-xl sm:rounded-2xl shadow-2xl overflow-visible h-full mt-6 md:mt-7">
+      {/* 눈 내리는 효과 */}
+      <div className="absolute inset-0 rounded-xl sm:rounded-2xl overflow-hidden pointer-events-none">
+        <div className="absolute w-2 h-2 bg-white rounded-full opacity-80 animate-[fall_3s_linear_infinite]" style={{left: '15%', animationDelay: '0.2s'}} />
+        <div className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-60 animate-[fall_4s_linear_infinite]" style={{left: '30%', animationDelay: '1.2s'}} />
+        <div className="absolute w-2 h-2 bg-white rounded-full opacity-70 animate-[fall_3.5s_linear_infinite]" style={{left: '50%', animationDelay: '0.7s'}} />
+        <div className="absolute w-1 h-1 bg-white rounded-full opacity-80 animate-[fall_4.5s_linear_infinite]" style={{left: '65%', animationDelay: '2.2s'}} />
+        <div className="absolute w-2 h-2 bg-white rounded-full opacity-60 animate-[fall_3s_linear_infinite]" style={{left: '80%', animationDelay: '1.8s'}} />
+        <div className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-70 animate-[fall_4s_linear_infinite]" style={{left: '5%', animationDelay: '1s'}} />
+      </div>
+      {/* 상단 중앙 아이콘 - 박스 바깥 */}
+      <div className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 z-20">
+        <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-cyan-500">
+          <span className="text-2xl md:text-3xl">☕</span>
+        </div>
+      </div>
+      <div className="relative z-10 p-4 md:p-6 pt-8 md:pt-10 h-full flex flex-col justify-between">
+        <div>
+          <div className="text-center mb-3 md:mb-4">
+            <span className="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-yellow-400 text-yellow-900 text-xs md:text-sm font-bold rounded-full mb-1">
+              ❄️ 카페 할인
+            </span>
+            <h2 className="text-lg md:text-2xl font-bold text-white leading-tight drop-shadow-lg">
+              음료 & 커피 10% 할인
+            </h2>
+          </div>
+          {/* 팔찌 디자인 */}
+          <div className="bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-400 rounded-full p-1 mb-3 md:mb-4 shadow-lg">
+            <div className="bg-gradient-to-r from-orange-500 via-amber-500 to-orange-500 rounded-full py-3 md:py-4 px-4 md:px-6 text-center border-2 border-dashed border-white/50">
+              <p className="text-white font-bold text-sm md:text-base drop-shadow">
+                🎿 눈썰매장 입장 팔찌
+              </p>
+            </div>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 md:p-5 border border-white/30 text-center">
+            <p className="text-white font-medium text-base md:text-lg mb-1">
+              팔찌 지참시
+            </p>
+            <p className="text-yellow-300 font-black text-3xl md:text-4xl drop-shadow-lg">
+              10% 할인!
+            </p>
+            <p className="text-white/90 text-xs md:text-sm mt-2">
+              초리골164 베이커리 카페
+            </p>
+          </div>
+        </div>
+        <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 md:p-4 text-center border border-white/20">
           <p className="text-white text-sm md:text-base font-medium">
-            🎿 눈썰매장 팔찌를 보여주세요!
-          </p>
-          <p className="text-white/80 text-xs md:text-sm mt-1">
-            초리골164베이커리 카페에서 사용 가능
+            ☕ 팔찌를 보여주세요!
           </p>
         </div>
       </div>
@@ -254,6 +337,7 @@ export function CombinedWinterPopup() {
   );
 
   const popupCards = [
+    <LateCheckinCard key="late-checkin" />,
     <SledTicketCard key="sled-ticket" />,
     <CafeDiscountCard key="cafe-discount" />,
     <WinterNoticeCard key="winter-notice" />,
@@ -270,24 +354,25 @@ export function CombinedWinterPopup() {
         <X className="w-5 h-5 text-neutral-700" />
       </button>
 
-      {/* Desktop: 3 columns Grid */}
-      <div className="hidden md:grid md:grid-cols-3 gap-5 max-w-7xl w-full animate-in fade-in zoom-in duration-300 my-auto px-4">
+      {/* Desktop: 4 columns Grid */}
+      <div className="hidden md:grid md:grid-cols-4 gap-4 max-w-7xl w-full animate-in fade-in zoom-in duration-300 my-auto px-4">
         <div className="h-[520px]">{popupCards[0]}</div>
         <div className="h-[520px]">{popupCards[1]}</div>
         <div className="h-[520px]">{popupCards[2]}</div>
+        <div className="h-[520px]">{popupCards[3]}</div>
       </div>
 
       {/* Mobile: Slider */}
-      <div className="md:hidden w-full max-w-sm mx-auto my-auto">
+      <div className="md:hidden w-full max-w-sm mx-auto my-4 py-6 overflow-x-hidden overflow-y-visible">
         {/* Slide Container */}
-        <div className="relative">
-          <div className="overflow-hidden rounded-2xl">
+        <div className="relative pt-8">
+          <div className="overflow-visible">
             <div
               className="flex transition-transform duration-300 ease-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {popupCards.map((card, index) => (
-                <div key={index} className="w-full flex-shrink-0 h-[420px]">
+                <div key={index} className="w-full flex-shrink-0 h-[480px]">
                   {card}
                 </div>
               ))}
@@ -313,7 +398,7 @@ export function CombinedWinterPopup() {
 
         {/* Dots Indicator */}
         <div className="flex justify-center gap-2 mt-3">
-          {[0, 1, 2].map((index) => (
+          {[0, 1, 2, 3].map((index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}

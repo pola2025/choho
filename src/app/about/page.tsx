@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Image from "next/image";
+import ChorigolHistorySection, { ChorigolHistory, defaultHistoryData } from "@/components/ChorigolHistorySection";
 
 export const metadata: Metadata = {
   title: "초호 소개 | 초호펜션",
@@ -8,6 +9,55 @@ export const metadata: Metadata = {
     canonical: "/about",
   },
 };
+
+// 에어테이블에서 초리골 역사 데이터 가져오기
+async function getChorigolHistory(): Promise<ChorigolHistory[]> {
+  const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
+  const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
+  const AIRTABLE_TABLE_ID = process.env.AIRTABLE_CHORIGOL_HISTORY_TABLE_ID;
+
+  // 환경 변수가 없으면 기본 데이터 반환
+  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
+    return defaultHistoryData;
+  }
+
+  try {
+    const filterFormula = encodeURIComponent("{isPublished}=TRUE()");
+    const response = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?filterByFormula=${filterFormula}&sort[0][field]=order&sort[0][direction]=asc`,
+      {
+        headers: {
+          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        next: { revalidate: 3600 }, // 1시간 캐시
+      }
+    );
+
+    if (!response.ok) return defaultHistoryData;
+
+    const data = await response.json();
+
+    if (!data.records || data.records.length === 0) {
+      return defaultHistoryData;
+    }
+
+    return data.records.map((record: { id: string; fields: Record<string, unknown> }) => ({
+      id: record.id,
+      year: record.fields.year || "",
+      title: record.fields.title || "",
+      content: record.fields.content || "",
+      source: record.fields.source || "",
+      sourceUrl: record.fields.sourceUrl || "",
+      category: record.fields.category || "history",
+      order: record.fields.order || 0,
+      viewCount: (record.fields.viewCount as number) || 0,
+      isPublished: record.fields.isPublished ?? true,
+    }));
+  } catch {
+    return defaultHistoryData;
+  }
+}
 
 // 타임라인 데이터 (이미지 포함)
 const timelineData = [
@@ -52,7 +102,7 @@ const timelineData = [
     image: "/images/history/history-6-cafe.webp",
   },
   {
-    year: "2021",
+    year: "2025",
     title: "힐링 공간으로 새롭게 태어나다",
     description:
       "전세계적인 팬데믹 속에서도 꾸준히 초호를 가꿔왔습니다. 카페와 펜션을 이용하는 모든 고객분들에게 편안한 휴식과 쉼의 가치를 전달해드리며 보람을 느끼고 있습니다.",
@@ -104,7 +154,9 @@ function TimelineItem({
   );
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const chorigolHistory = await getChorigolHistory();
+
   return (
     <main className="-mt-16">
       {/* Hero Section */}
@@ -176,7 +228,7 @@ export default function AboutPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-emerald-600">2021</h3>
+                <h3 className="text-2xl font-bold text-emerald-600">2025</h3>
               </div>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 초리골 숲의 기운을 담아
@@ -292,6 +344,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Chorigol History Section - 초리골 역사 기록 */}
+      <ChorigolHistorySection data={chorigolHistory} />
     </main>
   );
 }

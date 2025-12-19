@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>초리골 역사 에어테이블 설정 가이드</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .copy-btn:active { transform: scale(0.95); }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen py-8 px-4">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-2xl shadow-sm border p-6 mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">초리골 역사 에어테이블 설정 가이드</h1>
+      <p class="text-gray-600">초호펜션 웹사이트의 초리골 역사 기록을 에어테이블로 관리하기 위한 설정 가이드입니다.</p>
+    </div>
+
+    <!-- Progress Checklist -->
+    <div class="bg-white rounded-2xl shadow-sm border p-6 mb-6">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">진행 체크리스트</h2>
+      <div class="space-y-3">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" class="w-5 h-5 rounded border-gray-300">
+          <span class="text-gray-700">1단계: 에어테이블 테이블 생성</span>
+        </label>
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" class="w-5 h-5 rounded border-gray-300">
+          <span class="text-gray-700">2단계: 필드 구조 설정</span>
+        </label>
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" class="w-5 h-5 rounded border-gray-300">
+          <span class="text-gray-700">3단계: 환경 변수 설정</span>
+        </label>
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" class="w-5 h-5 rounded border-gray-300">
+          <span class="text-gray-700">4단계: 초기 데이터 입력</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="bg-white rounded-2xl shadow-sm border p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">1</div>
+        <h2 class="text-lg font-bold text-gray-900">에어테이블 테이블 생성</h2>
+      </div>
+
+      <div class="space-y-4 text-gray-700">
+        <p>1. <a href="https://airtable.com" target="_blank" class="text-blue-600 hover:underline">Airtable</a>에 로그인합니다.</p>
+        <p>2. 기존 "choho" Base를 엽니다.</p>
+        <p>3. <strong>+ Add a table</strong> 버튼을 클릭합니다.</p>
+        <p>4. 테이블 이름을 입력합니다:</p>
+
+        <div class="bg-gray-100 rounded-lg p-3 flex items-center justify-between">
+          <code class="text-sm font-mono text-gray-800">ChorigolHistory</code>
+          <button onclick="copyText('ChorigolHistory')" class="copy-btn bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">복사</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="bg-white rounded-2xl shadow-sm border p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">2</div>
+        <h2 class="text-lg font-bold text-gray-900">필드 구조 설정</h2>
+      </div>
+
+      <p class="text-gray-600 mb-4">다음 필드들을 생성합니다. (필드명을 정확히 입력하세요)</p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="text-left p-3 font-semibold">필드명</th>
+              <th class="text-left p-3 font-semibold">타입</th>
+              <th class="text-left p-3 font-semibold">설명</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">year</code></td>
+              <td class="p-3">Single line text</td>
+              <td class="p-3">연도 (예: "1947년", "현재")</td>
+            </tr>
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">title</code></td>
+              <td class="p-3">Single line text</td>
+              <td class="p-3">기사 제목</td>
+            </tr>
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">content</code></td>
+              <td class="p-3">Long text</td>
+              <td class="p-3">기사 본문 내용</td>
+            </tr>
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">source</code></td>
+              <td class="p-3">Single line text</td>
+              <td class="p-3">출처명 (예: "파주위키")</td>
+            </tr>
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">sourceUrl</code></td>
+              <td class="p-3">URL</td>
+              <td class="p-3">출처 URL 링크</td>
+            </tr>
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">category</code></td>
+              <td class="p-3">Single select</td>
+              <td class="p-3">카테고리</td>
+            </tr>
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">order</code></td>
+              <td class="p-3">Number (Integer)</td>
+              <td class="p-3">정렬 순서 (1, 2, 3...)</td>
+            </tr>
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">viewCount</code></td>
+              <td class="p-3">Number (Integer)</td>
+              <td class="p-3">조회수 (기본값: 0)</td>
+            </tr>
+            <tr>
+              <td class="p-3"><code class="bg-gray-100 px-2 py-0.5 rounded">isPublished</code></td>
+              <td class="p-3">Checkbox</td>
+              <td class="p-3">공개 여부</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+        <p class="text-amber-800 font-semibold mb-2">category 필드 옵션 설정</p>
+        <p class="text-amber-700 text-sm mb-2">Single select 필드에 다음 옵션들을 추가하세요:</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm">origin (지명유래)</span>
+          <span class="px-2 py-1 bg-amber-100 text-amber-700 rounded text-sm">history (근현대사)</span>
+          <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-sm">nature (자연환경)</span>
+          <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-sm">culture (문화유산)</span>
+          <span class="px-2 py-1 bg-rose-100 text-rose-700 rounded text-sm">development (마을발전)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="bg-white rounded-2xl shadow-sm border p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">3</div>
+        <h2 class="text-lg font-bold text-gray-900">환경 변수 설정</h2>
+      </div>
+
+      <div class="space-y-4 text-gray-700">
+        <p>1. 에어테이블에서 <strong>Help → API documentation</strong>으로 이동합니다.</p>
+        <p>2. 테이블 ID를 확인합니다. (URL에서 <code class="bg-gray-100 px-1 rounded">tbl...</code>로 시작하는 부분)</p>
+        <p>3. <code>.env.local</code> 파일에 다음 환경 변수를 추가합니다:</p>
+
+        <div class="bg-gray-900 rounded-lg p-4 text-green-400 font-mono text-sm overflow-x-auto">
+          <p># 초리골 역사 테이블 ID</p>
+          <p>AIRTABLE_CHORIGOL_HISTORY_TABLE_ID=tbl여기에테이블ID입력</p>
+        </div>
+
+        <div class="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p class="text-red-800 font-semibold">보안 주의</p>
+          <p class="text-red-700 text-sm">API 키와 테이블 ID는 절대 공개 저장소에 커밋하지 마세요!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="bg-white rounded-2xl shadow-sm border p-6 mb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">4</div>
+        <h2 class="text-lg font-bold text-gray-900">초기 데이터 입력</h2>
+      </div>
+
+      <div class="space-y-4 text-gray-700">
+        <p>에어테이블 테이블이 비어있으면 기본 20개의 역사 기록이 자동으로 표시됩니다.</p>
+        <p>에어테이블에서 직접 수정하거나 추가하면 해당 데이터가 우선 표시됩니다.</p>
+
+        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p class="text-blue-800 font-semibold mb-2">기본 데이터 목록 (20개)</p>
+          <ul class="text-blue-700 text-sm space-y-1">
+            <li>1. 초리골 지명의 유래 - '꼬리'에서 비롯된 이름</li>
+            <li>2. 천현면(泉峴面)의 역사 - 샘재의 유래</li>
+            <li>3. 장군봉 은굴의 은 채광 역사</li>
+            <li>4. 초호정의 탄생 - 나눔으로 일궈낸 연못</li>
+            <li>5. 은굴 폐광과 군부대 봉쇄</li>
+            <li>6. 1.21 사태 - 초리골 삼봉산에서 무장공비 발견</li>
+            <li>7. 천현면에서 법원읍으로 승격</li>
+            <li>8. 초리골 마을 운영 규약 제정</li>
+            <li>9. 자운서원 건립 - 율곡 이이 선생을 기리다</li>
+            <li>10. 비학산과 12개 봉우리</li>
+            <li>11. 초리골의 야생동물</li>
+            <li>12. 장군봉과 장군바위</li>
+            <li>13. 다산수도원</li>
+            <li>14. 단양우씨 집성촌</li>
+            <li>15. 초비클럽 결성</li>
+            <li>16. 더 초리골 수영장 개장</li>
+            <li>17. 눈 내리는 초리골 겨울축제 시작</li>
+            <li>18. 초리골 협동조합 설립</li>
+            <li>19. 파주의 알프스 - 소득 주도형 마을로 진화</li>
+            <li>20. 1.21 사태 생존자 김신조 별세</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Endpoints -->
+    <div class="bg-white rounded-2xl shadow-sm border p-6 mb-6">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">API 엔드포인트</h2>
+
+      <div class="space-y-4">
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <p class="font-semibold text-gray-800 mb-2">GET /api/chorigol-history</p>
+          <p class="text-gray-600 text-sm">공개된 모든 초리골 역사 기록을 조회합니다.</p>
+        </div>
+
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <p class="font-semibold text-gray-800 mb-2">POST /api/chorigol-history</p>
+          <p class="text-gray-600 text-sm">새로운 역사 기록을 추가합니다.</p>
+        </div>
+
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <p class="font-semibold text-gray-800 mb-2">PATCH /api/chorigol-history</p>
+          <p class="text-gray-600 text-sm">기존 역사 기록을 수정합니다.</p>
+        </div>
+
+        <div class="p-4 bg-gray-50 rounded-lg">
+          <p class="font-semibold text-gray-800 mb-2">DELETE /api/chorigol-history?id={recordId}</p>
+          <p class="text-gray-600 text-sm">역사 기록을 삭제합니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completion -->
+    <div class="bg-green-50 rounded-2xl shadow-sm border border-green-200 p-6 text-center">
+      <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-green-800 mb-2">설정 완료!</h3>
+      <p class="text-green-700 text-sm">에어테이블 설정이 완료되면 /about 페이지 하단에서 초리골 역사 기록을 확인할 수 있습니다.</p>
+    </div>
+  </div>
+
+  <script>
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('복사되었습니다: ' + text);
+      });
+    }
+  </script>
+</body>
+</html>
