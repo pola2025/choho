@@ -1,11 +1,21 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Calendar } from "lucide-react";
-import { journals } from "@/lib/data";
+import { ArrowRight, BookOpen, Calendar, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const categoryLabels = {
+interface Journal {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: "event" | "notice" | "guide";
+  thumbnail: string;
+  createdAt: string;
+  viewCount: number;
+}
+
+const categoryLabels: Record<string, { label: string; color: string; gradient: string }> = {
   notice: {
     label: "공지",
     color: "bg-blue-100 text-blue-700",
@@ -24,6 +34,26 @@ const categoryLabels = {
 };
 
 export function JournalPreview() {
+  const [journals, setJournals] = useState<Journal[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchJournals() {
+      try {
+        const response = await fetch("/api/journals");
+        if (response.ok) {
+          const data = await response.json();
+          setJournals(data.slice(0, 4));
+        }
+      } catch (error) {
+        console.error("Failed to fetch journals:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchJournals();
+  }, []);
+
   return (
     <section className="relative py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background */}
@@ -61,64 +91,89 @@ export function JournalPreview() {
           </Link>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        )}
+
         {/* Journal Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-          {journals.slice(0, 4).map((journal, index) => (
-            <Link
-              key={journal.id}
-              href={`/about/journal/${journal.id}`}
-              className="group"
-            >
-              <article
-                className="card-premium overflow-hidden h-full flex flex-col"
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                }}
-              >
-                {/* Thumbnail */}
-                {journal.thumbnail && (
-                  <div className="relative aspect-[5/7] overflow-hidden">
-                    <img
-                      src={journal.thumbnail}
-                      alt={journal.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                )}
-
-                <div className="p-5 sm:p-6 flex-grow flex flex-col">
-                {/* Category Badge */}
-                <div className="mb-3">
-                  <span
-                    className={cn(
-                      "inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full",
-                      categoryLabels[journal.category].color
-                    )}
+        {!isLoading && journals.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+            {journals.map((journal, index) => {
+              const categoryInfo = categoryLabels[journal.category] || categoryLabels.event;
+              return (
+                <Link
+                  key={journal.id}
+                  href={`/about/journal/${journal.id}`}
+                  className="group"
+                >
+                  <article
+                    className="card-premium overflow-hidden h-full flex flex-col"
+                    style={{
+                      animationDelay: `${index * 100}ms`,
+                    }}
                   >
-                    {categoryLabels[journal.category].label}
-                  </span>
-                </div>
+                    {/* Thumbnail */}
+                    {journal.thumbnail && (
+                      <div className="relative aspect-[5/7] overflow-hidden">
+                        <img
+                          src={journal.thumbnail}
+                          alt={journal.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
 
-                {/* Title */}
-                <h3 className="font-bold text-neutral-900 mb-3 line-clamp-2 text-base sm:text-lg group-hover:text-primary transition-colors">
-                  {journal.title}
-                </h3>
+                    <div className="p-5 sm:p-6 flex-grow flex flex-col">
+                      {/* Category Badge */}
+                      <div className="mb-3">
+                        <span
+                          className={cn(
+                            "inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full",
+                            categoryInfo.color
+                          )}
+                        >
+                          {categoryInfo.label}
+                        </span>
+                      </div>
 
-                {/* Excerpt */}
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-grow leading-relaxed">
-                  {journal.excerpt}
-                </p>
+                      {/* Title */}
+                      <h3 className="font-bold text-neutral-900 mb-3 line-clamp-2 text-base sm:text-lg group-hover:text-primary transition-colors">
+                        {journal.title}
+                      </h3>
 
-                {/* Date */}
-                <div className="flex items-center gap-2 text-xs text-neutral-400 pt-4 border-t border-border mt-auto">
-                  <Calendar className="w-3.5 h-3.5" />
-                  <span>{journal.createdAt}</span>
-                </div>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
+                      {/* Excerpt */}
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-grow leading-relaxed">
+                        {journal.excerpt}
+                      </p>
+
+                      {/* Date & Views */}
+                      <div className="flex items-center justify-between text-xs text-neutral-400 pt-4 border-t border-border mt-auto">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-3.5 h-3.5" />
+                          <span>{journal.createdAt}</span>
+                        </div>
+                        {journal.viewCount > 0 && (
+                          <span>조회 {journal.viewCount}</span>
+                        )}
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && journals.length === 0 && (
+          <div className="text-center py-16">
+            <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <p className="text-muted-foreground">아직 등록된 저널이 없습니다.</p>
+          </div>
+        )}
 
         {/* Mobile More Link */}
         <div className="mt-8 text-center sm:hidden">

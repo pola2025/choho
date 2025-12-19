@@ -1,26 +1,47 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
-import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
-import { journals } from "@/lib/data";
+import { Calendar, ChevronLeft, ChevronRight, Eye } from "lucide-react";
+
+interface Journal {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: "event" | "notice" | "guide";
+  thumbnail: string;
+  images: string[];
+  createdAt: string;
+  viewCount: number;
+  order: number;
+  isPublished: boolean;
+}
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
-const categoryLabels = {
+const categoryLabels: Record<string, { label: string; color: string }> = {
   notice: { label: "공지", color: "bg-blue-100 text-blue-700" },
   guide: { label: "가이드", color: "bg-green-100 text-green-700" },
   event: { label: "이벤트", color: "bg-amber-100 text-amber-700" },
 };
 
-export async function generateStaticParams() {
-  return journals.map((journal) => ({ id: journal.id }));
+async function getJournal(id: string): Promise<Journal | null> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://choho.kr";
+    const response = await fetch(`${baseUrl}/api/journals/${id}`, {
+      cache: "no-store",
+    });
+    if (!response.ok) return null;
+    return response.json();
+  } catch {
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
-  const journal = journals.find((j) => j.id === id);
+  const journal = await getJournal(id);
 
   if (!journal) {
     return { title: "글을 찾을 수 없습니다" };
@@ -34,13 +55,13 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function JournalDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const journal = journals.find((j) => j.id === id);
+  const journal = await getJournal(id);
 
   if (!journal) {
     notFound();
   }
 
-  const categoryInfo = categoryLabels[journal.category];
+  const categoryInfo = categoryLabels[journal.category] || categoryLabels.event;
 
   return (
     <article className="pt-20 pb-16">
@@ -79,9 +100,15 @@ export default async function JournalDetailPage({ params }: PageProps) {
           </p>
 
           {/* Meta */}
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar size={18} className="text-neutral-400" />
-            {formatDate(journal.createdAt)}
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Calendar size={18} className="text-neutral-400" />
+              {formatDate(journal.createdAt)}
+            </div>
+            <div className="flex items-center gap-2">
+              <Eye size={18} className="text-neutral-400" />
+              조회 {journal.viewCount}
+            </div>
           </div>
         </div>
       </header>
@@ -119,11 +146,11 @@ export default async function JournalDetailPage({ params }: PageProps) {
           {/* Back to List */}
           <div className="pt-8 border-t border-border">
             <Link
-              href="/"
+              href="/about/journal"
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               <ChevronLeft size={16} />
-              홈으로 돌아가기
+              목록으로 돌아가기
             </Link>
           </div>
         </div>
@@ -133,6 +160,7 @@ export default async function JournalDetailPage({ params }: PageProps) {
 }
 
 function formatDate(dateString: string): string {
+  if (!dateString) return "";
   const date = new Date(dateString);
   return date.toLocaleDateString("ko-KR", {
     year: "numeric",

@@ -1,9 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar, ChevronRight, BookOpen } from "lucide-react";
-import { journals } from "@/lib/data";
 
-const categoryLabels = {
+interface Journal {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  category: "event" | "notice" | "guide";
+  thumbnail: string;
+  images: string[];
+  createdAt: string;
+  viewCount: number;
+  order: number;
+  isPublished: boolean;
+}
+
+const categoryLabels: Record<string, { label: string; color: string }> = {
   notice: { label: "공지", color: "bg-blue-100 text-blue-700" },
   guide: { label: "가이드", color: "bg-green-100 text-green-700" },
   event: { label: "이벤트", color: "bg-amber-100 text-amber-700" },
@@ -14,7 +27,22 @@ export const metadata = {
   description: "초호펜션의 새로운 소식과 이벤트를 확인하세요.",
 };
 
-export default function JournalListPage() {
+async function getJournals(): Promise<Journal[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://choho.kr";
+    const response = await fetch(`${baseUrl}/api/journals`, {
+      cache: "no-store",
+    });
+    if (!response.ok) return [];
+    return response.json();
+  } catch {
+    return [];
+  }
+}
+
+export default async function JournalListPage() {
+  const journals = await getJournals();
+
   return (
     <div className="pt-20 pb-16">
       {/* Header */}
@@ -59,7 +87,7 @@ export default function JournalListPage() {
         {/* Journal Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {journals.map((journal) => {
-            const categoryInfo = categoryLabels[journal.category];
+            const categoryInfo = categoryLabels[journal.category] || categoryLabels.event;
             return (
               <Link
                 key={journal.id}
@@ -91,9 +119,14 @@ export default function JournalListPage() {
                   <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                     {journal.excerpt}
                   </p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Calendar size={14} />
-                    {formatDate(journal.createdAt)}
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Calendar size={14} />
+                      {formatDate(journal.createdAt)}
+                    </div>
+                    {journal.viewCount > 0 && (
+                      <span>조회 {journal.viewCount}</span>
+                    )}
                   </div>
                 </div>
               </Link>
@@ -114,6 +147,7 @@ export default function JournalListPage() {
 }
 
 function formatDate(dateString: string): string {
+  if (!dateString) return "";
   const date = new Date(dateString);
   return date.toLocaleDateString("ko-KR", {
     year: "numeric",
