@@ -9,12 +9,14 @@ import {
   Settings,
   ChevronLeft,
   LayoutDashboard,
+  Megaphone,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "대시보드", icon: LayoutDashboard },
   { href: "/admin/images", label: "이미지 관리", icon: Image },
   { href: "/admin/menu", label: "카페 메뉴", icon: Coffee },
+  { href: "/admin/popup-archive", label: "팝업 아카이브", icon: Megaphone },
   { href: "/admin/settings", label: "설정", icon: Settings },
 ];
 
