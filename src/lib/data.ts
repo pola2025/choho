@@ -284,6 +284,43 @@ export const rooms: Room[] = [
 
 export const journals: Journal[] = [
   {
+    id: "sled-ticket-discount-2025",
+    category: "event",
+    title: "눈썰매장 입장권 할인",
+    excerpt: "초호펜션 이용고객님께 초리골 눈썰매장 입장권을 할인된 가격으로 제공해드립니다!",
+    content: `초호펜션 이용고객님께 특별한 혜택을 드립니다!
+
+초리골 눈썰매장 입장권을 할인된 가격으로 구매하실 수 있습니다.
+
+신청 방법:
+- 관리자 연락 (010-7932-0029)
+- 펜션 예약시 함께 신청
+
+아이들과 함께 즐거운 겨울 추억을 만들어보세요!`,
+    createdAt: "2025-12-19",
+    thumbnail: "/images/journal/sled-ticket/sled-ticket-thumb.png",
+    images: ["/images/journal/sled-ticket/sled-ticket-thumb.png"],
+  },
+  {
+    id: "cafe-discount-2025",
+    category: "event",
+    title: "카페 음료 10% 할인",
+    excerpt: "눈썰매장 팔찌 지참시 초리골164 베이커리 카페에서 음료&커피 10% 할인!",
+    content: `눈내리는 초리골 눈썰매장을 즐기신 후 따뜻한 음료로 몸을 녹여보세요!
+
+눈썰매장 팔찌를 지참하시면 초리골164 베이커리 카페에서 모든 음료&커피를 10% 할인된 가격으로 즐기실 수 있습니다.
+
+이용 방법:
+1. 눈썰매장에서 팔찌 받기
+2. 카페에서 팔찌 보여주기
+3. 10% 할인 받기!
+
+신나는 눈썰매 후 따뜻한 음료 한 잔의 여유를 즐겨보세요!`,
+    createdAt: "2025-12-19",
+    thumbnail: "/images/journal/cafe-discount/cafe-discount-thumb.png",
+    images: ["/images/journal/cafe-discount/cafe-discount-thumb.png"],
+  },
+  {
     id: "christmas-event-2025",
     category: "event",
     title: "크리스마스 이벤트",
