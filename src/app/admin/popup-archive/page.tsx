@@ -203,79 +203,75 @@ export default function PopupArchivePage() {
             <p className="text-sm mt-1">에어테이블에서 팝업을 추가해주세요</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="grid grid-cols-2 gap-4 p-4">
             {filteredPopups.map((popup) => {
-              const StatusIcon = statusLabels[popup.status]?.icon || Eye;
               return (
                 <div
                   key={popup.id}
-                  className="p-4 hover:bg-gray-50 transition-colors"
+                  className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
                 >
-                  <div className="flex gap-4">
-                    {/* 썸네일 */}
-                    <div className="w-24 aspect-[5/7] bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
-                      {popup.thumbnailUrl ? (
-                        <Image
-                          src={popup.thumbnailUrl}
-                          alt={popup.name}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
-                          <Megaphone className="w-8 h-8" />
-                        </div>
+                  {/* 썸네일 */}
+                  <div className="w-full aspect-[5/7] bg-gray-100 relative">
+                    {popup.thumbnailUrl ? (
+                      <Image
+                        src={popup.thumbnailUrl}
+                        alt={popup.name}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400">
+                        <Megaphone className="w-12 h-12" />
+                      </div>
+                    )}
+                    {/* 상태 배지 */}
+                    <div className="absolute top-2 left-2 flex items-center gap-1.5">
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          statusLabels[popup.status]?.color || "bg-gray-400"
+                        } text-white`}
+                      >
+                        {statusLabels[popup.status]?.label || popup.status}
+                      </span>
+                    </div>
+                    {/* D+ 배지 */}
+                    {popup.status === "active" && popup.startDate && (
+                      <div className="absolute top-2 right-2">
+                        <span className="px-2 py-0.5 bg-white/90 text-green-700 rounded-full text-xs font-bold">
+                          D+{getDaysSinceStart(popup.startDate)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 정보 */}
+                  <div className="p-3">
+                    <div className="flex items-center gap-2 mb-1">
+                      {popup.category && categoryLabels[popup.category] && (
+                        <span
+                          className={`px-2 py-0.5 rounded text-xs font-medium ${
+                            categoryLabels[popup.category].color
+                          }`}
+                        >
+                          {categoryLabels[popup.category].label}
+                        </span>
                       )}
                     </div>
+                    <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-1">
+                      {popup.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 line-clamp-2 mb-2">
+                      {popup.description}
+                    </p>
 
-                    {/* 정보 */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            {popup.category && categoryLabels[popup.category] && (
-                              <span
-                                className={`px-2 py-0.5 rounded text-xs font-medium ${
-                                  categoryLabels[popup.category].color
-                                }`}
-                              >
-                                {categoryLabels[popup.category].label}
-                              </span>
-                            )}
-                            <div className="flex items-center gap-1">
-                              <span
-                                className={`w-2 h-2 rounded-full ${
-                                  statusLabels[popup.status]?.color || "bg-gray-400"
-                                }`}
-                              />
-                              <span className="text-xs text-gray-500">
-                                {statusLabels[popup.status]?.label || popup.status}
-                              </span>
-                            </div>
-                          </div>
-                          <h3 className="font-semibold text-gray-900 mb-1">
-                            {popup.name}
-                          </h3>
-                          <p className="text-sm text-gray-500 line-clamp-1">
-                            {popup.description}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* 기간 */}
-                      <div className="flex items-center gap-2 mt-3 text-sm">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        <span className="text-gray-600">
-                          {formatDate(popup.startDate)}
-                          {" ~ "}
-                          {popup.endDate ? formatDate(popup.endDate) : "진행중"}
-                        </span>
-                        {popup.status === "active" && popup.startDate && (
-                          <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">
-                            D+{getDaysSinceStart(popup.startDate)}
-                          </span>
-                        )}
-                      </div>
+                    {/* 기간 */}
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                      <Calendar className="w-3.5 h-3.5" />
+                      <span>
+                        {formatDate(popup.startDate)}
+                        {" ~ "}
+                        {popup.endDate ? formatDate(popup.endDate) : "진행중"}
+                      </span>
                     </div>
                   </div>
                 </div>
