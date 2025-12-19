@@ -203,25 +203,24 @@ export default function PopupArchivePage() {
             <p className="text-sm mt-1">에어테이블에서 팝업을 추가해주세요</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4 p-4">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 p-4">
             {filteredPopups.map((popup) => {
               return (
                 <div
                   key={popup.id}
-                  className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
+                  className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
                 >
                   {/* 썸네일 */}
-                  <div className="w-full aspect-[5/7] bg-gray-100 relative">
+                  <div className="w-full aspect-[4/3] bg-gray-100 relative">
                     {popup.thumbnailUrl ? (
-                      <Image
+                      <img
                         src={popup.thumbnailUrl}
                         alt={popup.name}
-                        fill
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-400">
-                        <Megaphone className="w-12 h-12" />
+                        <Megaphone className="w-8 h-8" />
                       </div>
                     )}
                     {/* 상태 배지 */}
