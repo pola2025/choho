@@ -1,74 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Calendar, Eye, EyeOff, Megaphone, Clock, ExternalLink } from "lucide-react";
+import { Calendar, Eye, EyeOff, Megaphone, Clock, Loader2, RefreshCw, Plus } from "lucide-react";
 
 // 팝업 아카이브 데이터 타입
 interface PopupArchive {
   id: string;
   name: string;
   description: string;
-  startDate: string;
-  endDate: string | null; // null이면 현재 진행중
-  status: "active" | "ended" | "scheduled";
-  thumbnail: string;
   category: "event" | "notice" | "promotion";
+  status: "active" | "ended" | "scheduled";
+  startDate: string;
+  endDate: string | null;
+  thumbnailUrl: string;
+  order: number;
+  isActive: boolean;
 }
-
-// 팝업 아카이브 데이터
-const popupArchives: PopupArchive[] = [
-  {
-    id: "sled-ticket-2025",
-    name: "눈썰매장 입장권 할인",
-    description: "초호펜션 이용고객 대상 초리골 눈썰매장 입장권 할인판매",
-    startDate: "2025-12-19",
-    endDate: null,
-    status: "active",
-    thumbnail: "/images/popup-archive/sled-ticket.png",
-    category: "promotion",
-  },
-  {
-    id: "cafe-discount-2025",
-    name: "카페 음료 10% 할인",
-    description: "눈썰매장 팔찌 지참시 초리골164베이커리 카페 음료&커피 10% 할인",
-    startDate: "2025-12-19",
-    endDate: null,
-    status: "active",
-    thumbnail: "/images/popup-archive/cafe-discount.png",
-    category: "promotion",
-  },
-  {
-    id: "winter-notice-2025",
-    name: "겨울철 이용 안내",
-    description: "동파 예방, 테라스 그릴, 조설기 소음, 음료쿠폰 안내",
-    startDate: "2025-12-01",
-    endDate: null,
-    status: "active",
-    thumbnail: "/images/popup-archive/winter-notice.png",
-    category: "notice",
-  },
-  {
-    id: "ice-wall-2025",
-    name: "빙벽 시즌 오픈",
-    description: "한파와 함께 초호펜션 빙벽이 아름답게 얼어붙었습니다",
-    startDate: "2025-12-10",
-    endDate: "2025-12-18",
-    status: "ended",
-    thumbnail: "/images/journal/ice-wall/ice-wall-2.webp",
-    category: "event",
-  },
-  {
-    id: "free-drink-coupon-2025",
-    name: "음료 무료쿠폰 안내",
-    description: "초리골164 베이커리 카페 음료 무료쿠폰 제공 안내",
-    startDate: "2025-11-20",
-    endDate: "2025-12-10",
-    status: "ended",
-    thumbnail: "/images/popup-archive/drink-coupon.png",
-    category: "promotion",
-  },
-];
 
 const categoryLabels = {
   event: { label: "이벤트", color: "bg-blue-100 text-blue-700" },
@@ -83,23 +31,63 @@ const statusLabels = {
 };
 
 export default function PopupArchivePage() {
+  const [popups, setPopups] = useState<PopupArchive[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "active" | "ended">("all");
 
-  const filteredPopups = popupArchives.filter((popup) => {
+  // 팝업 데이터 로드
+  const loadPopups = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/popups");
+      if (!response.ok) {
+        throw new Error("데이터를 가져오는데 실패했습니다");
+      }
+      const data = await response.json();
+      setPopups(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "오류가 발생했습니다");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadPopups();
+  }, []);
+
+  const filteredPopups = popups.filter((popup) => {
     if (filter === "all") return true;
     return popup.status === filter;
   });
 
   const formatDate = (dateStr: string) => {
+    if (!dateStr) return "";
     const date = new Date(dateStr);
     return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(date.getDate()).padStart(2, "0")}`;
   };
 
+  const getDaysSinceStart = (startDate: string) => {
+    const start = new Date(startDate);
+    const now = new Date();
+    return Math.floor((now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  };
+
+  if (isLoading) {
+    return (
+      <div className="max-w-6xl flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-6xl">
       {/* 헤더 */}
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
             <Megaphone className="w-5 h-5 text-green-600" />
           </div>
@@ -110,7 +98,21 @@ export default function PopupArchivePage() {
             </p>
           </div>
         </div>
+        <button
+          onClick={loadPopups}
+          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          <RefreshCw className="w-4 h-4" />
+          새로고침
+        </button>
       </div>
+
+      {/* 에러 메시지 */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
+          {error}
+        </div>
+      )}
 
       {/* 필터 탭 */}
       <div className="flex gap-2 mb-6">
@@ -130,7 +132,7 @@ export default function PopupArchivePage() {
           >
             {tab.label}
             <span className="ml-1.5 text-xs opacity-70">
-              ({popupArchives.filter((p) => tab.value === "all" || p.status === tab.value).length})
+              ({popups.filter((p) => tab.value === "all" || p.status === tab.value).length})
             </span>
           </button>
         ))}
@@ -145,7 +147,7 @@ export default function PopupArchivePage() {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
-                {popupArchives.filter((p) => p.status === "active").length}
+                {popups.filter((p) => p.status === "active").length}
               </p>
               <p className="text-sm text-gray-500">현재 진행중</p>
             </div>
@@ -158,7 +160,7 @@ export default function PopupArchivePage() {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
-                {popupArchives.filter((p) => p.status === "ended").length}
+                {popups.filter((p) => p.status === "ended").length}
               </p>
               <p className="text-sm text-gray-500">종료된 팝업</p>
             </div>
@@ -171,7 +173,7 @@ export default function PopupArchivePage() {
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">
-                {popupArchives.length}
+                {popups.length}
               </p>
               <p className="text-sm text-gray-500">전체 팝업</p>
             </div>
@@ -181,96 +183,127 @@ export default function PopupArchivePage() {
 
       {/* 팝업 목록 */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+        <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
           <h2 className="font-semibold text-gray-900">팝업 히스토리</h2>
+          <a
+            href="https://airtable.com/appcA2d6nXAIkLydp/tblzLnNjgHFSkO0wT"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            에어테이블에서 추가
+          </a>
         </div>
-        <div className="divide-y divide-gray-100">
-          {filteredPopups.map((popup) => {
-            const StatusIcon = statusLabels[popup.status].icon;
-            return (
-              <div
-                key={popup.id}
-                className="p-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex gap-4">
-                  {/* 썸네일 */}
-                  <div className="w-32 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
-                    <Image
-                      src={popup.thumbnail}
-                      alt={popup.name}
-                      fill
-                      className="object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/images/placeholder.png";
-                      }}
-                    />
-                  </div>
 
-                  {/* 정보 */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span
-                            className={`px-2 py-0.5 rounded text-xs font-medium ${
-                              categoryLabels[popup.category].color
-                            }`}
-                          >
-                            {categoryLabels[popup.category].label}
-                          </span>
-                          <div className="flex items-center gap-1">
-                            <span
-                              className={`w-2 h-2 rounded-full ${
-                                statusLabels[popup.status].color
-                              }`}
-                            />
-                            <span className="text-xs text-gray-500">
-                              {statusLabels[popup.status].label}
-                            </span>
-                          </div>
+        {filteredPopups.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">
+            <Megaphone className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+            <p>등록된 팝업이 없습니다</p>
+            <p className="text-sm mt-1">에어테이블에서 팝업을 추가해주세요</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-100">
+            {filteredPopups.map((popup) => {
+              const StatusIcon = statusLabels[popup.status]?.icon || Eye;
+              return (
+                <div
+                  key={popup.id}
+                  className="p-4 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex gap-4">
+                    {/* 썸네일 */}
+                    <div className="w-32 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
+                      {popup.thumbnailUrl ? (
+                        <Image
+                          src={popup.thumbnailUrl}
+                          alt={popup.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          <Megaphone className="w-8 h-8" />
                         </div>
-                        <h3 className="font-semibold text-gray-900 mb-1">
-                          {popup.name}
-                        </h3>
-                        <p className="text-sm text-gray-500 line-clamp-1">
-                          {popup.description}
-                        </p>
-                      </div>
+                      )}
                     </div>
 
-                    {/* 기간 */}
-                    <div className="flex items-center gap-2 mt-3 text-sm">
-                      <Calendar className="w-4 h-4 text-gray-400" />
-                      <span className="text-gray-600">
-                        {formatDate(popup.startDate)}
-                        {" ~ "}
-                        {popup.endDate ? formatDate(popup.endDate) : "진행중"}
-                      </span>
-                      {popup.status === "active" && (
-                        <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">
-                          D+{Math.floor((Date.now() - new Date(popup.startDate).getTime()) / (1000 * 60 * 60 * 24))}
+                    {/* 정보 */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            {popup.category && categoryLabels[popup.category] && (
+                              <span
+                                className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                  categoryLabels[popup.category].color
+                                }`}
+                              >
+                                {categoryLabels[popup.category].label}
+                              </span>
+                            )}
+                            <div className="flex items-center gap-1">
+                              <span
+                                className={`w-2 h-2 rounded-full ${
+                                  statusLabels[popup.status]?.color || "bg-gray-400"
+                                }`}
+                              />
+                              <span className="text-xs text-gray-500">
+                                {statusLabels[popup.status]?.label || popup.status}
+                              </span>
+                            </div>
+                          </div>
+                          <h3 className="font-semibold text-gray-900 mb-1">
+                            {popup.name}
+                          </h3>
+                          <p className="text-sm text-gray-500 line-clamp-1">
+                            {popup.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* 기간 */}
+                      <div className="flex items-center gap-2 mt-3 text-sm">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <span className="text-gray-600">
+                          {formatDate(popup.startDate)}
+                          {" ~ "}
+                          {popup.endDate ? formatDate(popup.endDate) : "진행중"}
                         </span>
-                      )}
+                        {popup.status === "active" && popup.startDate && (
+                          <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">
+                            D+{getDaysSinceStart(popup.startDate)}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* 안내 */}
       <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
         <div className="flex items-start gap-3">
           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <ExternalLink className="w-4 h-4 text-blue-600" />
+            <Megaphone className="w-4 h-4 text-blue-600" />
           </div>
           <div>
             <h3 className="font-semibold text-blue-900 mb-1">팝업 관리 안내</h3>
             <p className="text-sm text-blue-700">
-              팝업 추가/수정은 <code className="px-1.5 py-0.5 bg-blue-100 rounded text-xs">src/components/CombinedWinterPopup.tsx</code> 파일에서 직접 수정하거나,
-              개발자에게 요청해주세요.
+              팝업 추가/수정/삭제는{" "}
+              <a
+                href="https://airtable.com/appcA2d6nXAIkLydp/tblzLnNjgHFSkO0wT"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline font-medium"
+              >
+                에어테이블
+              </a>
+              에서 직접 관리하실 수 있습니다.
             </p>
           </div>
         </div>
