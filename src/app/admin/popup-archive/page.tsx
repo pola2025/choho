@@ -203,7 +203,7 @@ export default function PopupArchivePage() {
             <p className="text-sm mt-1">에어테이블에서 팝업을 추가해주세요</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 p-4">
+          <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 p-4">
             {filteredPopups.map((popup) => {
               return (
                 <div
