@@ -27,13 +27,66 @@ const categoryLabels: Record<string, { label: string; color: string }> = {
 };
 
 async function getJournal(id: string): Promise<Journal | null> {
+  const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
+  const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
+  const AIRTABLE_TABLE_ID = process.env.AIRTABLE_JOURNAL_TABLE_ID;
+
+  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
+    return null;
+  }
+
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://choho.kr";
-    const response = await fetch(`${baseUrl}/api/journals/${id}`, {
-      cache: "no-store",
-    });
+    const response = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
     if (!response.ok) return null;
-    return response.json();
+
+    const record = await response.json();
+
+    const journal: Journal = {
+      id: record.id,
+      title: record.fields.title || "",
+      excerpt: record.fields.excerpt || "",
+      content: record.fields.content || "",
+      category: record.fields.category || "event",
+      thumbnail: record.fields.thumbnail || "",
+      images: record.fields.images ? String(record.fields.images).split(",").map((s: string) => s.trim()) : [],
+      createdAt: record.fields.createdAt || "",
+      viewCount: record.fields.viewCount || 0,
+      order: record.fields.order || 0,
+      isPublished: record.fields.isPublished ?? true,
+    };
+
+    if (!journal.isPublished) return null;
+
+    // 조회수 증가 (백그라운드)
+    fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        records: [
+          {
+            id,
+            fields: {
+              viewCount: (journal.viewCount || 0) + 1,
+            },
+          },
+        ],
+      }),
+    }).catch(console.error);
+
+    return journal;
   } catch {
     return null;
   }
@@ -126,9 +179,9 @@ export default async function JournalDetailPage({ params }: PageProps) {
           </div>
 
           {/* Images - 원본 비율 유지 */}
-          {journal.images && journal.images.length > 0 && (
+          {journal.images && journal.images.length > 0 && journal.images[0] && (
             <div className="space-y-6 mb-10">
-              {journal.images.map((image, index) => (
+              {journal.images.filter(img => img).map((image, index) => (
                 <div
                   key={index}
                   className="rounded-xl overflow-hidden border border-border"

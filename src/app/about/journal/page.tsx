@@ -28,13 +28,43 @@ export const metadata = {
 };
 
 async function getJournals(): Promise<Journal[]> {
+  const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
+  const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
+  const AIRTABLE_TABLE_ID = process.env.AIRTABLE_JOURNAL_TABLE_ID;
+
+  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
+    return [];
+  }
+
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://choho.kr";
-    const response = await fetch(`${baseUrl}/api/journals`, {
-      cache: "no-store",
-    });
+    const filterFormula = encodeURIComponent("{isPublished}=TRUE()");
+    const response = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?filterByFormula=${filterFormula}&sort[0][field]=createdAt&sort[0][direction]=desc`,
+      {
+        headers: {
+          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
     if (!response.ok) return [];
-    return response.json();
+
+    const data = await response.json();
+    return data.records.map((record: { id: string; fields: Record<string, unknown> }) => ({
+      id: record.id,
+      title: record.fields.title || "",
+      excerpt: record.fields.excerpt || "",
+      content: record.fields.content || "",
+      category: record.fields.category || "event",
+      thumbnail: record.fields.thumbnail || "",
+      images: record.fields.images ? String(record.fields.images).split(",").map((s: string) => s.trim()) : [],
+      createdAt: record.fields.createdAt || "",
+      viewCount: record.fields.viewCount || 0,
+      order: record.fields.order || 0,
+      isPublished: record.fields.isPublished ?? true,
+    }));
   } catch {
     return [];
   }
