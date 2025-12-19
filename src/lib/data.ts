@@ -284,6 +284,23 @@ export const rooms: Room[] = [
 
 export const journals: Journal[] = [
   {
+    id: "christmas-event-2025",
+    category: "event",
+    title: "크리스마스 이벤트",
+    excerpt: "크리스마스에 초리골164 베이커리 카페 이용고객님께 알파카 미니피규어 키링을 제공해드립니다!",
+    content: `크리스마스에 초리골164 베이커리 카페 이용고객님께 특별한 선물을 준비했습니다!
+
+귀여운 알파카 미니피규어 키링을 제공해드립니다.
+
+이벤트 기간: 12월 25일 (수)
+제공 수량: 1인 1개 한정 (선착순 소진시 종료)
+
+따뜻한 음료와 함께 특별한 크리스마스를 보내세요!`,
+    createdAt: "2025-12-19",
+    thumbnail: "/images/journal/christmas/christmas-event-thumb.png",
+    images: ["/images/journal/christmas/christmas-event-thumb.png"],
+  },
+  {
     id: "winter-notice-2025",
     category: "notice",
     title: "겨울철 이용 안내",
