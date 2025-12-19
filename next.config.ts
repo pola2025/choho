@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'cdn.imweb.me',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.chorigol.co.kr',
+      },
     ],
   },
 };
