@@ -69,7 +69,7 @@ export default function JournalListPage() {
                 {/* Thumbnail */}
                 <div className="relative aspect-[16/10] overflow-hidden bg-neutral-100">
                   <Image
-                    src={journal.thumbnail}
+                    src={journal.thumbnail || "/images/placeholder.webp"}
                     alt={journal.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
