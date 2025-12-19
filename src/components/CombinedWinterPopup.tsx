@@ -50,7 +50,7 @@ export function CombinedWinterPopup() {
   // 팝업 카드 컴포넌트들
   const IceWallCard = () => (
     <div className="relative bg-neutral-900 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden h-full">
-      <div className="relative aspect-[4/3] sm:aspect-[3/4] h-full">
+      <div className="relative aspect-[5/7] h-full">
         <Image
           src="/images/journal/ice-wall/ice-wall-2.webp"
           alt="초호쉼터 빙벽"
