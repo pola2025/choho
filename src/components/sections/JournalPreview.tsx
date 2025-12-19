@@ -77,7 +77,7 @@ export function JournalPreview() {
               >
                 {/* Thumbnail */}
                 {journal.thumbnail && (
-                  <div className="relative aspect-[16/10] overflow-hidden">
+                  <div className="relative aspect-[5/7] overflow-hidden">
                     <img
                       src={journal.thumbnail}
                       alt={journal.title}
