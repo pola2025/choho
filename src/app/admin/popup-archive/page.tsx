@@ -213,7 +213,7 @@ export default function PopupArchivePage() {
                 >
                   <div className="flex gap-4">
                     {/* 썸네일 */}
-                    <div className="w-32 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
+                    <div className="w-20 aspect-[5/7] bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                       {popup.thumbnailUrl ? (
                         <Image
                           src={popup.thumbnailUrl}
