@@ -9,9 +9,11 @@ const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE
 interface AirtableRecord {
   id: string;
   fields: {
+    Name?: string;
     name?: string;
     description?: string;
     category?: string;
+    Status?: string;
     status?: string;
     startDate?: string;
     endDate?: string;
@@ -35,13 +37,14 @@ interface PopupArchive {
 }
 
 // Airtable 레코드를 PopupArchive로 변환
+// 에어테이블 필드명: Name, Status (대문자)
 function transformRecord(record: AirtableRecord): PopupArchive {
   return {
     id: record.id,
-    name: record.fields.name || "",
+    name: record.fields.Name || record.fields.name || "",
     description: record.fields.description || "",
     category: (record.fields.category as PopupArchive["category"]) || "event",
-    status: (record.fields.status as PopupArchive["status"]) || "active",
+    status: (record.fields.Status || record.fields.status) as PopupArchive["status"] || "active",
     startDate: record.fields.startDate || "",
     endDate: record.fields.endDate || null,
     thumbnailUrl: record.fields.thumbnailUrl || "",

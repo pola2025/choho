@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Image,
   Coffee,
@@ -10,6 +10,9 @@ import {
   ChevronLeft,
   LayoutDashboard,
   Megaphone,
+  Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 const navItems = [
@@ -20,12 +23,46 @@ const navItems = [
   { href: "/admin/settings", label: "설정", icon: Settings },
 ];
 
+// 관리자 비밀번호 (실제 환경에서는 환경변수나 서버에서 검증)
+const ADMIN_PASSWORD = "chflrhf12$%";
+
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 세션 스토리지에서 인증 상태 확인
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem("adminAuthenticated");
+    if (authStatus === "true") {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      sessionStorage.setItem("adminAuthenticated", "true");
+      setIsAuthenticated(true);
+      setError("");
+    } else {
+      setError("비밀번호가 올바르지 않습니다");
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("adminAuthenticated");
+    setIsAuthenticated(false);
+    setPassword("");
+  };
 
   // 관리자 페이지에서는 메인 사이트 헤더/푸터 숨기기
   useEffect(() => {
@@ -44,6 +81,74 @@ export default function AdminLayout({
     };
   }, []);
 
+  // 로딩 중
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 fixed inset-0 z-[100] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+      </div>
+    );
+  }
+
+  // 로그인 화면
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8 text-green-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900">관리자 로그인</h1>
+            <p className="text-sm text-gray-500 mt-1">초호펜션 관리자 페이지</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                비밀번호
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent pr-12"
+                  placeholder="비밀번호를 입력하세요"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <p className="text-red-500 text-sm">{error}</p>
+            )}
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
+            >
+              로그인
+            </button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <Link href="/" className="text-sm text-gray-500 hover:text-gray-700">
+              ← 사이트로 돌아가기
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 fixed inset-0 z-[100] overflow-auto">
       {/* 상단 헤더 */}
@@ -61,7 +166,12 @@ export default function AdminLayout({
           <h1 className="text-lg font-bold text-gray-900">
             초호펜션 관리자
           </h1>
-          <div className="w-32" /> {/* 균형을 위한 빈 공간 */}
+          <button
+            onClick={handleLogout}
+            className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            로그아웃
+          </button>
         </div>
       </header>
 
