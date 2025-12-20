@@ -1,3 +1,9 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "crons": [
+    {
+      "path": "/api/analytics/sync?mode=today",
+      "schedule": "0 * * * *"
+    }
+  ]
 }

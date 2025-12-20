@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Snowflake, AlertTriangle, Phone, Coffee, Ticket, ChevronLeft, ChevronRight, Clock } from "lucide-react";
+import { X, Snowflake, AlertTriangle, Phone, Coffee, Ticket, ChevronLeft, ChevronRight, Clock, Flame } from "lucide-react";
 
 export function CombinedWinterPopup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -336,6 +336,155 @@ export function CombinedWinterPopup() {
     </div>
   );
 
+  // 바베큐 배너 컴포넌트
+  const BBQBanner = () => (
+    <div className="relative w-full bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden">
+      {/* 불꽃 파티클 효과 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute w-3 h-3 bg-yellow-400 rounded-full opacity-80 animate-[fireFloat_2s_ease-in-out_infinite]" style={{left: '5%', bottom: '20%'}} />
+        <div className="absolute w-2 h-2 bg-orange-300 rounded-full opacity-70 animate-[fireFloat_2.5s_ease-in-out_infinite]" style={{left: '20%', bottom: '40%', animationDelay: '0.3s'}} />
+        <div className="absolute w-2.5 h-2.5 bg-yellow-300 rounded-full opacity-60 animate-[fireFloat_1.8s_ease-in-out_infinite]" style={{left: '40%', bottom: '25%', animationDelay: '0.7s'}} />
+        <div className="absolute w-2 h-2 bg-red-400 rounded-full opacity-80 animate-[fireFloat_2.2s_ease-in-out_infinite]" style={{left: '60%', bottom: '35%', animationDelay: '0.5s'}} />
+        <div className="absolute w-3 h-3 bg-yellow-400 rounded-full opacity-70 animate-[fireFloat_2s_ease-in-out_infinite]" style={{left: '80%', bottom: '20%', animationDelay: '1s'}} />
+        <div className="absolute w-2 h-2 bg-orange-400 rounded-full opacity-80 animate-[fireFloat_2.3s_ease-in-out_infinite]" style={{left: '95%', bottom: '30%', animationDelay: '0.8s'}} />
+      </div>
+
+      <div className="relative z-10 px-3 py-3 md:px-5 md:py-4">
+        {/* 헤더 */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Flame className="w-5 h-5 md:w-6 md:h-6 text-yellow-300 animate-[flicker_0.5s_ease-in-out_infinite]" />
+              <Flame className="absolute top-0 left-0 w-5 h-5 md:w-6 md:h-6 text-orange-400 opacity-50 animate-[flicker_0.3s_ease-in-out_infinite_0.1s]" />
+            </div>
+            <h3 className="text-white font-bold text-sm md:text-base">바베큐 시설 안내</h3>
+            <span className="text-yellow-300 text-[10px] md:text-xs bg-black/20 px-2 py-0.5 rounded-full">숯불 현장결제</span>
+          </div>
+          <a
+            href="tel:010-7932-0029"
+            className="flex items-center gap-1.5 bg-white text-red-600 font-bold px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-white/90 transition-colors text-xs md:text-sm"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            문의하기
+          </a>
+        </div>
+
+        {/* 3가지 바베큐 카드 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3">
+          {/* 가스버너 & 캠핑그릴 카드 */}
+          <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+            {/* PC 이미지 */}
+            <div className="hidden md:block relative h-44">
+              <Image
+                src="/images/bbq/burner/burner-1.webp"
+                alt="가스버너 & 캠핑그릴"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="p-3 md:p-4">
+              <div className="flex items-start gap-2">
+                <span className="text-2xl md:hidden">🔥</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="font-bold text-neutral-900 text-sm md:text-base">가스버너 & 캠핑그릴</h4>
+                    <span className="text-orange-600 font-bold text-sm md:text-base">2만원</span>
+                  </div>
+                  <p className="text-neutral-600 text-xs md:text-sm">Forest 객실 테라스 전용</p>
+                  <p className="text-amber-600 text-[10px] md:text-xs mt-1">※ 영하권 착화불가 → 관리자 연락</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 숯불바베큐 카드 */}
+          <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+            {/* PC 이미지 */}
+            <div className="hidden md:block relative h-44">
+              <Image
+                src="/images/bbq/forest/forest-1.webp"
+                alt="숯불바베큐"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="p-3 md:p-4">
+              <div className="flex items-start gap-2">
+                <span className="text-2xl md:hidden">🍖</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="font-bold text-neutral-900 text-sm md:text-base">숯불바베큐 5동</h4>
+                    <span className="text-red-600 font-bold text-sm md:text-base">3만원</span>
+                  </div>
+                  <p className="text-neutral-600 text-xs md:text-sm">Forest Room 지정 바베큐장</p>
+                  <p className="text-red-500 text-[10px] md:text-xs mt-1">※ 객실 9개 중 5동 한정 → 조기마감</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 호수뷰 객실 카드 */}
+          <div className="bg-white rounded-lg overflow-hidden shadow-lg">
+            {/* PC 이미지 */}
+            <div className="hidden md:block relative h-44">
+              <Image
+                src="/images/bbq/lakeview/lakeview-2.webp"
+                alt="호수뷰 바베큐"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="p-3 md:p-4">
+              <div className="flex items-start gap-2">
+                <span className="text-2xl md:hidden">🌊</span>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="font-bold text-neutral-900 text-sm md:text-base">호수뷰 객실</h4>
+                    <span className="text-blue-600 font-bold text-sm md:text-base">3만원</span>
+                  </div>
+                  <p className="text-neutral-600 text-xs md:text-sm">객실 앞 테라스 숯불바베큐</p>
+                  <p className="text-blue-500 text-[10px] md:text-xs mt-1">※ 가스버너 희망시 관리자 연락</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CSS 애니메이션 정의 */}
+      <style jsx>{`
+        @keyframes fireFloat {
+          0%, 100% {
+            transform: translateY(0) scale(1);
+            opacity: 0.8;
+          }
+          50% {
+            transform: translateY(-15px) scale(1.2);
+            opacity: 0.3;
+          }
+        }
+        @keyframes flicker {
+          0%, 100% {
+            transform: scale(1) rotate(-3deg);
+            opacity: 1;
+          }
+          25% {
+            transform: scale(1.1) rotate(2deg);
+            opacity: 0.9;
+          }
+          50% {
+            transform: scale(0.95) rotate(-2deg);
+            opacity: 1;
+          }
+          75% {
+            transform: scale(1.05) rotate(3deg);
+            opacity: 0.85;
+          }
+        }
+      `}</style>
+    </div>
+  );
+
   const popupCards = [
     <LateCheckinCard key="late-checkin" />,
     <SledTicketCard key="sled-ticket" />,
@@ -354,12 +503,18 @@ export function CombinedWinterPopup() {
         <X className="w-5 h-5 text-neutral-700" />
       </button>
 
-      {/* Desktop: 4 columns Grid */}
-      <div className="hidden md:grid md:grid-cols-4 gap-4 max-w-7xl w-full animate-in fade-in zoom-in duration-300 my-auto px-4">
-        <div className="h-[520px]">{popupCards[0]}</div>
-        <div className="h-[520px]">{popupCards[1]}</div>
-        <div className="h-[520px]">{popupCards[2]}</div>
-        <div className="h-[520px]">{popupCards[3]}</div>
+      {/* Desktop: 4 columns Grid + BBQ Banner */}
+      <div className="hidden md:flex md:flex-col gap-6 max-w-7xl w-full animate-in fade-in zoom-in duration-300 my-auto px-4">
+        <div className="grid grid-cols-4 gap-4">
+          <div className="h-[520px]">{popupCards[0]}</div>
+          <div className="h-[520px]">{popupCards[1]}</div>
+          <div className="h-[520px]">{popupCards[2]}</div>
+          <div className="h-[520px]">{popupCards[3]}</div>
+        </div>
+        {/* BBQ 배너 */}
+        <div className="mt-12">
+          <BBQBanner />
+        </div>
       </div>
 
       {/* Mobile: Slider */}
@@ -408,6 +563,11 @@ export function CombinedWinterPopup() {
               aria-label={`슬라이드 ${index + 1}`}
             />
           ))}
+        </div>
+
+        {/* BBQ 배너 - Mobile */}
+        <div className="mt-4">
+          <BBQBanner />
         </div>
 
         {/* Hide Today Button - Mobile */}
