@@ -1,5 +1,5 @@
 // Google Analytics
-export const GA_MEASUREMENT_ID = "G-VPH2XESGW3";
+export const GA_MEASUREMENT_ID = "G-7NC4PTL4D2";
 
 export const SITE_CONFIG = {
   name: "초호펜션",
