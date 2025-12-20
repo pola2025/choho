@@ -354,6 +354,44 @@ export async function GET(request: Request) {
       return NextResponse.json({ searchKeywords, searchPages, source: 'ga' });
     }
 
+    // 기간별 검색어 Top5 조회
+    if (type === 'period-keywords') {
+      const today = new Date();
+      const formatDate = (d: Date) => d.toISOString().split('T')[0];
+
+      // 이번 주 (일요일 ~ 오늘)
+      const thisWeekStart = new Date(today);
+      thisWeekStart.setDate(today.getDate() - today.getDay());
+
+      // 지난 주
+      const lastWeekEnd = new Date(thisWeekStart);
+      lastWeekEnd.setDate(lastWeekEnd.getDate() - 1);
+      const lastWeekStart = new Date(lastWeekEnd);
+      lastWeekStart.setDate(lastWeekEnd.getDate() - 6);
+
+      // 이번 달 (1일 ~ 오늘)
+      const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+
+      // 지난 달
+      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+      const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+
+      const [thisWeek, lastWeek, thisMonth, lastMonth] = await Promise.all([
+        getSearchKeywords(0, 5, formatDate(thisWeekStart), formatDate(today)),
+        getSearchKeywords(0, 5, formatDate(lastWeekStart), formatDate(lastWeekEnd)),
+        getSearchKeywords(0, 5, formatDate(thisMonthStart), formatDate(today)),
+        getSearchKeywords(0, 5, formatDate(lastMonthStart), formatDate(lastMonthEnd)),
+      ]);
+
+      return NextResponse.json({
+        thisWeek,
+        lastWeek,
+        thisMonth,
+        lastMonth,
+        source: 'ga',
+      });
+    }
+
     // 비교 분석 데이터 조회 (GA only)
     if (type === 'comparison') {
       const currentStart = searchParams.get('currentStart');

@@ -211,6 +211,13 @@ interface SearchKeyword {
   position: number;
 }
 
+interface PeriodKeywords {
+  thisWeek: SearchKeyword[];
+  lastWeek: SearchKeyword[];
+  thisMonth: SearchKeyword[];
+  lastMonth: SearchKeyword[];
+}
+
 interface SearchPage {
   page: string;
   clicks: number;
@@ -1658,6 +1665,9 @@ export default function AnalyticsPage() {
       {/* 검색어 탭 */}
       {activeTab === 'keywords' && (
         <>
+          {/* 기간별 검색어 Top5 */}
+          <PeriodKeywordsSection />
+
           {/* 검색어 순위 */}
           <Card>
             <CardHeader>
@@ -2395,5 +2405,86 @@ function ComparisonTab() {
         </>
       )}
     </>
+  );
+}
+
+// 기간별 검색어 Top5 컴포넌트
+function PeriodKeywordsSection() {
+  const [data, setData] = useState<PeriodKeywords | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPeriodKeywords();
+  }, []);
+
+  const fetchPeriodKeywords = async () => {
+    try {
+      const response = await fetch('/api/analytics?type=period-keywords');
+      if (response.ok) {
+        const result = await response.json();
+        setData(result);
+      }
+    } catch (error) {
+      console.error('Error fetching period keywords:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Card className="mb-6">
+        <CardContent className="py-8">
+          <div className="flex items-center justify-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-600"></div>
+            <span className="ml-2 text-gray-500">기간별 검색어 로딩 중...</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const renderKeywordList = (keywords: SearchKeyword[], title: string, bgColor: string, textColor: string) => (
+    <div className={`rounded-lg p-4 ${bgColor}`}>
+      <h4 className={`font-bold mb-3 ${textColor}`}>{title}</h4>
+      {keywords.length > 0 ? (
+        <div className="space-y-2">
+          {keywords.slice(0, 5).map((kw, idx) => (
+            <div key={idx} className="flex items-center gap-2">
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
+                idx === 0 ? 'bg-yellow-400 text-yellow-900' :
+                idx === 1 ? 'bg-gray-300 text-gray-700' :
+                idx === 2 ? 'bg-amber-600 text-white' :
+                'bg-gray-200 text-gray-600'
+              }`}>
+                {idx + 1}
+              </span>
+              <span className="flex-1 text-sm text-gray-800 truncate">{kw.query}</span>
+              <span className="text-xs font-medium text-emerald-600">{kw.clicks}회</span>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-gray-500 text-center py-4">데이터 없음</p>
+      )}
+    </div>
+  );
+
+  return (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle className="text-lg flex items-center gap-2">
+          <span>📊</span> 기간별 유입 검색어 Top 5
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {renderKeywordList(data?.lastWeek || [], '지난 주', 'bg-blue-50', 'text-blue-700')}
+          {renderKeywordList(data?.thisWeek || [], '이번 주', 'bg-emerald-50', 'text-emerald-700')}
+          {renderKeywordList(data?.lastMonth || [], '지난 달', 'bg-purple-50', 'text-purple-700')}
+          {renderKeywordList(data?.thisMonth || [], '이번 달', 'bg-orange-50', 'text-orange-700')}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

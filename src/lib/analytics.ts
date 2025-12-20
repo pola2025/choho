@@ -1019,7 +1019,9 @@ function createSearchConsoleClient() {
 // 검색어(쿼리)별 통계 조회
 export async function getSearchKeywords(
   days: number = 30,
-  limit: number = 50
+  limit: number = 50,
+  startDateStr?: string,
+  endDateStr?: string
 ): Promise<SearchKeyword[]> {
   if (!siteUrl) {
     console.error('SEARCH_CONSOLE_SITE_URL is not set');
@@ -1027,7 +1029,7 @@ export async function getSearchKeywords(
   }
 
   // 캐시 확인
-  const cacheKey = generateCacheKey('searchKeywords', days, limit);
+  const cacheKey = generateCacheKey('searchKeywords', days, limit, startDateStr, endDateStr);
   const cached = getCached<SearchKeyword[]>(cacheKey);
   if (cached) return cached;
 
@@ -1035,9 +1037,17 @@ export async function getSearchKeywords(
   if (!searchConsole) return [];
 
   // 날짜 계산
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
+  let startDate: Date;
+  let endDate: Date;
+
+  if (startDateStr && endDateStr) {
+    startDate = new Date(startDateStr);
+    endDate = new Date(endDateStr);
+  } else {
+    endDate = new Date();
+    startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+  }
 
   const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
@@ -1192,9 +1202,19 @@ export async function getComparisonData(
       getChannelGroups(0, previousStart, previousEnd),
     ]);
 
-    if (!currentSummary || !previousSummary) {
+    if (!currentSummary) {
       return null;
     }
+
+    // 이전 기간 데이터가 없으면 0으로 처리
+    const safePreviousSummary = previousSummary || {
+      totalUsers: 0,
+      newUsers: 0,
+      sessions: 0,
+      pageViews: 0,
+      avgSessionDuration: 0,
+      bounceRate: 0,
+    };
 
     // 변화율 계산 (이전 값이 0인 경우 처리)
     const calculateChange = (current: number, previous: number): number => {
@@ -1204,19 +1224,19 @@ export async function getComparisonData(
 
     return {
       current: currentSummary,
-      previous: previousSummary,
+      previous: safePreviousSummary,
       changes: {
-        totalUsers: calculateChange(currentSummary.totalUsers, previousSummary.totalUsers),
-        newUsers: calculateChange(currentSummary.newUsers, previousSummary.newUsers),
-        sessions: calculateChange(currentSummary.sessions, previousSummary.sessions),
-        pageViews: calculateChange(currentSummary.pageViews, previousSummary.pageViews),
-        avgSessionDuration: calculateChange(currentSummary.avgSessionDuration, previousSummary.avgSessionDuration),
-        bounceRate: calculateChange(currentSummary.bounceRate, previousSummary.bounceRate),
+        totalUsers: calculateChange(currentSummary.totalUsers, safePreviousSummary.totalUsers),
+        newUsers: calculateChange(currentSummary.newUsers, safePreviousSummary.newUsers),
+        sessions: calculateChange(currentSummary.sessions, safePreviousSummary.sessions),
+        pageViews: calculateChange(currentSummary.pageViews, safePreviousSummary.pageViews),
+        avgSessionDuration: calculateChange(currentSummary.avgSessionDuration, safePreviousSummary.avgSessionDuration),
+        bounceRate: calculateChange(currentSummary.bounceRate, safePreviousSummary.bounceRate),
       },
       currentDaily,
-      previousDaily,
-      currentChannels,
-      previousChannels,
+      previousDaily: previousDaily || [],
+      currentChannels: currentChannels || [],
+      previousChannels: previousChannels || [],
     };
   } catch (error) {
     console.error('Error fetching comparison data:', error);
