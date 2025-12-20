@@ -582,7 +582,7 @@ export function CombinedWinterPopup() {
       {/* Hide Today Button - Desktop */}
       <button
         onClick={handleHideToday}
-        className="hidden md:block fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-2 text-sm text-white/70 hover:text-white bg-black/30 hover:bg-black/50 rounded-full transition-colors backdrop-blur-sm"
+        className="hidden md:block fixed bottom-3 left-1/2 -translate-x-1/2 px-6 py-2 text-sm text-white/70 hover:text-white bg-black/30 hover:bg-black/50 rounded-full transition-colors backdrop-blur-sm"
       >
         오늘 하루 보지 않기
       </button>
