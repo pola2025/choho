@@ -1080,7 +1080,34 @@ export default function ChorigolHistorySection({ data }: ChorigolHistorySectionP
             </article>
 
             {/* 모달 푸터 - 네비게이션 */}
-            <div className="sticky bottom-0 bg-white border-t border-border px-6 py-4">
+            {/* 모바일: 하단 고정 3등분 버튼 */}
+            <div className="md:hidden sticky bottom-0 bg-white border-t border-border">
+              <div className="grid grid-cols-3 divide-x divide-border">
+                <button
+                  onClick={() => navigateHistory('prev')}
+                  className="flex items-center justify-center gap-2 py-4 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted/80 transition-colors"
+                >
+                  <ChevronLeft size={20} />
+                  <span>이전</span>
+                </button>
+                <button
+                  onClick={closeModal}
+                  className="flex items-center justify-center gap-2 py-4 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted/80 transition-colors"
+                >
+                  <X size={20} />
+                  <span>닫기</span>
+                </button>
+                <button
+                  onClick={() => navigateHistory('next')}
+                  className="flex items-center justify-center gap-2 py-4 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted active:bg-muted/80 transition-colors"
+                >
+                  <span>다음</span>
+                  <ChevronRight size={20} />
+                </button>
+              </div>
+            </div>
+            {/* PC: 기존 스타일 */}
+            <div className="hidden md:block sticky bottom-0 bg-white border-t border-border px-6 py-4">
               <div className="flex items-center justify-between">
                 <button
                   onClick={() => navigateHistory('prev')}
