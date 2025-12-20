@@ -1,3 +1,6 @@
+// Google Analytics
+export const GA_MEASUREMENT_ID = "G-VPH2XESGW3";
+
 export const SITE_CONFIG = {
   name: "초호펜션",
   description: "서울에서 1시간, 자연 속 힐링 펜션",

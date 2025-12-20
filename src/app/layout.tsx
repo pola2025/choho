@@ -6,6 +6,7 @@ import {
   LodgingBusinessJsonLd,
   WebSiteJsonLd,
 } from "@/components/JsonLd";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 
 const BASE_URL = "https://www.chorigol.co.kr";
 
@@ -91,6 +92,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        <GoogleAnalytics />
         <OrganizationJsonLd />
         <LodgingBusinessJsonLd />
         <WebSiteJsonLd />
