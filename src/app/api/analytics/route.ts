@@ -574,56 +574,15 @@ export async function GET(request: Request) {
       }
     }
 
-    // 네이버 광고 일별 통계 (캐시 우선)
+    // 네이버 광고 일별 통계 (캐시 전용 - API 호출 안함)
     if (type === 'naver-daily') {
       try {
         const today = new Date();
         const thisMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
         const todayStr = today.toISOString().split('T')[0];
-
         const queryStartDate = startDate || thisMonthStart;
         const queryEndDate = endDate || todayStr;
-
-        // 1. Airtable에서 캐시된 데이터 조회
         const cachedDaily = await getNaverAdDaily(queryStartDate, queryEndDate);
-
-        // 2. 누락된 날짜 확인 (오늘 데이터는 항상 갱신)
-        const missingDates = await getMissingNaverAdDates(queryStartDate, queryEndDate);
-
-        // 3. 누락된 날짜가 있으면 API에서 가져와 저장
-        if (missingDates.length > 0) {
-          const campaigns = await getCampaigns();
-          if (campaigns.length > 0) {
-            const campaignIds = campaigns.map(c => c.nccCampaignId);
-
-            // 누락된 날짜를 하루씩 조회 (API가 일별 데이터를 안 줘서)
-            const freshDaily = await getMultipleDaysStats(campaignIds, missingDates);
-
-            // Airtable에 저장
-            if (freshDaily.length > 0) {
-              const recordsToSave: NaverAdDailyRecord[] = freshDaily.map(d => ({
-                date: d.date,
-                impCnt: d.impCnt,
-                clkCnt: d.clkCnt,
-                salesAmt: d.salesAmt,
-                ctr: d.ctr,
-                cpc: d.cpc,
-                ccnt: d.ccnt,
-              }));
-              await saveNaverAdDaily(recordsToSave);
-            }
-
-            // 캐시 갱신 후 다시 조회
-            const updatedDaily = await getNaverAdDaily(queryStartDate, queryEndDate);
-            return NextResponse.json({
-              daily: updatedDaily,
-              source: 'naver-api+cache',
-              synced: freshDaily.length,
-            });
-          }
-        }
-
-        // 캐시된 데이터 반환
         return NextResponse.json({
           daily: cachedDaily,
           source: 'cache',
@@ -631,10 +590,7 @@ export async function GET(request: Request) {
         });
       } catch (error) {
         console.error('Naver daily error:', error);
-        return NextResponse.json(
-          { error: 'Failed to fetch naver daily stats', details: String(error) },
-          { status: 500 }
-        );
+        return NextResponse.json({ daily: [], source: 'cache', cached: 0 });
       }
     }
 
