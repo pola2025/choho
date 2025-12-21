@@ -493,7 +493,7 @@ export function CombinedWinterPopup() {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-start xl:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
       {/* Close Button */}
       <button
         onClick={handleClose}
@@ -503,16 +503,17 @@ export function CombinedWinterPopup() {
         <X className="w-5 h-5 text-neutral-700" />
       </button>
 
-      {/* Desktop: 4 columns Grid + BBQ Banner */}
-      <div className="hidden md:flex md:flex-col gap-6 max-w-7xl w-full animate-in fade-in zoom-in duration-300 my-auto px-4">
-        <div className="grid grid-cols-4 gap-4">
-          <div className="h-[520px]">{popupCards[0]}</div>
-          <div className="h-[520px]">{popupCards[1]}</div>
-          <div className="h-[520px]">{popupCards[2]}</div>
-          <div className="h-[520px]">{popupCards[3]}</div>
+      {/* Desktop: Responsive Grid + BBQ Banner */}
+      <div className="hidden md:flex md:flex-col gap-4 max-w-7xl w-full animate-in fade-in zoom-in duration-300 my-4 xl:my-auto px-4">
+        {/* Tablet: 2x2 grid, Desktop: 1x4 grid */}
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 pt-8">
+          <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[0]}</div>
+          <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[1]}</div>
+          <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[2]}</div>
+          <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[3]}</div>
         </div>
         {/* BBQ 배너 */}
-        <div className="mt-12">
+        <div className="mt-6">
           <BBQBanner />
         </div>
       </div>
