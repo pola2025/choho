@@ -1668,6 +1668,9 @@ export default function AnalyticsPage() {
           {/* 기간별 검색어 Top5 */}
           <PeriodKeywordsSection />
 
+          {/* 네이버 검색광고 키워드 */}
+          <NaverKeywordsSection />
+
           {/* 검색어 순위 */}
           <Card>
             <CardHeader>
@@ -2484,6 +2487,174 @@ function PeriodKeywordsSection() {
           {renderKeywordList(data?.lastMonth || [], '지난 달', 'bg-purple-50', 'text-purple-700')}
           {renderKeywordList(data?.thisMonth || [], '이번 달', 'bg-orange-50', 'text-orange-700')}
         </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// 네이버 검색광고 키워드 컴포넌트
+interface NaverKeyword {
+  keyword: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  avgPosition: number;
+  cost: number;
+  conversions: number;
+}
+
+function NaverKeywordsSection() {
+  const [data, setData] = useState<NaverKeyword[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchNaverKeywords();
+  }, []);
+
+  const fetchNaverKeywords = async () => {
+    try {
+      setLoading(true);
+      // 먼저 실시간 동기화 시도
+      const response = await fetch('/api/analytics?type=naver-keywords-sync');
+      const result = await response.json();
+      if (result.keywords && result.keywords.length > 0) {
+        setData(result.keywords);
+        setError(null);
+      } else if (result.error) {
+        setError(result.error);
+      }
+    } catch (err) {
+      console.error('Error fetching naver keywords:', err);
+      setError('데이터를 불러오는데 실패했습니다');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSync = async () => {
+    setSyncing(true);
+    await fetchNaverKeywords();
+    setSyncing(false);
+  };
+
+  // 광고비 포맷
+  const formatCost = (cost: number) => {
+    if (cost >= 10000) {
+      return `${(cost / 10000).toFixed(1)}만원`;
+    }
+    return `${cost.toLocaleString()}원`;
+  };
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <span>🔎</span> 네이버 검색광고 키워드
+            <span className="ml-2 text-gray-500 text-sm font-normal">로딩 중...</span>
+          </CardTitle>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <span>🔎</span> 네이버 검색광고 키워드
+            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-2">
+              이번 달
+            </span>
+          </CardTitle>
+          <button
+            onClick={handleSync}
+            disabled={syncing}
+            className="text-xs px-3 py-1.5 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors disabled:opacity-50"
+          >
+            {syncing ? '동기화 중...' : '🔄 새로고침'}
+          </button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {error ? (
+          <div className="text-center py-8">
+            <p className="text-red-500 mb-2">{error}</p>
+            <p className="text-xs text-gray-400">네이버 검색광고 API 연결을 확인해주세요</p>
+          </div>
+        ) : data.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-green-50">
+                  <th className="text-left py-2 px-3 font-medium text-gray-600">순위</th>
+                  <th className="text-left py-2 px-3 font-medium text-gray-600">키워드</th>
+                  <th className="text-right py-2 px-3 font-medium text-gray-600">클릭</th>
+                  <th className="text-right py-2 px-3 font-medium text-gray-600">노출</th>
+                  <th className="text-right py-2 px-3 font-medium text-gray-600">CTR</th>
+                  <th className="text-right py-2 px-3 font-medium text-gray-600">평균순위</th>
+                  <th className="text-right py-2 px-3 font-medium text-gray-600">광고비</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.slice(0, 20).map((kw, index) => (
+                  <tr key={index} className="border-b last:border-0 hover:bg-gray-50">
+                    <td className="py-2 px-3">
+                      <span
+                        className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${
+                          index < 3
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-gray-100 text-gray-600'
+                        }`}
+                      >
+                        {index + 1}
+                      </span>
+                    </td>
+                    <td className="py-2 px-3">
+                      <span className="font-medium text-gray-900">{kw.keyword}</span>
+                    </td>
+                    <td className="py-2 px-3 text-right font-bold text-green-700">
+                      {kw.clicks.toLocaleString()}
+                    </td>
+                    <td className="py-2 px-3 text-right text-gray-600">
+                      {kw.impressions.toLocaleString()}
+                    </td>
+                    <td className="py-2 px-3 text-right">
+                      <span
+                        className={`${kw.ctr >= 5 ? 'text-green-600' : kw.ctr >= 2 ? 'text-amber-600' : 'text-gray-500'}`}
+                      >
+                        {kw.ctr.toFixed(2)}%
+                      </span>
+                    </td>
+                    <td className="py-2 px-3 text-right">
+                      <span
+                        className={`font-medium ${kw.avgPosition <= 2 ? 'text-green-600' : kw.avgPosition <= 5 ? 'text-blue-600' : 'text-gray-500'}`}
+                      >
+                        {kw.avgPosition.toFixed(1)}
+                      </span>
+                    </td>
+                    <td className="py-2 px-3 text-right text-gray-600">
+                      {formatCost(kw.cost)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {data.length > 20 && (
+              <p className="text-center text-xs text-gray-400 mt-3">
+                상위 20개 키워드만 표시됩니다 (전체 {data.length}개)
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500 mb-2">네이버 검색광고 키워드 데이터가 없습니다</p>
+            <p className="text-xs text-gray-400">광고 캠페인에 등록된 키워드가 있는지 확인해주세요</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

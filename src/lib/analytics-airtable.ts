@@ -11,6 +11,9 @@ const TABLES = {
   sources: process.env.AIRTABLE_ANALYTICS_SOURCES_TABLE,
   devices: process.env.AIRTABLE_ANALYTICS_DEVICES_TABLE,
   keywords: process.env.AIRTABLE_ANALYTICS_KEYWORDS_TABLE,
+  naverKeywords: process.env.AIRTABLE_NAVER_KEYWORDS_TABLE,
+  naverAdDaily: process.env.AIRTABLE_NAVER_AD_DAILY_TABLE,
+  naverAdCampaigns: process.env.AIRTABLE_NAVER_AD_CAMPAIGNS_TABLE,
 } as const;
 
 type TableName = keyof typeof TABLES;
@@ -59,8 +62,9 @@ export async function getRecordsByDate(
   const tableId = TABLES[table];
   if (!tableId) throw new Error(`Unknown table: ${table}`);
 
+  // Airtable Date 필드는 IS_SAME 함수로 비교
   const result = await airtableRequest(tableId, 'GET', undefined, {
-    filterByFormula: `{date}='${date}'`,
+    filterByFormula: `IS_SAME({date}, '${date}', 'day')`,
   });
 
   return result.records || [];
@@ -75,8 +79,9 @@ export async function getRecordsByDateRange(
   const tableId = TABLES[table];
   if (!tableId) throw new Error(`Unknown table: ${table}`);
 
+  // Airtable Date 필드는 IS_AFTER, IS_BEFORE 함수로 비교
   const result = await airtableRequest(tableId, 'GET', undefined, {
-    filterByFormula: `AND({date}>='${startDate}', {date}<='${endDate}')`,
+    filterByFormula: `AND(IS_AFTER({date}, DATEADD('${startDate}', -1, 'day')), IS_BEFORE({date}, DATEADD('${endDate}', 1, 'day')))`,
     'sort[0][field]': 'date',
     'sort[0][direction]': 'desc',
   });
@@ -259,87 +264,480 @@ export async function saveKeywords(
   return upsertByDate('keywords', date, records);
 }
 
-// 최신 Summary 조회 (최근 N일)
-export async function getLatestSummary(days: number = 30) {
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
-
+// 최신 Summary 조회 (최근 N일 또는 날짜 범위)
+export async function getLatestSummary(
+  days: number = 30,
+  startDateStr?: string,
+  endDateStr?: string
+) {
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
 
-  const records = await getRecordsByDateRange(
-    'summary',
-    formatDate(startDate),
-    formatDate(endDate)
-  );
+  let start: string;
+  let end: string;
+
+  if (startDateStr && endDateStr) {
+    // 날짜 범위가 지정된 경우
+    start = startDateStr;
+    end = endDateStr;
+  } else {
+    // days 기준으로 계산
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    start = formatDate(startDate);
+    end = formatDate(endDate);
+  }
+
+  const records = await getRecordsByDateRange('summary', start, end);
 
   return records.map((r) => r.fields);
 }
 
-// 최신 Pages 조회
-export async function getLatestPages(days: number = 30) {
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
-
+// 최신 Pages 조회 (최근 N일 또는 날짜 범위)
+export async function getLatestPages(
+  days: number = 30,
+  startDateStr?: string,
+  endDateStr?: string
+) {
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
 
-  const records = await getRecordsByDateRange(
-    'pages',
-    formatDate(startDate),
-    formatDate(endDate)
-  );
+  let start: string;
+  let end: string;
 
+  if (startDateStr && endDateStr) {
+    start = startDateStr;
+    end = endDateStr;
+  } else {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    start = formatDate(startDate);
+    end = formatDate(endDate);
+  }
+
+  const records = await getRecordsByDateRange('pages', start, end);
   return records.map((r) => r.fields);
 }
 
-// 최신 Sources 조회
-export async function getLatestSources(days: number = 30) {
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
-
+// 최신 Sources 조회 (최근 N일 또는 날짜 범위)
+export async function getLatestSources(
+  days: number = 30,
+  startDateStr?: string,
+  endDateStr?: string
+) {
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
 
-  const records = await getRecordsByDateRange(
-    'sources',
-    formatDate(startDate),
-    formatDate(endDate)
-  );
+  let start: string;
+  let end: string;
 
+  if (startDateStr && endDateStr) {
+    start = startDateStr;
+    end = endDateStr;
+  } else {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    start = formatDate(startDate);
+    end = formatDate(endDate);
+  }
+
+  const records = await getRecordsByDateRange('sources', start, end);
   return records.map((r) => r.fields);
 }
 
-// 최신 Devices 조회
-export async function getLatestDevices(days: number = 30) {
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
-
+// 최신 Devices 조회 (최근 N일 또는 날짜 범위)
+export async function getLatestDevices(
+  days: number = 30,
+  startDateStr?: string,
+  endDateStr?: string
+) {
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
 
-  const records = await getRecordsByDateRange(
-    'devices',
-    formatDate(startDate),
-    formatDate(endDate)
-  );
+  let start: string;
+  let end: string;
 
+  if (startDateStr && endDateStr) {
+    start = startDateStr;
+    end = endDateStr;
+  } else {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    start = formatDate(startDate);
+    end = formatDate(endDate);
+  }
+
+  const records = await getRecordsByDateRange('devices', start, end);
   return records.map((r) => r.fields);
 }
 
-// 최신 Keywords 조회
-export async function getLatestKeywords(days: number = 30) {
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days);
-
+// 최신 Keywords 조회 (최근 N일 또는 날짜 범위)
+export async function getLatestKeywords(
+  days: number = 30,
+  startDateStr?: string,
+  endDateStr?: string
+) {
   const formatDate = (d: Date) => d.toISOString().split('T')[0];
 
-  const records = await getRecordsByDateRange(
-    'keywords',
-    formatDate(startDate),
-    formatDate(endDate)
-  );
+  let start: string;
+  let end: string;
 
+  if (startDateStr && endDateStr) {
+    start = startDateStr;
+    end = endDateStr;
+  } else {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    start = formatDate(startDate);
+    end = formatDate(endDate);
+  }
+
+  const records = await getRecordsByDateRange('keywords', start, end);
   return records.map((r) => r.fields);
+}
+
+// ============================================
+// 네이버 검색광고 키워드 (월별 저장)
+// ============================================
+
+// 네이버 키워드 데이터 저장 (월별)
+export async function saveNaverKeywords(
+  yearMonth: string, // 'YYYY-MM' 형식
+  keywords: Array<{
+    keyword: string;
+    impressions: number;
+    clicks: number;
+    ctr: number;
+    avgPosition: number;
+    cost: number;
+    conversions: number;
+  }>
+) {
+  // 기존 해당 월 데이터 삭제 후 새로 저장
+  const tableId = TABLES.naverKeywords;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_KEYWORDS_TABLE not configured');
+    return { created: 0, updated: 0, deleted: 0 };
+  }
+
+  // 해당 월 데이터 조회 및 삭제
+  const existing = await airtableRequest(tableId, 'GET', undefined, {
+    filterByFormula: `{yearMonth} = '${yearMonth}'`,
+  });
+
+  const existingRecords = existing.records || [];
+  if (existingRecords.length > 0) {
+    const ids = existingRecords.map((r: AirtableRecord) => r.id).filter(Boolean) as string[];
+    for (let i = 0; i < ids.length; i += 10) {
+      const batch = ids.slice(i, i + 10);
+      const params: Record<string, string> = {};
+      batch.forEach((id, index) => {
+        params[`records[${index}]`] = id;
+      });
+      await airtableRequest(tableId, 'DELETE', undefined, params);
+    }
+  }
+
+  // 새 데이터 저장
+  const records = keywords.map((kw) => ({
+    yearMonth,
+    ...kw,
+    syncedAt: new Date().toISOString(),
+  }));
+
+  // Airtable은 한 번에 10개까지만 생성 가능
+  const batches: typeof records[] = [];
+  for (let i = 0; i < records.length; i += 10) {
+    batches.push(records.slice(i, i + 10));
+  }
+
+  let created = 0;
+  for (const batch of batches) {
+    const result = await airtableRequest(tableId, 'POST', {
+      records: batch.map((fields) => ({ fields })),
+    });
+    created += (result.records || []).length;
+  }
+
+  return {
+    created,
+    updated: 0,
+    deleted: existingRecords.length,
+  };
+}
+
+// 네이버 키워드 조회 (월별)
+export async function getNaverKeywordsByMonth(yearMonth: string) {
+  const tableId = TABLES.naverKeywords;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_KEYWORDS_TABLE not configured');
+    return [];
+  }
+
+  const result = await airtableRequest(tableId, 'GET', undefined, {
+    filterByFormula: `{yearMonth} = '${yearMonth}'`,
+    'sort[0][field]': 'clicks',
+    'sort[0][direction]': 'desc',
+  });
+
+  return (result.records || []).map((r: AirtableRecord) => r.fields);
+}
+
+// 네이버 키워드 조회 (범위 - 여러 달)
+export async function getNaverKeywordsRange(startYearMonth: string, endYearMonth: string) {
+  const tableId = TABLES.naverKeywords;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_KEYWORDS_TABLE not configured');
+    return [];
+  }
+
+  const result = await airtableRequest(tableId, 'GET', undefined, {
+    filterByFormula: `AND({yearMonth} >= '${startYearMonth}', {yearMonth} <= '${endYearMonth}')`,
+    'sort[0][field]': 'yearMonth',
+    'sort[0][direction]': 'desc',
+  });
+
+  return (result.records || []).map((r: AirtableRecord) => r.fields);
+}
+
+// 최근 N개월 네이버 키워드 추이 조회
+export async function getNaverKeywordsTrend(months: number = 6) {
+  const tableId = TABLES.naverKeywords;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_KEYWORDS_TABLE not configured');
+    return [];
+  }
+
+  // 최근 N개월 계산
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setMonth(startDate.getMonth() - months + 1);
+
+  const startYearMonth = `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}`;
+  const endYearMonth = `${endDate.getFullYear()}-${String(endDate.getMonth() + 1).padStart(2, '0')}`;
+
+  return getNaverKeywordsRange(startYearMonth, endYearMonth);
+}
+
+// ============================================
+// 네이버 광고 일별 통계 (캐싱)
+// ============================================
+
+export interface NaverAdDailyRecord {
+  date: string;
+  impCnt: number;
+  clkCnt: number;
+  salesAmt: number;
+  ctr: number;
+  cpc: number;
+  ccnt: number;
+  syncedAt?: string;
+}
+
+// 네이버 광고 일별 데이터 저장
+export async function saveNaverAdDaily(
+  records: NaverAdDailyRecord[]
+): Promise<{ created: number; updated: number; deleted: number }> {
+  const tableId = TABLES.naverAdDaily;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_AD_DAILY_TABLE not configured');
+    return { created: 0, updated: 0, deleted: 0 };
+  }
+
+  let totalCreated = 0;
+  let totalDeleted = 0;
+
+  // 날짜별로 그룹화하여 upsert
+  for (const record of records) {
+    // 기존 데이터 삭제
+    const existing = await airtableRequest(tableId, 'GET', undefined, {
+      filterByFormula: `{date} = '${record.date}'`,
+    });
+
+    const existingRecords = existing.records || [];
+    if (existingRecords.length > 0) {
+      const ids = existingRecords.map((r: AirtableRecord) => r.id).filter(Boolean) as string[];
+      for (let i = 0; i < ids.length; i += 10) {
+        const batch = ids.slice(i, i + 10);
+        const params: Record<string, string> = {};
+        batch.forEach((id, index) => {
+          params[`records[${index}]`] = id;
+        });
+        await airtableRequest(tableId, 'DELETE', undefined, params);
+      }
+      totalDeleted += ids.length;
+    }
+
+    // 새 데이터 저장
+    await airtableRequest(tableId, 'POST', {
+      records: [{
+        fields: {
+          ...record,
+          syncedAt: new Date().toISOString(),
+        }
+      }],
+    });
+    totalCreated++;
+  }
+
+  return { created: totalCreated, updated: 0, deleted: totalDeleted };
+}
+
+// 네이버 광고 일별 데이터 조회 (날짜 범위)
+export async function getNaverAdDaily(
+  startDate: string,
+  endDate: string
+): Promise<NaverAdDailyRecord[]> {
+  const tableId = TABLES.naverAdDaily;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_AD_DAILY_TABLE not configured');
+    return [];
+  }
+
+  const result = await airtableRequest(tableId, 'GET', undefined, {
+    filterByFormula: `AND({date} >= '${startDate}', {date} <= '${endDate}')`,
+    'sort[0][field]': 'date',
+    'sort[0][direction]': 'asc',
+  });
+
+  return (result.records || []).map((r: AirtableRecord) => ({
+    date: String(r.fields.date || ''),
+    impCnt: Number(r.fields.impCnt) || 0,
+    clkCnt: Number(r.fields.clkCnt) || 0,
+    salesAmt: Number(r.fields.salesAmt) || 0,
+    ctr: Number(r.fields.ctr) || 0,
+    cpc: Number(r.fields.cpc) || 0,
+    ccnt: Number(r.fields.ccnt) || 0,
+    syncedAt: r.fields.syncedAt ? String(r.fields.syncedAt) : undefined,
+  }));
+}
+
+// 네이버 광고 일별 데이터 중 누락된 날짜 확인
+export async function getMissingNaverAdDates(
+  startDate: string,
+  endDate: string
+): Promise<string[]> {
+  const existingData = await getNaverAdDaily(startDate, endDate);
+  const existingDates = new Set(existingData.map(d => d.date));
+
+  const missingDates: string[] = [];
+  const current = new Date(startDate);
+  const end = new Date(endDate);
+  const today = new Date().toISOString().split('T')[0];
+
+  while (current <= end) {
+    const dateStr = current.toISOString().split('T')[0];
+    // 오늘 날짜는 항상 갱신 필요 (당일 데이터 업데이트)
+    if (!existingDates.has(dateStr) || dateStr === today) {
+      missingDates.push(dateStr);
+    }
+    current.setDate(current.getDate() + 1);
+  }
+
+  return missingDates;
+}
+
+// ============================================
+// 네이버 광고 캠페인별 통계 (캐싱)
+// ============================================
+
+export interface NaverAdCampaignRecord {
+  date: string;
+  campaignId: string;
+  campaignName: string;
+  status: string;
+  dailyBudget: number;
+  impCnt: number;
+  clkCnt: number;
+  salesAmt: number;
+  ctr: number;
+  cpc: number;
+  ccnt: number;
+  syncedAt?: string;
+}
+
+// 네이버 광고 캠페인별 데이터 저장
+export async function saveNaverAdCampaigns(
+  date: string,
+  campaigns: Array<Omit<NaverAdCampaignRecord, 'date' | 'syncedAt'>>
+): Promise<{ created: number; updated: number; deleted: number }> {
+  const tableId = TABLES.naverAdCampaigns;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_AD_CAMPAIGNS_TABLE not configured');
+    return { created: 0, updated: 0, deleted: 0 };
+  }
+
+  // 해당 날짜 기존 데이터 삭제
+  const existing = await airtableRequest(tableId, 'GET', undefined, {
+    filterByFormula: `{date} = '${date}'`,
+  });
+
+  const existingRecords = existing.records || [];
+  if (existingRecords.length > 0) {
+    const ids = existingRecords.map((r: AirtableRecord) => r.id).filter(Boolean) as string[];
+    for (let i = 0; i < ids.length; i += 10) {
+      const batch = ids.slice(i, i + 10);
+      const params: Record<string, string> = {};
+      batch.forEach((id, index) => {
+        params[`records[${index}]`] = id;
+      });
+      await airtableRequest(tableId, 'DELETE', undefined, params);
+    }
+  }
+
+  // 새 데이터 저장
+  const records = campaigns.map((c) => ({
+    date,
+    ...c,
+    syncedAt: new Date().toISOString(),
+  }));
+
+  const batches: typeof records[] = [];
+  for (let i = 0; i < records.length; i += 10) {
+    batches.push(records.slice(i, i + 10));
+  }
+
+  let created = 0;
+  for (const batch of batches) {
+    const result = await airtableRequest(tableId, 'POST', {
+      records: batch.map((fields) => ({ fields })),
+    });
+    created += (result.records || []).length;
+  }
+
+  return { created, updated: 0, deleted: existingRecords.length };
+}
+
+// 네이버 광고 캠페인별 데이터 조회 (날짜 범위)
+export async function getNaverAdCampaigns(
+  startDate: string,
+  endDate: string
+): Promise<NaverAdCampaignRecord[]> {
+  const tableId = TABLES.naverAdCampaigns;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_AD_CAMPAIGNS_TABLE not configured');
+    return [];
+  }
+
+  const result = await airtableRequest(tableId, 'GET', undefined, {
+    filterByFormula: `AND({date} >= '${startDate}', {date} <= '${endDate}')`,
+    'sort[0][field]': 'date',
+    'sort[0][direction]': 'desc',
+  });
+
+  return (result.records || []).map((r: AirtableRecord) => ({
+    date: String(r.fields.date || ''),
+    campaignId: String(r.fields.campaignId || ''),
+    campaignName: String(r.fields.campaignName || ''),
+    status: String(r.fields.status || ''),
+    dailyBudget: Number(r.fields.dailyBudget) || 0,
+    impCnt: Number(r.fields.impCnt) || 0,
+    clkCnt: Number(r.fields.clkCnt) || 0,
+    salesAmt: Number(r.fields.salesAmt) || 0,
+    ctr: Number(r.fields.ctr) || 0,
+    cpc: Number(r.fields.cpc) || 0,
+    ccnt: Number(r.fields.ccnt) || 0,
+    syncedAt: r.fields.syncedAt ? String(r.fields.syncedAt) : undefined,
+  }));
 }

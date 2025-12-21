@@ -27,6 +27,30 @@ import {
   getLatestSources,
   getLatestDevices,
   getLatestKeywords,
+  saveNaverKeywords,
+  getNaverKeywordsByMonth,
+  getNaverKeywordsTrend,
+} from '@/lib/analytics-airtable';
+import {
+  getAllKeywordStats,
+  testConnection as testNaverConnection,
+  getAdSummary,
+  getDailyStats,
+  getMultipleDaysStats,
+  getCampaigns,
+  getCampaignsWithStats,
+  getMonthComparison,
+  getKeywordSearchVolume,
+  getRegisteredKeywordsSearchVolume,
+  type DailyStatRecord,
+} from '@/lib/naver-searchad';
+import {
+  saveNaverAdDaily,
+  getNaverAdDaily,
+  getMissingNaverAdDates,
+  saveNaverAdCampaigns,
+  getNaverAdCampaigns,
+  type NaverAdDailyRecord,
 } from '@/lib/analytics-airtable';
 
 // Airtable 데이터 유효성 확인 (데이터가 있고 최근 데이터인지)
@@ -47,8 +71,29 @@ interface SummaryTotals {
 function transformSummaryFromAirtable(records: Record<string, unknown>[]) {
   if (records.length === 0) return null;
 
-  // 전체 합계 계산
-  const totals = records.reduce<SummaryTotals>(
+  // 날짜별로 그룹화하고 각 날짜의 최신 레코드(가장 큰 값)만 사용
+  // Airtable에 시간별 누적 스냅샷이 저장되어 있으므로, 같은 날짜의 최신 데이터만 사용
+  const dateMap = new Map<string, Record<string, unknown>>();
+
+  for (const r of records) {
+    const date = String(r.date || '');
+    const existing = dateMap.get(date);
+
+    if (!existing) {
+      dateMap.set(date, r);
+    } else {
+      // 같은 날짜에 여러 레코드가 있으면 syncedAt이 더 최신인 것 사용
+      const existingSyncedAt = String(existing.syncedAt || '');
+      const currentSyncedAt = String(r.syncedAt || '');
+      if (currentSyncedAt > existingSyncedAt) {
+        dateMap.set(date, r);
+      }
+    }
+  }
+
+  // 날짜별 최신 레코드들의 합계 계산
+  const dailyRecords = Array.from(dateMap.values());
+  const totals = dailyRecords.reduce<SummaryTotals>(
     (acc, r) => ({
       totalUsers: acc.totalUsers + (Number(r.totalUsers) || 0),
       newUsers: acc.newUsers + (Number(r.newUsers) || 0),
@@ -61,7 +106,7 @@ function transformSummaryFromAirtable(records: Record<string, unknown>[]) {
   );
 
   // 평균값 계산
-  const count = records.length;
+  const count = dailyRecords.length;
   return {
     totalUsers: totals.totalUsers,
     newUsers: totals.newUsers,
@@ -415,6 +460,464 @@ export async function GET(request: Request) {
       return NextResponse.json({ comparison: comparisonData, source: 'ga' });
     }
 
+    // 네이버 검색광고 키워드 조회
+    if (type === 'naver-keywords') {
+      const yearMonth = searchParams.get('yearMonth');
+      const months = parseInt(searchParams.get('months') || '6');
+
+      try {
+        if (yearMonth) {
+          // 특정 월 데이터 조회
+          const keywords = await getNaverKeywordsByMonth(yearMonth);
+          return NextResponse.json({ keywords, source: 'airtable' });
+        } else {
+          // 최근 N개월 추이 조회
+          const keywords = await getNaverKeywordsTrend(months);
+          return NextResponse.json({ keywords, source: 'airtable' });
+        }
+      } catch (error) {
+        console.error('Naver keywords fetch error:', error);
+        return NextResponse.json({ keywords: [], source: 'airtable', error: 'Failed to fetch' });
+      }
+    }
+
+    // 네이버 검색광고 실시간 조회 및 저장
+    if (type === 'naver-keywords-sync') {
+      const yearMonth = searchParams.get('yearMonth') ||
+        `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+
+      try {
+        // 이번 달 시작일과 현재 날짜
+        const [year, month] = yearMonth.split('-').map(Number);
+        const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
+        const endDate = new Date().toISOString().split('T')[0];
+
+        // 네이버 API에서 키워드 통계 조회
+        const stats = await getAllKeywordStats(startDate, endDate);
+
+        if (stats.length > 0) {
+          // Airtable에 저장
+          const saveResult = await saveNaverKeywords(yearMonth, stats);
+          return NextResponse.json({
+            keywords: stats,
+            saved: saveResult,
+            yearMonth,
+            source: 'naver-api',
+          });
+        }
+
+        return NextResponse.json({
+          keywords: [],
+          message: 'No keyword stats found',
+          yearMonth,
+          source: 'naver-api',
+        });
+      } catch (error) {
+        console.error('Naver keywords sync error:', error);
+        return NextResponse.json(
+          { error: 'Failed to sync naver keywords', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 API 연결 테스트
+    if (type === 'naver-test') {
+      try {
+        const connected = await testNaverConnection();
+        return NextResponse.json({ connected, source: 'naver-api' });
+      } catch (error) {
+        console.error('Naver API test error:', error);
+        return NextResponse.json({ connected: false, error: String(error), source: 'naver-api' });
+      }
+    }
+
+    // 네이버 광고 요약 통계
+    if (type === 'naver-summary') {
+      try {
+        const today = new Date();
+        const thisMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
+        const todayStr = today.toISOString().split('T')[0];
+
+        const summary = await getAdSummary(
+          startDate || thisMonthStart,
+          endDate || todayStr
+        );
+        return NextResponse.json({ summary, source: 'naver-api' });
+      } catch (error) {
+        console.error('Naver summary error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch naver summary', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 광고 일별 통계 (캐시 우선)
+    if (type === 'naver-daily') {
+      try {
+        const today = new Date();
+        const thisMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
+        const todayStr = today.toISOString().split('T')[0];
+
+        const queryStartDate = startDate || thisMonthStart;
+        const queryEndDate = endDate || todayStr;
+
+        // 1. Airtable에서 캐시된 데이터 조회
+        const cachedDaily = await getNaverAdDaily(queryStartDate, queryEndDate);
+
+        // 2. 누락된 날짜 확인 (오늘 데이터는 항상 갱신)
+        const missingDates = await getMissingNaverAdDates(queryStartDate, queryEndDate);
+
+        // 3. 누락된 날짜가 있으면 API에서 가져와 저장
+        if (missingDates.length > 0) {
+          const campaigns = await getCampaigns();
+          if (campaigns.length > 0) {
+            const campaignIds = campaigns.map(c => c.nccCampaignId);
+
+            // 누락된 날짜를 하루씩 조회 (API가 일별 데이터를 안 줘서)
+            const freshDaily = await getMultipleDaysStats(campaignIds, missingDates);
+
+            // Airtable에 저장
+            if (freshDaily.length > 0) {
+              const recordsToSave: NaverAdDailyRecord[] = freshDaily.map(d => ({
+                date: d.date,
+                impCnt: d.impCnt,
+                clkCnt: d.clkCnt,
+                salesAmt: d.salesAmt,
+                ctr: d.ctr,
+                cpc: d.cpc,
+                ccnt: d.ccnt,
+              }));
+              await saveNaverAdDaily(recordsToSave);
+            }
+
+            // 캐시 갱신 후 다시 조회
+            const updatedDaily = await getNaverAdDaily(queryStartDate, queryEndDate);
+            return NextResponse.json({
+              daily: updatedDaily,
+              source: 'naver-api+cache',
+              synced: freshDaily.length,
+            });
+          }
+        }
+
+        // 캐시된 데이터 반환
+        return NextResponse.json({
+          daily: cachedDaily,
+          source: 'cache',
+          cached: cachedDaily.length,
+        });
+      } catch (error) {
+        console.error('Naver daily error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch naver daily stats', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 광고 캠페인별 통계
+    if (type === 'naver-campaigns') {
+      try {
+        const today = new Date();
+        const thisMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
+        const todayStr = today.toISOString().split('T')[0];
+
+        const campaigns = await getCampaignsWithStats(
+          startDate || thisMonthStart,
+          endDate || todayStr
+        );
+        return NextResponse.json({ campaigns, source: 'naver-api' });
+      } catch (error) {
+        console.error('Naver campaigns error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch naver campaigns', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 광고 주간별 통계 (일별 캐시 데이터 집계)
+    if (type === 'naver-weekly') {
+      try {
+        const weeks = parseInt(searchParams.get('weeks') || '8');
+        const today = new Date();
+
+        // 이번 주 월요일 계산
+        const dayOfWeek = today.getDay();
+        const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        const thisMonday = new Date(today);
+        thisMonday.setDate(today.getDate() + mondayOffset);
+
+        // N주 전 월요일
+        const startMonday = new Date(thisMonday);
+        startMonday.setDate(thisMonday.getDate() - ((weeks - 1) * 7));
+
+        const startDateStr = startMonday.toISOString().split('T')[0];
+        const endDateStr = today.toISOString().split('T')[0];
+
+        // 일별 캐시 데이터 조회
+        const dailyData = await getNaverAdDaily(startDateStr, endDateStr);
+
+        // 주별로 집계
+        const weekly: Array<{
+          weekStart: string;
+          weekEnd: string;
+          weekLabel: string;
+          impCnt: number;
+          clkCnt: number;
+          salesAmt: number;
+          ctr: number;
+          cpc: number;
+          ccnt: number;
+        }> = [];
+
+        for (let i = 0; i < weeks; i++) {
+          const weekStart = new Date(thisMonday);
+          weekStart.setDate(thisMonday.getDate() - (i * 7));
+          const weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekStart.getDate() + 6);
+
+          const weekStartStr = weekStart.toISOString().split('T')[0];
+          const weekEndStr = (weekEnd > today ? today : weekEnd).toISOString().split('T')[0];
+
+          // 해당 주의 데이터 필터링
+          const weekData = dailyData.filter(d => d.date >= weekStartStr && d.date <= weekEndStr);
+
+          const totals = weekData.reduce(
+            (acc, d) => ({
+              impCnt: acc.impCnt + (d.impCnt || 0),
+              clkCnt: acc.clkCnt + (d.clkCnt || 0),
+              salesAmt: acc.salesAmt + (d.salesAmt || 0),
+              ccnt: acc.ccnt + (d.ccnt || 0),
+            }),
+            { impCnt: 0, clkCnt: 0, salesAmt: 0, ccnt: 0 }
+          );
+
+          const month = weekStart.getMonth() + 1;
+          const weekOfMonth = Math.ceil(weekStart.getDate() / 7);
+
+          weekly.push({
+            weekStart: weekStartStr,
+            weekEnd: weekEndStr,
+            weekLabel: `${month}월 ${weekOfMonth}주`,
+            ...totals,
+            ctr: totals.impCnt > 0 ? (totals.clkCnt / totals.impCnt) * 100 : 0,
+            cpc: totals.clkCnt > 0 ? totals.salesAmt / totals.clkCnt : 0,
+          });
+        }
+
+        return NextResponse.json({ weekly: weekly.reverse(), source: 'cache' });
+      } catch (error) {
+        console.error('Naver weekly error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch naver weekly stats', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 광고 월별 통계 (일별 캐시 데이터 집계)
+    if (type === 'naver-monthly') {
+      try {
+        const months = parseInt(searchParams.get('months') || '12');
+        const today = new Date();
+
+        // N개월 전 1일
+        const startDate = new Date(today.getFullYear(), today.getMonth() - months + 1, 1);
+        const startDateStr = startDate.toISOString().split('T')[0];
+        const endDateStr = today.toISOString().split('T')[0];
+
+        // 일별 캐시 데이터 조회
+        const dailyData = await getNaverAdDaily(startDateStr, endDateStr);
+
+        // 월별로 집계
+        const monthly: Array<{
+          month: string;
+          monthLabel: string;
+          impCnt: number;
+          clkCnt: number;
+          salesAmt: number;
+          ctr: number;
+          cpc: number;
+          ccnt: number;
+        }> = [];
+
+        for (let i = 0; i < months; i++) {
+          const targetDate = new Date(today.getFullYear(), today.getMonth() - i, 1);
+          const monthStart = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+          const monthEnd = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0);
+
+          const monthStartStr = monthStart.toISOString().split('T')[0];
+          const monthEndStr = (monthEnd > today ? today : monthEnd).toISOString().split('T')[0];
+
+          // 해당 월의 데이터 필터링
+          const monthData = dailyData.filter(d => d.date >= monthStartStr && d.date <= monthEndStr);
+
+          const totals = monthData.reduce(
+            (acc, d) => ({
+              impCnt: acc.impCnt + (d.impCnt || 0),
+              clkCnt: acc.clkCnt + (d.clkCnt || 0),
+              salesAmt: acc.salesAmt + (d.salesAmt || 0),
+              ccnt: acc.ccnt + (d.ccnt || 0),
+            }),
+            { impCnt: 0, clkCnt: 0, salesAmt: 0, ccnt: 0 }
+          );
+
+          const year = monthStart.getFullYear();
+          const month = monthStart.getMonth() + 1;
+
+          monthly.push({
+            month: `${year}-${String(month).padStart(2, '0')}`,
+            monthLabel: `${year}년 ${month}월`,
+            ...totals,
+            ctr: totals.impCnt > 0 ? (totals.clkCnt / totals.impCnt) * 100 : 0,
+            cpc: totals.clkCnt > 0 ? totals.salesAmt / totals.clkCnt : 0,
+          });
+        }
+
+        return NextResponse.json({ monthly: monthly.reverse(), source: 'cache' });
+      } catch (error) {
+        console.error('Naver monthly error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch naver monthly stats', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 광고 연간 통계 (일별 캐시 데이터 집계)
+    if (type === 'naver-yearly') {
+      try {
+        const year = searchParams.get('year') ? parseInt(searchParams.get('year')!) : new Date().getFullYear();
+        const today = new Date();
+
+        // 올해와 작년 데이터 조회
+        const currentYearStart = `${year}-01-01`;
+        const previousYearStart = `${year - 1}-01-01`;
+        const previousYearEnd = `${year - 1}-12-31`;
+
+        const [currentYearDaily, previousYearDaily] = await Promise.all([
+          getNaverAdDaily(currentYearStart, today.toISOString().split('T')[0]),
+          getNaverAdDaily(previousYearStart, previousYearEnd),
+        ]);
+
+        const aggregateByMonth = (data: NaverAdDailyRecord[], targetYear: number) => {
+          const result: Array<{
+            year: number;
+            month: number;
+            monthLabel: string;
+            impCnt: number;
+            clkCnt: number;
+            salesAmt: number;
+            ctr: number;
+            cpc: number;
+            ccnt: number;
+          }> = [];
+
+          const maxMonth = targetYear === today.getFullYear() ? today.getMonth() + 1 : 12;
+
+          for (let month = 1; month <= maxMonth; month++) {
+            const monthStartStr = `${targetYear}-${String(month).padStart(2, '0')}-01`;
+            const monthEnd = new Date(targetYear, month, 0);
+            const monthEndStr = monthEnd.toISOString().split('T')[0];
+
+            const monthData = data.filter(d => d.date >= monthStartStr && d.date <= monthEndStr);
+
+            const totals = monthData.reduce(
+              (acc, d) => ({
+                impCnt: acc.impCnt + (d.impCnt || 0),
+                clkCnt: acc.clkCnt + (d.clkCnt || 0),
+                salesAmt: acc.salesAmt + (d.salesAmt || 0),
+                ccnt: acc.ccnt + (d.ccnt || 0),
+              }),
+              { impCnt: 0, clkCnt: 0, salesAmt: 0, ccnt: 0 }
+            );
+
+            result.push({
+              year: targetYear,
+              month,
+              monthLabel: `${month}월`,
+              ...totals,
+              ctr: totals.impCnt > 0 ? (totals.clkCnt / totals.impCnt) * 100 : 0,
+              cpc: totals.clkCnt > 0 ? totals.salesAmt / totals.clkCnt : 0,
+            });
+          }
+
+          return result;
+        };
+
+        const yearly = {
+          currentYear: aggregateByMonth(currentYearDaily, year),
+          previousYear: aggregateByMonth(previousYearDaily, year - 1),
+        };
+
+        return NextResponse.json({ yearly, source: 'cache' });
+      } catch (error) {
+        console.error('Naver yearly error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch naver yearly stats', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 키워드 검색량 조회
+    if (type === 'naver-keyword-volume') {
+      try {
+        const keywords = searchParams.get('keywords')?.split(',') || [];
+
+        if (keywords.length === 0) {
+          return NextResponse.json({ keywords: [], source: 'naver-api' });
+        }
+
+        const volumes = await getKeywordSearchVolume(keywords);
+        return NextResponse.json({ keywords: volumes, source: 'naver-api' });
+      } catch (error) {
+        console.error('Naver keyword volume error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch keyword volume', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 등록 키워드 + 검색량 조회
+    if (type === 'naver-keywords-with-volume') {
+      try {
+        const today = new Date();
+        const thisMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
+        const todayStr = today.toISOString().split('T')[0];
+
+        const keywordsWithVolume = await getRegisteredKeywordsSearchVolume(
+          startDate || thisMonthStart,
+          endDate || todayStr
+        );
+        return NextResponse.json({ keywords: keywordsWithVolume, source: 'naver-api' });
+      } catch (error) {
+        console.error('Naver keywords with volume error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch keywords with volume', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 광고 전월 대비 분석
+    if (type === 'naver-comparison') {
+      try {
+        const comparison = await getMonthComparison();
+        return NextResponse.json({ comparison, source: 'naver-api' });
+      } catch (error) {
+        console.error('Naver comparison error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch naver comparison', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
     // Traffic 데이터 조회 (혼합)
     if (type === 'traffic') {
       // Airtable에서 가져올 수 있는 데이터
@@ -484,14 +987,19 @@ export async function GET(request: Request) {
       });
     }
 
-    // 모든 데이터 조회 (기본) - Airtable 우선
+    // 모든 데이터 조회
+    // Airtable 캐시는 기본 30일 조회에만 사용 (API 호출 최소화)
+    // 날짜 필터 변경 시 GA에서 직접 조회 (정확한 유니크 방문자 수 필요)
     let airtableSummary = null;
     let airtableDaily = null;
     let airtablePages = null;
     let airtableSources = null;
     let airtableDevices = null;
 
-    if (source !== 'ga') {
+    // Airtable은 기본 30일 조회에만 사용 (날짜 필터 변경 시 GA에서 직접 조회)
+    const useAirtable = source !== 'ga' && days === 30 && !startDate && !endDate;
+
+    if (useAirtable) {
       try {
         const [summaryRecords, pagesRecords, sourcesRecords, devicesRecords] = await Promise.all([
           getLatestSummary(days),

@@ -47,3 +47,7 @@ credentials/
 .playwright-mcp/
 
 .vercel
+
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md
