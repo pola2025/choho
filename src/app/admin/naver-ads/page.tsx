@@ -203,6 +203,7 @@ export default function NaverAdsPage() {
   // 데이터 상태
   const [summary, setSummary] = useState<AdSummary | null>(null);
   const [comparison, setComparison] = useState<MonthComparison | null>(null);
+  const [bizmoney, setBizmoney] = useState<number | null>(null);
   const [dailyStats, setDailyStats] = useState<DailyStat[]>([]);
   const [weeklyStats, setWeeklyStats] = useState<WeeklyStat[]>([]);
   const [monthlyStats, setMonthlyStats] = useState<MonthlyStat[]>([]);
@@ -330,6 +331,7 @@ export default function NaverAdsPage() {
       const [
         summaryRes,
         comparisonRes,
+        bizmoneyRes,
         dailyRes,
         weeklyRes,
         monthlyRes,
@@ -340,6 +342,7 @@ export default function NaverAdsPage() {
       ] = await Promise.all([
         fetch(`/api/analytics?type=naver-summary&${params}`),
         fetch(`/api/analytics?type=naver-comparison`),
+        fetch(`/api/analytics?type=naver-bizmoney`),
         fetch(`/api/analytics?type=naver-daily&${params}`),
         fetch(`/api/analytics?type=naver-weekly&weeks=8`),
         fetch(`/api/analytics?type=naver-monthly&months=24`), // 24개월로 확장
@@ -359,6 +362,12 @@ export default function NaverAdsPage() {
       if (comparisonRes.ok) {
         const data = await comparisonRes.json();
         setComparison(data.comparison);
+      }
+
+      // 잔여 예산
+      if (bizmoneyRes.ok) {
+        const data = await bizmoneyRes.json();
+        setBizmoney(data.bizmoney?.bizmoney || null);
       }
 
       // 일별 통계
@@ -534,6 +543,24 @@ export default function NaverAdsPage() {
       {/* 요약 탭 */}
       {activeTab === "summary" && (
         <div className="space-y-6">
+          {/* 잔여 예산 배너 */}
+          {bizmoney !== null && (
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-4 text-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 rounded-lg p-2">
+                  <Wallet className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-sm text-blue-100">잔여 광고 예산</p>
+                  <p className="text-2xl font-bold">{formatCurrency(bizmoney)}</p>
+                </div>
+              </div>
+              <div className="text-right text-sm text-blue-100">
+                네이버 검색광고 비즈머니
+              </div>
+            </div>
+          )}
+
           {/* 요약 카드 (전월 대비 포함) */}
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="bg-white rounded-xl border border-gray-200 p-4">

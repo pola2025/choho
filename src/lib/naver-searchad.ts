@@ -992,6 +992,24 @@ export async function getRegisteredKeywordsSearchVolume(
   }
 }
 
+// 잔여 예산(비즈머니) 조회
+export interface BizmoneyInfo {
+  customerId: number;
+  bizmoney: number;      // 잔여 예산
+  budgetLock: boolean;
+  refundLock: boolean;
+}
+
+export async function getBizmoney(): Promise<BizmoneyInfo | null> {
+  try {
+    const result = await naverAdRequest<BizmoneyInfo>('GET', '/billing/bizmoney');
+    return result;
+  } catch (error) {
+    console.error('getBizmoney error:', error);
+    return null;
+  }
+}
+
 // API 연결 테스트
 export async function testConnection(): Promise<boolean> {
   try {

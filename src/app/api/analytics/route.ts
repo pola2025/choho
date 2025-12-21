@@ -42,6 +42,7 @@ import {
   getMonthComparison,
   getKeywordSearchVolume,
   getRegisteredKeywordsSearchVolume,
+  getBizmoney,
   type DailyStatRecord,
 } from '@/lib/naver-searchad';
 import {
@@ -610,6 +611,20 @@ export async function GET(request: Request) {
         console.error('Naver campaigns error:', error);
         return NextResponse.json(
           { error: 'Failed to fetch naver campaigns', details: String(error) },
+          { status: 500 }
+        );
+      }
+    }
+
+    // 네이버 광고 잔여 예산 (비즈머니) 조회
+    if (type === 'naver-bizmoney') {
+      try {
+        const bizmoney = await getBizmoney();
+        return NextResponse.json({ bizmoney, source: 'naver-api' });
+      } catch (error) {
+        console.error('Naver bizmoney error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch bizmoney', details: String(error) },
           { status: 500 }
         );
       }
