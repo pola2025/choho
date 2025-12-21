@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getBizmoney } from '@/lib/naver-searchad';
 import { sendNaverAdBudgetAlert, sendNaverAdBudgetDepletedAlert } from '@/lib/telegram';
+import { sendNaverAdBudgetSMS, sendNaverAdBudgetDepletedSMS } from '@/lib/naver-sens';
 
 // Vercel Cron 인증
 const CRON_SECRET = process.env.CRON_SECRET;
@@ -29,17 +30,28 @@ export async function GET(request: Request) {
     }
 
     const currentBudget = bizmoneyInfo.bizmoney;
-    let alertSent = false;
+    let telegramSent = false;
+    let smsSent = false;
     let alertType = 'none';
 
-    // 예산 체크 및 알림 발송
+    // 예산 체크 및 알림 발송 (텔레그램 + SMS)
     if (currentBudget <= BUDGET_CRITICAL_THRESHOLD) {
-      // 긴급 알림 (3만원 이하)
-      alertSent = await sendNaverAdBudgetDepletedAlert(currentBudget);
+      // 긴급 알림 (2만원 이하)
+      const [telegramResult, smsResult] = await Promise.all([
+        sendNaverAdBudgetDepletedAlert(currentBudget),
+        sendNaverAdBudgetDepletedSMS(currentBudget),
+      ]);
+      telegramSent = telegramResult;
+      smsSent = smsResult.success;
       alertType = 'critical';
     } else if (currentBudget <= BUDGET_WARNING_THRESHOLD) {
-      // 경고 알림 (10만원 이하)
-      alertSent = await sendNaverAdBudgetAlert(currentBudget, BUDGET_WARNING_THRESHOLD);
+      // 경고 알림 (5만원 이하)
+      const [telegramResult, smsResult] = await Promise.all([
+        sendNaverAdBudgetAlert(currentBudget, BUDGET_WARNING_THRESHOLD),
+        sendNaverAdBudgetSMS(currentBudget, BUDGET_WARNING_THRESHOLD),
+      ]);
+      telegramSent = telegramResult;
+      smsSent = smsResult.success;
       alertType = 'warning';
     }
 
@@ -51,7 +63,10 @@ export async function GET(request: Request) {
         critical: BUDGET_CRITICAL_THRESHOLD,
       },
       alertType,
-      alertSent,
+      alerts: {
+        telegram: telegramSent,
+        sms: smsSent,
+      },
       checkedAt: new Date().toISOString(),
     });
   } catch (error) {
