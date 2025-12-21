@@ -20,8 +20,8 @@ const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_ANALYTICS_BASE_ID;
 const NAVER_AD_DAILY_TABLE = process.env.AIRTABLE_NAVER_AD_DAILY_TABLE;
 
-// 설정: 백필 시작일 (1년 전부터)
-const BACKFILL_DAYS = 365;
+// 설정: 백필 시작일 (2024-01-01부터)
+const BACKFILL_START = '2024-01-01';
 
 function generateSignature(timestamp, method, path) {
   const message = `${timestamp}.${method}.${path}`;
@@ -183,8 +183,7 @@ async function main() {
 
     // 3. 백필할 날짜 범위 계산
     const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - BACKFILL_DAYS);
+    const startDate = new Date(BACKFILL_START);
 
     const formatDate = (d) => d.toISOString().split('T')[0];
 

@@ -532,17 +532,38 @@ export async function GET(request: Request) {
       }
     }
 
-    // 네이버 광고 요약 통계
+    // 네이버 광고 요약 통계 (캐시 기반)
     if (type === 'naver-summary') {
       try {
         const today = new Date();
         const thisMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
         const todayStr = today.toISOString().split('T')[0];
 
-        const summary = await getAdSummary(
-          startDate || thisMonthStart,
-          endDate || todayStr
-        );
+        const queryStartDate = startDate || thisMonthStart;
+        const queryEndDate = endDate || todayStr;
+
+        // 캐시된 일별 데이터에서 요약 계산
+        const dailyData = await getNaverAdDaily(queryStartDate, queryEndDate);
+
+        if (dailyData.length > 0) {
+          const totals = dailyData.reduce((acc, d) => ({
+            totalCost: acc.totalCost + d.salesAmt,
+            totalClicks: acc.totalClicks + d.clkCnt,
+            totalImpressions: acc.totalImpressions + d.impCnt,
+            totalConversions: acc.totalConversions + d.ccnt,
+          }), { totalCost: 0, totalClicks: 0, totalImpressions: 0, totalConversions: 0 });
+
+          const summary = {
+            ...totals,
+            avgCtr: totals.totalImpressions > 0 ? (totals.totalClicks / totals.totalImpressions) * 100 : 0,
+            avgCpc: totals.totalClicks > 0 ? totals.totalCost / totals.totalClicks : 0,
+          };
+
+          return NextResponse.json({ summary, source: 'cache', days: dailyData.length });
+        }
+
+        // 캐시 없으면 API 직접 호출
+        const summary = await getAdSummary(queryStartDate, queryEndDate);
         return NextResponse.json({ summary, source: 'naver-api' });
       } catch (error) {
         console.error('Naver summary error:', error);
