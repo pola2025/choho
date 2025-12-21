@@ -217,6 +217,8 @@ export default function NaverAdsPage() {
   // 주간별 데이터를 위한 상태
   const [allWeeklyData, setAllWeeklyData] = useState<WeeklyStat[]>([]);
   const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
+  // 일별 데이터 월별 접힘 상태 (별도 관리)
+  const [expandedDailyMonths, setExpandedDailyMonths] = useState<Set<string>>(new Set());
 
   // 날짜 범위 상태
   const [dateRange, setDateRange] = useState({
@@ -325,7 +327,7 @@ export default function NaverAdsPage() {
     return { currentYear: currentYearTotals, previousYear: previousYearTotals };
   }, [yearlyStats]);
 
-  // 월 접기/펼치기 토글
+  // 월 접기/펼치기 토글 (주간별)
   const toggleMonth = (monthKey: string) => {
     setExpandedMonths((prev) => {
       const next = new Set(prev);
@@ -337,6 +339,50 @@ export default function NaverAdsPage() {
       return next;
     });
   };
+
+  // 일별 월 접기/펼치기 토글
+  const toggleDailyMonth = (monthKey: string) => {
+    setExpandedDailyMonths((prev) => {
+      const next = new Set(prev);
+      if (next.has(monthKey)) {
+        next.delete(monthKey);
+      } else {
+        next.add(monthKey);
+      }
+      return next;
+    });
+  };
+
+  // 일별 데이터를 월별로 그룹핑
+  const dailyDataByMonth = useMemo(() => {
+    const grouped: Record<string, { monthLabel: string; days: DailyStat[]; totals: { impCnt: number; clkCnt: number; salesAmt: number } }> = {};
+
+    // 최신순으로 정렬 (date 기준 내림차순)
+    const sortedData = [...dailyStats].sort((a, b) => b.date.localeCompare(a.date));
+
+    for (const day of sortedData) {
+      const yearMonth = day.date.slice(0, 7); // YYYY-MM
+      const [year, month] = yearMonth.split("-");
+      const monthLabel = `${year}년 ${parseInt(month)}월`;
+
+      if (!grouped[yearMonth]) {
+        grouped[yearMonth] = {
+          monthLabel,
+          days: [],
+          totals: { impCnt: 0, clkCnt: 0, salesAmt: 0 }
+        };
+      }
+      grouped[yearMonth].days.push(day);
+      grouped[yearMonth].totals.impCnt += day.impCnt;
+      grouped[yearMonth].totals.clkCnt += day.clkCnt;
+      grouped[yearMonth].totals.salesAmt += day.salesAmt;
+    }
+
+    // 월별로 정렬 (최신순)
+    return Object.entries(grouped)
+      .sort(([a], [b]) => b.localeCompare(a))
+      .map(([key, value]) => ({ key, ...value }));
+  }, [dailyStats]);
 
   // 데이터 로드
   const loadData = useCallback(async () => {
@@ -803,37 +849,76 @@ export default function NaverAdsPage() {
             )}
           </div>
 
-          {/* 일별 데이터 테이블 */}
+          {/* 일별 데이터 테이블 (월별 접힘/펼침) */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               일별 상세 데이터 ({dailyStats.length}일)
             </h2>
-            {dailyStats.length > 0 ? (
-              <div className="overflow-x-auto max-h-[400px]">
-                <table className="w-full text-sm">
-                  <thead className="sticky top-0 bg-white">
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4 font-medium text-gray-600">날짜</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">광고비</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">노출수</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">클릭수</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">CTR</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">CPC</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[...dailyStats].reverse().map((stat) => (
-                      <tr key={stat.date} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium text-gray-900">{stat.date}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(stat.salesAmt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.impCnt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.clkCnt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{stat.ctr.toFixed(2)}%</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(Math.round(stat.cpc))}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {dailyDataByMonth.length > 0 ? (
+              <div className="space-y-2">
+                {dailyDataByMonth.map(({ key, monthLabel, days, totals }) => (
+                  <div key={key} className="border border-gray-200 rounded-lg overflow-hidden">
+                    {/* 월 헤더 (클릭하여 접기/펼치기) */}
+                    <button
+                      onClick={() => toggleDailyMonth(key)}
+                      className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        {expandedDailyMonths.has(key) ? (
+                          <ChevronDown className="w-5 h-5 text-gray-500" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5 text-gray-500" />
+                        )}
+                        <span className="font-semibold text-gray-900">{monthLabel}</span>
+                        <span className="text-sm text-gray-500">({days.length}일)</span>
+                      </div>
+                      <div className="flex gap-6 text-sm">
+                        <div className="text-right">
+                          <span className="text-gray-500">광고비: </span>
+                          <span className="font-medium text-gray-900">{formatCurrency(totals.salesAmt)}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-gray-500">노출: </span>
+                          <span className="font-medium text-gray-900">{formatNumber(totals.impCnt)}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-gray-500">클릭: </span>
+                          <span className="font-medium text-gray-900">{formatNumber(totals.clkCnt)}</span>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* 일별 데이터 테이블 (펼쳤을 때만 표시) */}
+                    {expandedDailyMonths.has(key) && (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-gray-200 bg-gray-50/50">
+                              <th className="text-left py-3 px-4 font-medium text-gray-600">날짜</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">광고비</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">노출수</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">클릭수</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">CTR</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">CPC</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {days.map((stat) => (
+                              <tr key={stat.date} className="border-b border-gray-100 hover:bg-gray-50">
+                                <td className="py-3 px-4 font-medium text-gray-900">{stat.date}</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(stat.salesAmt)}</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.impCnt)}</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.clkCnt)}</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{stat.ctr.toFixed(2)}%</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(Math.round(stat.cpc))}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="flex items-center justify-center h-32 text-gray-400">

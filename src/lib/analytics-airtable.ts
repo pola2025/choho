@@ -467,7 +467,7 @@ export async function saveNaverKeywords(
   };
 }
 
-// 네이버 키워드 조회 (월별)
+// 네이버 키워드 조회 (월별) - 페이지네이션 지원
 export async function getNaverKeywordsByMonth(yearMonth: string) {
   const tableId = TABLES.naverKeywords;
   if (!tableId) {
@@ -475,16 +475,32 @@ export async function getNaverKeywordsByMonth(yearMonth: string) {
     return [];
   }
 
-  const result = await airtableRequest(tableId, 'GET', undefined, {
-    filterByFormula: `{yearMonth} = '${yearMonth}'`,
-    'sort[0][field]': 'clicks',
-    'sort[0][direction]': 'desc',
-  });
+  const allRecords: Record<string, unknown>[] = [];
+  let offset: string | undefined;
 
-  return (result.records || []).map((r: AirtableRecord) => r.fields);
+  do {
+    const params: Record<string, string> = {
+      filterByFormula: `{yearMonth} = '${yearMonth}'`,
+      'sort[0][field]': 'clicks',
+      'sort[0][direction]': 'desc',
+      pageSize: '100',
+    };
+
+    if (offset) {
+      params.offset = offset;
+    }
+
+    const result = await airtableRequest(tableId, 'GET', undefined, params);
+
+    const records = (result.records || []).map((r: AirtableRecord) => r.fields);
+    allRecords.push(...records);
+    offset = result.offset;
+  } while (offset);
+
+  return allRecords;
 }
 
-// 네이버 키워드 조회 (범위 - 여러 달)
+// 네이버 키워드 조회 (범위 - 여러 달) - 페이지네이션 지원
 export async function getNaverKeywordsRange(startYearMonth: string, endYearMonth: string) {
   const tableId = TABLES.naverKeywords;
   if (!tableId) {
@@ -492,13 +508,29 @@ export async function getNaverKeywordsRange(startYearMonth: string, endYearMonth
     return [];
   }
 
-  const result = await airtableRequest(tableId, 'GET', undefined, {
-    filterByFormula: `AND({yearMonth} >= '${startYearMonth}', {yearMonth} <= '${endYearMonth}')`,
-    'sort[0][field]': 'yearMonth',
-    'sort[0][direction]': 'desc',
-  });
+  const allRecords: Record<string, unknown>[] = [];
+  let offset: string | undefined;
 
-  return (result.records || []).map((r: AirtableRecord) => r.fields);
+  do {
+    const params: Record<string, string> = {
+      filterByFormula: `AND({yearMonth} >= '${startYearMonth}', {yearMonth} <= '${endYearMonth}')`,
+      'sort[0][field]': 'yearMonth',
+      'sort[0][direction]': 'desc',
+      pageSize: '100',
+    };
+
+    if (offset) {
+      params.offset = offset;
+    }
+
+    const result = await airtableRequest(tableId, 'GET', undefined, params);
+
+    const records = (result.records || []).map((r: AirtableRecord) => r.fields);
+    allRecords.push(...records);
+    offset = result.offset;
+  } while (offset);
+
+  return allRecords;
 }
 
 // 최근 N개월 네이버 키워드 추이 조회
