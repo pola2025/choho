@@ -30,6 +30,7 @@ import {
   saveNaverKeywords,
   getNaverKeywordsByMonth,
   getNaverKeywordsTrend,
+  getNaverKeywordsRange,
 } from '@/lib/analytics-airtable';
 import {
   getAllKeywordStats,
@@ -482,22 +483,68 @@ export async function GET(request: Request) {
       }
     }
 
-    // 네이버 검색광고 실시간 조회 및 저장
+    // 네이버 검색광고 키워드 조회 (Airtable 캐시 또는 실시간)
     if (type === 'naver-keywords-sync') {
-      const yearMonth = searchParams.get('yearMonth') ||
-        `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
-
       try {
-        // 이번 달 시작일과 현재 날짜
-        const [year, month] = yearMonth.split('-').map(Number);
-        const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
-        const endDate = new Date().toISOString().split('T')[0];
+        // startDate/endDate 파라미터가 있으면 Airtable에서 해당 기간 조회
+        if (startDate && endDate) {
+          const startYearMonth = startDate.slice(0, 7); // YYYY-MM
+          const endYearMonth = endDate.slice(0, 7);
 
-        // 네이버 API에서 키워드 통계 조회
-        const stats = await getAllKeywordStats(startDate, endDate);
+          const rawKeywords = await getNaverKeywordsRange(startYearMonth, endYearMonth);
+
+          // 동일 키워드 합산
+          const keywordMap = new Map<string, {
+            keyword: string;
+            impressions: number;
+            clicks: number;
+            cost: number;
+            conversions: number;
+          }>();
+
+          for (const kw of rawKeywords) {
+            const existing = keywordMap.get(kw.keyword);
+            if (existing) {
+              existing.impressions += kw.impressions || 0;
+              existing.clicks += kw.clicks || 0;
+              existing.cost += kw.cost || 0;
+              existing.conversions += kw.conversions || 0;
+            } else {
+              keywordMap.set(kw.keyword, {
+                keyword: kw.keyword,
+                impressions: kw.impressions || 0,
+                clicks: kw.clicks || 0,
+                cost: kw.cost || 0,
+                conversions: kw.conversions || 0,
+              });
+            }
+          }
+
+          // CTR, CPC 계산 및 정렬
+          const stats = Array.from(keywordMap.values()).map(kw => ({
+            ...kw,
+            ctr: kw.impressions > 0 ? (kw.clicks / kw.impressions) * 100 : 0,
+            avgPosition: 0,
+          })).sort((a, b) => b.clicks - a.clicks);
+
+          return NextResponse.json({
+            keywords: stats,
+            source: 'airtable',
+            period: `${startYearMonth} ~ ${endYearMonth}`,
+          });
+        }
+
+        // 기본: 현재 월 네이버 API 실시간 조회
+        const yearMonth = searchParams.get('yearMonth') ||
+          `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+
+        const [year, month] = yearMonth.split('-').map(Number);
+        const monthStartDate = `${year}-${String(month).padStart(2, '0')}-01`;
+        const monthEndDate = new Date().toISOString().split('T')[0];
+
+        const stats = await getAllKeywordStats(monthStartDate, monthEndDate);
 
         if (stats.length > 0) {
-          // Airtable에 저장
           const saveResult = await saveNaverKeywords(yearMonth, stats);
           return NextResponse.json({
             keywords: stats,
