@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   TrendingUp,
   MousePointer,
@@ -15,6 +15,9 @@ import {
   BarChart3,
   LineChartIcon,
   TrendingDown,
+  ChevronDown,
+  ChevronRight,
+  Search,
 } from "lucide-react";
 import {
   LineChart,
@@ -136,7 +139,7 @@ interface MonthComparison {
   };
 }
 
-type TabType = "summary" | "daily" | "weekly" | "monthly" | "yearly";
+type TabType = "summary" | "daily" | "weekly" | "monthly" | "yearly" | "keywords";
 
 // 숫자 포맷팅
 function formatNumber(num: number): string {
@@ -210,6 +213,11 @@ export default function NaverAdsPage() {
   const [campaigns, setCampaigns] = useState<CampaignStat[]>([]);
   const [keywords, setKeywords] = useState<KeywordStat[]>([]);
 
+  // 주간별 데이터를 위한 상태
+  const [allWeeklyData, setAllWeeklyData] = useState<WeeklyStat[]>([]);
+  const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
+
+  // 날짜 범위 상태
   const [dateRange, setDateRange] = useState({
     startDate: "",
     endDate: "",
@@ -224,6 +232,86 @@ export default function NaverAdsPage() {
       endDate: today.toISOString().split("T")[0],
     });
   }, []);
+
+  // 주간별 데이터를 월별로 그룹핑
+  const weeklyDataByMonth = useMemo(() => {
+    const grouped: Record<string, { monthLabel: string; weeks: WeeklyStat[]; totals: { impCnt: number; clkCnt: number; salesAmt: number } }> = {};
+
+    // 최신순으로 정렬 (weekStart 기준 내림차순)
+    const sortedData = [...allWeeklyData].sort((a, b) => b.weekStart.localeCompare(a.weekStart));
+
+    for (const week of sortedData) {
+      const yearMonth = week.weekStart.slice(0, 7); // YYYY-MM
+      const [year, month] = yearMonth.split("-");
+      const monthLabel = `${year}년 ${parseInt(month)}월`;
+
+      if (!grouped[yearMonth]) {
+        grouped[yearMonth] = {
+          monthLabel,
+          weeks: [],
+          totals: { impCnt: 0, clkCnt: 0, salesAmt: 0 }
+        };
+      }
+      grouped[yearMonth].weeks.push(week);
+      grouped[yearMonth].totals.impCnt += week.impCnt;
+      grouped[yearMonth].totals.clkCnt += week.clkCnt;
+      grouped[yearMonth].totals.salesAmt += week.salesAmt;
+    }
+
+    // 월별로 정렬 (최신순)
+    return Object.entries(grouped)
+      .sort(([a], [b]) => b.localeCompare(a))
+      .map(([key, value]) => ({ key, ...value }));
+  }, [allWeeklyData]);
+
+  // 월별 합계 계산
+  const monthlyTotals = useMemo(() => {
+    return monthlyStats.reduce(
+      (acc, stat) => ({
+        impCnt: acc.impCnt + stat.impCnt,
+        clkCnt: acc.clkCnt + stat.clkCnt,
+        salesAmt: acc.salesAmt + stat.salesAmt,
+        ccnt: acc.ccnt + stat.ccnt,
+      }),
+      { impCnt: 0, clkCnt: 0, salesAmt: 0, ccnt: 0 }
+    );
+  }, [monthlyStats]);
+
+  // 연간 합계 계산
+  const yearlyTotals = useMemo(() => {
+    const currentYearTotals = yearlyStats.currentYear.reduce(
+      (acc, stat) => ({
+        impCnt: acc.impCnt + stat.impCnt,
+        clkCnt: acc.clkCnt + stat.clkCnt,
+        salesAmt: acc.salesAmt + stat.salesAmt,
+      }),
+      { impCnt: 0, clkCnt: 0, salesAmt: 0 }
+    );
+
+    const previousYearTotals = yearlyStats.previousYear.reduce(
+      (acc, stat) => ({
+        impCnt: acc.impCnt + stat.impCnt,
+        clkCnt: acc.clkCnt + stat.clkCnt,
+        salesAmt: acc.salesAmt + stat.salesAmt,
+      }),
+      { impCnt: 0, clkCnt: 0, salesAmt: 0 }
+    );
+
+    return { currentYear: currentYearTotals, previousYear: previousYearTotals };
+  }, [yearlyStats]);
+
+  // 월 접기/펼치기 토글
+  const toggleMonth = (monthKey: string) => {
+    setExpandedMonths((prev) => {
+      const next = new Set(prev);
+      if (next.has(monthKey)) {
+        next.delete(monthKey);
+      } else {
+        next.add(monthKey);
+      }
+      return next;
+    });
+  };
 
   // 데이터 로드
   const loadData = useCallback(async () => {
@@ -248,15 +336,17 @@ export default function NaverAdsPage() {
         yearlyRes,
         campaignsRes,
         keywordsRes,
+        allWeeklyRes, // 24년~25년 전체 주간 데이터
       ] = await Promise.all([
         fetch(`/api/analytics?type=naver-summary&${params}`),
         fetch(`/api/analytics?type=naver-comparison`),
         fetch(`/api/analytics?type=naver-daily&${params}`),
         fetch(`/api/analytics?type=naver-weekly&weeks=8`),
-        fetch(`/api/analytics?type=naver-monthly&months=12`),
+        fetch(`/api/analytics?type=naver-monthly&months=24`), // 24개월로 확장
         fetch(`/api/analytics?type=naver-yearly`),
         fetch(`/api/analytics?type=naver-campaigns&${params}`),
         fetch(`/api/analytics?type=naver-keywords-sync`),
+        fetch(`/api/analytics?type=naver-weekly&weeks=100`), // 약 2년치
       ]);
 
       // 요약 통계
@@ -277,10 +367,16 @@ export default function NaverAdsPage() {
         setDailyStats(data.daily || []);
       }
 
-      // 주간별 통계
+      // 주간별 통계 (최근 8주)
       if (weeklyRes.ok) {
         const data = await weeklyRes.json();
         setWeeklyStats(data.weekly || []);
+      }
+
+      // 전체 주간 데이터 (24년~25년)
+      if (allWeeklyRes.ok) {
+        const data = await allWeeklyRes.json();
+        setAllWeeklyData(data.weekly || []);
       }
 
       // 월별 통계
@@ -357,6 +453,7 @@ export default function NaverAdsPage() {
     { id: "weekly", label: "주간별", icon: <LineChartIcon className="w-4 h-4" /> },
     { id: "monthly", label: "월별", icon: <TrendingUp className="w-4 h-4" /> },
     { id: "yearly", label: "연간", icon: <TrendingDown className="w-4 h-4" /> },
+    { id: "keywords", label: "키워드통계", icon: <Search className="w-4 h-4" /> },
   ];
 
   if (isLoading && !summary) {
@@ -550,10 +647,10 @@ export default function NaverAdsPage() {
             )}
           </div>
 
-          {/* 키워드 TOP 20 */}
+          {/* 키워드 TOP 10 (클릭순) */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              키워드 TOP 20 (클릭순)
+              키워드 TOP 10 (클릭순)
             </h2>
             {keywords.length > 0 ? (
               <div className="overflow-x-auto">
@@ -569,7 +666,7 @@ export default function NaverAdsPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {keywords.slice(0, 20).map((kw, index) => (
+                    {keywords.slice(0, 10).map((kw, index) => (
                       <tr key={kw.keyword} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-3 px-4 text-gray-500">{index + 1}</td>
                         <td className="py-3 px-4 font-medium text-gray-900">{kw.keyword}</td>
@@ -596,9 +693,19 @@ export default function NaverAdsPage() {
         <div className="space-y-6">
           {/* 일별 광고비/클릭수 복합 차트 */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              일별 광고 성과 추이
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">
+                일별 광고 성과 추이
+              </h2>
+              <button
+                onClick={loadData}
+                disabled={isLoading}
+                className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50 flex items-center gap-1"
+              >
+                <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+                새로고침
+              </button>
+            </div>
             {dailyStats.length > 0 ? (
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -639,8 +746,10 @@ export default function NaverAdsPage() {
                 </ResponsiveContainer>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-[400px] text-gray-400">
-                데이터가 없습니다
+              <div className="flex flex-col items-center justify-center h-[400px] text-gray-400">
+                <p>데이터가 없습니다</p>
+                <p className="text-sm mt-2">백필 스크립트를 실행하여 과거 데이터를 동기화해주세요</p>
+                <p className="text-xs mt-1 text-gray-300">node scripts/backfill-naver-ad.js</p>
               </div>
             )}
           </div>
@@ -648,7 +757,7 @@ export default function NaverAdsPage() {
           {/* 일별 데이터 테이블 */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              일별 상세 데이터
+              일별 상세 데이터 ({dailyStats.length}일)
             </h2>
             {dailyStats.length > 0 ? (
               <div className="overflow-x-auto max-h-[400px]">
@@ -686,10 +795,10 @@ export default function NaverAdsPage() {
         </div>
       )}
 
-      {/* 주간별 탭 */}
+      {/* 주간별 탭 - 월별 그룹핑 */}
       {activeTab === "weekly" && (
         <div className="space-y-6">
-          {/* 주간별 그룹 바 차트 */}
+          {/* 최근 8주 차트 */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               주간별 광고 성과 (최근 8주)
@@ -700,7 +809,7 @@ export default function NaverAdsPage() {
                   <BarChart
                     data={weeklyStats.map((stat) => ({
                       주차: stat.weekLabel,
-                      광고비: Math.round(stat.salesAmt / 1000), // 천원 단위
+                      광고비: Math.round(stat.salesAmt / 1000),
                       클릭수: stat.clkCnt,
                     }))}
                   >
@@ -728,39 +837,78 @@ export default function NaverAdsPage() {
             )}
           </div>
 
-          {/* 주간별 데이터 테이블 */}
+          {/* 월별로 그룹핑된 주간 데이터 (접기/펼치기) */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              주간별 상세 데이터
+              주간별 상세 데이터 (2024년~2025년)
             </h2>
-            {weeklyStats.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4 font-medium text-gray-600">주차</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-600">기간</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">광고비</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">노출수</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">클릭수</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">CTR</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">CPC</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[...weeklyStats].reverse().map((stat) => (
-                      <tr key={stat.weekStart} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium text-gray-900">{stat.weekLabel}</td>
-                        <td className="py-3 px-4 text-gray-500 text-xs">{stat.weekStart} ~ {stat.weekEnd}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(stat.salesAmt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.impCnt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.clkCnt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{stat.ctr.toFixed(2)}%</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(Math.round(stat.cpc))}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {weeklyDataByMonth.length > 0 ? (
+              <div className="space-y-2">
+                {weeklyDataByMonth.map(({ key, monthLabel, weeks, totals }) => (
+                  <div key={key} className="border border-gray-200 rounded-lg overflow-hidden">
+                    {/* 월 헤더 (클릭하여 접기/펼치기) */}
+                    <button
+                      onClick={() => toggleMonth(key)}
+                      className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        {expandedMonths.has(key) ? (
+                          <ChevronDown className="w-5 h-5 text-gray-500" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5 text-gray-500" />
+                        )}
+                        <span className="font-semibold text-gray-900">{monthLabel}</span>
+                        <span className="text-sm text-gray-500">({weeks.length}주)</span>
+                      </div>
+                      <div className="flex gap-6 text-sm">
+                        <div className="text-right">
+                          <span className="text-gray-500">광고비: </span>
+                          <span className="font-medium text-gray-900">{formatCurrency(totals.salesAmt)}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-gray-500">노출: </span>
+                          <span className="font-medium text-gray-900">{formatNumber(totals.impCnt)}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-gray-500">클릭: </span>
+                          <span className="font-medium text-gray-900">{formatNumber(totals.clkCnt)}</span>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* 주간 데이터 테이블 (펼쳤을 때만 표시) */}
+                    {expandedMonths.has(key) && (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-gray-200 bg-gray-50/50">
+                              <th className="text-left py-3 px-4 font-medium text-gray-600">주차</th>
+                              <th className="text-left py-3 px-4 font-medium text-gray-600">기간</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">광고비</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">노출수</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">클릭수</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">CTR</th>
+                              <th className="text-right py-3 px-4 font-medium text-gray-600">CPC</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {weeks.map((stat) => (
+                              <tr key={stat.weekStart} className="border-b border-gray-100 hover:bg-gray-50">
+                                <td className="py-3 px-4 font-medium text-gray-900">{stat.weekLabel}</td>
+                                <td className="py-3 px-4 text-gray-500 text-xs">{stat.weekStart} ~ {stat.weekEnd}</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(stat.salesAmt)}</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.impCnt)}</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.clkCnt)}</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{stat.ctr.toFixed(2)}%</td>
+                                <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(Math.round(stat.cpc))}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="flex items-center justify-center h-32 text-gray-400">
@@ -777,15 +925,15 @@ export default function NaverAdsPage() {
           {/* 월별 Area 차트 */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              월별 광고비 추이 (최근 12개월)
+              월별 광고비 추이 (최근 24개월)
             </h2>
             {monthlyStats.length > 0 ? (
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
                     data={monthlyStats.map((stat) => ({
-                      월: stat.month.slice(5) + "월", // MM월 형식
-                      광고비: Math.round(stat.salesAmt / 10000), // 만원 단위
+                      월: stat.month.slice(5) + "월",
+                      광고비: Math.round(stat.salesAmt / 10000),
                       클릭수: stat.clkCnt,
                     }))}
                   >
@@ -826,6 +974,48 @@ export default function NaverAdsPage() {
             )}
           </div>
 
+          {/* 월별 합계 카드 */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl border border-green-200 p-4">
+              <div className="flex items-center gap-2 text-green-700 text-sm mb-2">
+                <Wallet className="w-4 h-4" />
+                전체 광고비 합계
+              </div>
+              <p className="text-2xl font-bold text-green-800">
+                {formatCurrency(monthlyTotals.salesAmt)}
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 p-4">
+              <div className="flex items-center gap-2 text-blue-700 text-sm mb-2">
+                <Eye className="w-4 h-4" />
+                전체 노출수 합계
+              </div>
+              <p className="text-2xl font-bold text-blue-800">
+                {formatNumber(monthlyTotals.impCnt)}
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border border-purple-200 p-4">
+              <div className="flex items-center gap-2 text-purple-700 text-sm mb-2">
+                <MousePointer className="w-4 h-4" />
+                전체 클릭수 합계
+              </div>
+              <p className="text-2xl font-bold text-purple-800">
+                {formatNumber(monthlyTotals.clkCnt)}
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 p-4">
+              <div className="flex items-center gap-2 text-orange-700 text-sm mb-2">
+                <TrendingUp className="w-4 h-4" />
+                평균 CTR
+              </div>
+              <p className="text-2xl font-bold text-orange-800">
+                {monthlyTotals.impCnt > 0
+                  ? ((monthlyTotals.clkCnt / monthlyTotals.impCnt) * 100).toFixed(2)
+                  : 0}%
+              </p>
+            </div>
+          </div>
+
           {/* 월별 데이터 테이블 */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -856,6 +1046,24 @@ export default function NaverAdsPage() {
                       </tr>
                     ))}
                   </tbody>
+                  <tfoot className="bg-gray-50">
+                    <tr className="font-semibold">
+                      <td className="py-3 px-4 text-gray-900">합계</td>
+                      <td className="py-3 px-4 text-right text-gray-900">{formatCurrency(monthlyTotals.salesAmt)}</td>
+                      <td className="py-3 px-4 text-right text-gray-900">{formatNumber(monthlyTotals.impCnt)}</td>
+                      <td className="py-3 px-4 text-right text-gray-900">{formatNumber(monthlyTotals.clkCnt)}</td>
+                      <td className="py-3 px-4 text-right text-gray-900">
+                        {monthlyTotals.impCnt > 0
+                          ? ((monthlyTotals.clkCnt / monthlyTotals.impCnt) * 100).toFixed(2)
+                          : 0}%
+                      </td>
+                      <td className="py-3 px-4 text-right text-gray-900">
+                        {monthlyTotals.clkCnt > 0
+                          ? formatCurrency(Math.round(monthlyTotals.salesAmt / monthlyTotals.clkCnt))
+                          : "-"}
+                      </td>
+                    </tr>
+                  </tfoot>
                 </table>
               </div>
             ) : (
@@ -870,53 +1078,113 @@ export default function NaverAdsPage() {
       {/* 연간 탭 */}
       {activeTab === "yearly" && (
         <div className="space-y-6">
-          {/* 연간 비교 차트 */}
+          {/* 연간 합계 카드 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* 올해 합계 */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                {yearlyStats.currentYear[0]?.year || new Date().getFullYear()}년 합계
+              </h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-1">광고비</p>
+                  <p className="text-xl font-bold text-green-600">{formatCurrency(yearlyTotals.currentYear.salesAmt)}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-1">노출수</p>
+                  <p className="text-xl font-bold text-blue-600">{formatNumber(yearlyTotals.currentYear.impCnt)}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-1">클릭수</p>
+                  <p className="text-xl font-bold text-purple-600">{formatNumber(yearlyTotals.currentYear.clkCnt)}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 작년 합계 */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                {yearlyStats.previousYear[0]?.year || new Date().getFullYear() - 1}년 합계
+              </h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-1">광고비</p>
+                  <p className="text-xl font-bold text-green-600">{formatCurrency(yearlyTotals.previousYear.salesAmt)}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-1">노출수</p>
+                  <p className="text-xl font-bold text-blue-600">{formatNumber(yearlyTotals.previousYear.impCnt)}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-1">클릭수</p>
+                  <p className="text-xl font-bold text-purple-600">{formatNumber(yearlyTotals.previousYear.clkCnt)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 연간 비교 차트 - 광고비, 노출, 클릭 모두 표시 */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              연간 광고비 비교 (전년 vs 금년)
+              연간 성과 비교 (전년 vs 금년)
             </h2>
             {yearlyStats.currentYear.length > 0 ? (
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart>
+                  <ComposedChart
+                    data={yearlyStats.currentYear.map((current) => {
+                      const previous = yearlyStats.previousYear.find((p) => p.month === current.month);
+                      return {
+                        월: current.monthLabel,
+                        [`${current.year}년 광고비`]: current.salesAmt,
+                        [`${current.year - 1}년 광고비`]: previous?.salesAmt || 0,
+                        [`${current.year}년 클릭`]: current.clkCnt,
+                        [`${current.year - 1}년 클릭`]: previous?.clkCnt || 0,
+                      };
+                    })}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis
-                      dataKey="monthLabel"
-                      type="category"
-                      allowDuplicatedCategory={false}
-                      tick={{ fontSize: 11 }}
-                    />
-                    <YAxis tick={{ fontSize: 11 }} tickFormatter={(value) => formatNumber(value)} />
+                    <XAxis dataKey="월" tick={{ fontSize: 11 }} />
+                    <YAxis yAxisId="left" tick={{ fontSize: 11 }} tickFormatter={(value) => formatNumber(value)} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} />
                     <Tooltip
-                      formatter={(value) => formatCurrency(Number(value) || 0)}
+                      formatter={(value, name) => {
+                        const v = Number(value) || 0;
+                        if (String(name).includes("광고비")) return formatCurrency(v);
+                        return formatNumber(v);
+                      }}
                     />
                     <Legend />
-                    <Line
-                      data={yearlyStats.currentYear.map((s) => ({
-                        monthLabel: s.monthLabel,
-                        광고비: s.salesAmt,
-                      }))}
-                      type="monotone"
-                      dataKey="광고비"
-                      name={`${yearlyStats.currentYear[0]?.year || new Date().getFullYear()}년`}
-                      stroke="#10b981"
-                      strokeWidth={3}
-                      dot={{ r: 4 }}
+                    <Bar
+                      yAxisId="left"
+                      dataKey={`${yearlyStats.currentYear[0]?.year}년 광고비`}
+                      fill="#10b981"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar
+                      yAxisId="left"
+                      dataKey={`${yearlyStats.previousYear[0]?.year}년 광고비`}
+                      fill="#9ca3af"
+                      radius={[4, 4, 0, 0]}
                     />
                     <Line
-                      data={yearlyStats.previousYear.map((s) => ({
-                        monthLabel: s.monthLabel,
-                        광고비: s.salesAmt,
-                      }))}
+                      yAxisId="right"
                       type="monotone"
-                      dataKey="광고비"
-                      name={`${yearlyStats.previousYear[0]?.year || new Date().getFullYear() - 1}년`}
+                      dataKey={`${yearlyStats.currentYear[0]?.year}년 클릭`}
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey={`${yearlyStats.previousYear[0]?.year}년 클릭`}
                       stroke="#9ca3af"
                       strokeWidth={2}
                       strokeDasharray="5 5"
                       dot={{ r: 3 }}
                     />
-                  </LineChart>
+                  </ComposedChart>
                 </ResponsiveContainer>
               </div>
             ) : (
@@ -926,7 +1194,7 @@ export default function NaverAdsPage() {
             )}
           </div>
 
-          {/* 연간 비교 테이블 */}
+          {/* 연간 비교 테이블 - 노출/클릭 포함 */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               월별 전년 대비 비교
@@ -943,7 +1211,19 @@ export default function NaverAdsPage() {
                       <th className="text-right py-3 px-4 font-medium text-gray-600">
                         {yearlyStats.previousYear[0]?.year}년 광고비
                       </th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">변화율</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">광고비 변화</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">
+                        {yearlyStats.currentYear[0]?.year}년 노출
+                      </th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">
+                        {yearlyStats.previousYear[0]?.year}년 노출
+                      </th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">
+                        {yearlyStats.currentYear[0]?.year}년 클릭
+                      </th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">
+                        {yearlyStats.previousYear[0]?.year}년 클릭
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -951,7 +1231,7 @@ export default function NaverAdsPage() {
                       const previous = yearlyStats.previousYear.find(
                         (p) => p.month === current.month
                       );
-                      const change = previous && previous.salesAmt > 0
+                      const costChange = previous && previous.salesAmt > 0
                         ? ((current.salesAmt - previous.salesAmt) / previous.salesAmt) * 100
                         : 0;
                       return (
@@ -964,7 +1244,19 @@ export default function NaverAdsPage() {
                             {previous ? formatCurrency(previous.salesAmt) : "-"}
                           </td>
                           <td className="py-3 px-4 text-right">
-                            {previous ? <ChangeIndicator value={change} /> : "-"}
+                            {previous ? <ChangeIndicator value={costChange} /> : "-"}
+                          </td>
+                          <td className="py-3 px-4 text-right text-gray-700">
+                            {formatNumber(current.impCnt)}
+                          </td>
+                          <td className="py-3 px-4 text-right text-gray-500">
+                            {previous ? formatNumber(previous.impCnt) : "-"}
+                          </td>
+                          <td className="py-3 px-4 text-right text-gray-700">
+                            {formatNumber(current.clkCnt)}
+                          </td>
+                          <td className="py-3 px-4 text-right text-gray-500">
+                            {previous ? formatNumber(previous.clkCnt) : "-"}
                           </td>
                         </tr>
                       );
@@ -978,6 +1270,146 @@ export default function NaverAdsPage() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* 키워드통계 탭 */}
+      {activeTab === "keywords" && (
+        <div className="space-y-6">
+          {/* 키워드 전체 통계 테이블 */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              검색 키워드 통계 (클릭수 기준 TOP 20)
+            </h2>
+            {keywords.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">순위</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-600">키워드</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">클릭수</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">노출수</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">CTR</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">광고비</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">CPC</th>
+                      <th className="text-right py-3 px-4 font-medium text-gray-600">전환수</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {keywords.slice(0, 20).map((kw, index) => (
+                      <tr key={kw.keyword} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="py-3 px-4">
+                          <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium ${
+                            index < 3 ? "bg-yellow-100 text-yellow-800" : "bg-gray-100 text-gray-600"
+                          }`}>
+                            {index + 1}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 font-medium text-gray-900">{kw.keyword}</td>
+                        <td className="py-3 px-4 text-right text-blue-600 font-semibold">{formatNumber(kw.clicks)}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{formatNumber(kw.impressions)}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{kw.ctr.toFixed(2)}%</td>
+                        <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(kw.cost)}</td>
+                        <td className="py-3 px-4 text-right text-gray-700">
+                          {kw.clicks > 0 ? formatCurrency(Math.round(kw.cost / kw.clicks)) : "-"}
+                        </td>
+                        <td className="py-3 px-4 text-right text-green-600">{formatNumber(kw.conversions)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-32 text-gray-400">
+                키워드 데이터가 없습니다
+              </div>
+            )}
+          </div>
+
+          {/* 키워드 성과 분포 시각화 */}
+          {keywords.length > 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* TOP 10 클릭수 차트 */}
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  TOP 10 키워드 (클릭수)
+                </h3>
+                <div className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={keywords.slice(0, 10).map((kw) => ({
+                        키워드: kw.keyword.length > 8 ? kw.keyword.slice(0, 8) + "..." : kw.keyword,
+                        클릭수: kw.clicks,
+                      }))}
+                      layout="vertical"
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis type="number" tick={{ fontSize: 11 }} />
+                      <YAxis type="category" dataKey="키워드" tick={{ fontSize: 10 }} width={80} />
+                      <Tooltip formatter={(value) => formatNumber(Number(value))} />
+                      <Bar dataKey="클릭수" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* TOP 10 광고비 차트 */}
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  TOP 10 키워드 (광고비)
+                </h3>
+                <div className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={[...keywords]
+                        .sort((a, b) => b.cost - a.cost)
+                        .slice(0, 10)
+                        .map((kw) => ({
+                          키워드: kw.keyword.length > 8 ? kw.keyword.slice(0, 8) + "..." : kw.keyword,
+                          광고비: Math.round(kw.cost / 1000),
+                        }))}
+                      layout="vertical"
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis type="number" tick={{ fontSize: 11 }} />
+                      <YAxis type="category" dataKey="키워드" tick={{ fontSize: 10 }} width={80} />
+                      <Tooltip formatter={(value) => formatCurrency(Number(value) * 1000)} />
+                      <Bar dataKey="광고비" fill="#10b981" radius={[0, 4, 4, 0]} name="광고비 (천원)" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 키워드 요약 통계 */}
+          {keywords.length > 0 && (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-white rounded-xl border border-gray-200 p-4">
+                <div className="text-sm text-gray-500 mb-1">등록 키워드 수</div>
+                <p className="text-2xl font-bold text-gray-900">{keywords.length}개</p>
+              </div>
+              <div className="bg-white rounded-xl border border-gray-200 p-4">
+                <div className="text-sm text-gray-500 mb-1">총 클릭수</div>
+                <p className="text-2xl font-bold text-blue-600">
+                  {formatNumber(keywords.reduce((sum, kw) => sum + kw.clicks, 0))}
+                </p>
+              </div>
+              <div className="bg-white rounded-xl border border-gray-200 p-4">
+                <div className="text-sm text-gray-500 mb-1">총 노출수</div>
+                <p className="text-2xl font-bold text-gray-900">
+                  {formatNumber(keywords.reduce((sum, kw) => sum + kw.impressions, 0))}
+                </p>
+              </div>
+              <div className="bg-white rounded-xl border border-gray-200 p-4">
+                <div className="text-sm text-gray-500 mb-1">총 광고비</div>
+                <p className="text-2xl font-bold text-green-600">
+                  {formatCurrency(keywords.reduce((sum, kw) => sum + kw.cost, 0))}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
