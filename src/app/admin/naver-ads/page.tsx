@@ -486,33 +486,34 @@ export default function NaverAdsPage() {
           </p>
         </div>
 
-        {/* 날짜 선택 (요약 탭에서만 표시) */}
-        {activeTab === "summary" && (
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-gray-400" />
-            <input
-              type="date"
-              value={dateRange.startDate}
-              onChange={(e) => handleDateChange("startDate", e.target.value)}
-              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
-            />
-            <span className="text-gray-400">~</span>
-            <input
-              type="date"
-              value={dateRange.endDate}
-              onChange={(e) => handleDateChange("endDate", e.target.value)}
-              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
-            />
-            <button
-              onClick={loadData}
-              disabled={isLoading}
-              className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50 flex items-center gap-1"
-            >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-              새로고침
-            </button>
-          </div>
-        )}
+        {/* 날짜 선택 (모든 탭에서 표시) */}
+        <div className="flex flex-wrap items-center gap-2">
+          <Calendar className="w-4 h-4 text-gray-400" />
+          <input
+            type="date"
+            value={dateRange.startDate}
+            onChange={(e) => handleDateChange("startDate", e.target.value)}
+            max={dateRange.endDate || undefined}
+            className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+          />
+          <span className="text-gray-400">~</span>
+          <input
+            type="date"
+            value={dateRange.endDate}
+            onChange={(e) => handleDateChange("endDate", e.target.value)}
+            min={dateRange.startDate || undefined}
+            max={new Date().toISOString().split("T")[0]}
+            className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm"
+          />
+          <button
+            onClick={loadData}
+            disabled={isLoading}
+            className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50 flex items-center gap-1"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+            새로고침
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -727,19 +728,9 @@ export default function NaverAdsPage() {
         <div className="space-y-6">
           {/* 일별 광고비/클릭수 복합 차트 */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">
-                일별 광고 성과 추이
-              </h2>
-              <button
-                onClick={loadData}
-                disabled={isLoading}
-                className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 disabled:opacity-50 flex items-center gap-1"
-              >
-                <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-                새로고침
-              </button>
-            </div>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              일별 광고 성과 추이
+            </h2>
             {dailyStats.length > 0 ? (
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
