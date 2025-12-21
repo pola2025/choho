@@ -796,16 +796,16 @@ export default function NaverAdsPage() {
       {/* 일별 탭 */}
       {activeTab === "daily" && (
         <div className="space-y-6">
-          {/* 일별 광고비/클릭수 복합 차트 */}
+          {/* 일별 광고비/클릭수 복합 차트 (최근 60일) */}
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              일별 광고 성과 추이
+              일별 광고 성과 추이 (최근 60일)
             </h2>
             {dailyStats.length > 0 ? (
               <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart
-                    data={dailyStats.map((stat) => ({
+                    data={dailyStats.slice(-60).map((stat) => ({
                       date: stat.date.slice(5), // MM-DD 형식
                       광고비: Math.round(stat.salesAmt),
                       클릭수: stat.clkCnt,
