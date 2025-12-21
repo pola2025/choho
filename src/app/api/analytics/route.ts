@@ -503,19 +503,25 @@ export async function GET(request: Request) {
           }>();
 
           for (const kw of rawKeywords) {
-            const existing = keywordMap.get(kw.keyword);
+            const keyword = String(kw.keyword || '');
+            const impressions = Number(kw.impressions) || 0;
+            const clicks = Number(kw.clicks) || 0;
+            const cost = Number(kw.cost) || 0;
+            const conversions = Number(kw.conversions) || 0;
+
+            const existing = keywordMap.get(keyword);
             if (existing) {
-              existing.impressions += kw.impressions || 0;
-              existing.clicks += kw.clicks || 0;
-              existing.cost += kw.cost || 0;
-              existing.conversions += kw.conversions || 0;
+              existing.impressions += impressions;
+              existing.clicks += clicks;
+              existing.cost += cost;
+              existing.conversions += conversions;
             } else {
-              keywordMap.set(kw.keyword, {
-                keyword: kw.keyword,
-                impressions: kw.impressions || 0,
-                clicks: kw.clicks || 0,
-                cost: kw.cost || 0,
-                conversions: kw.conversions || 0,
+              keywordMap.set(keyword, {
+                keyword,
+                impressions,
+                clicks,
+                cost,
+                conversions,
               });
             }
           }
