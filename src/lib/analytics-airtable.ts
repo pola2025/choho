@@ -584,7 +584,7 @@ export async function saveNaverAdDaily(
   return { created: totalCreated, updated: 0, deleted: totalDeleted };
 }
 
-// 네이버 광고 일별 데이터 조회 (날짜 범위)
+// 네이버 광고 일별 데이터 조회 (날짜 범위) - 페이지네이션 지원
 export async function getNaverAdDaily(
   startDate: string,
   endDate: string
@@ -595,22 +595,39 @@ export async function getNaverAdDaily(
     return [];
   }
 
-  const result = await airtableRequest(tableId, 'GET', undefined, {
-    filterByFormula: `AND({date} >= '${startDate}', {date} <= '${endDate}')`,
-    'sort[0][field]': 'date',
-    'sort[0][direction]': 'asc',
-  });
+  const allRecords: NaverAdDailyRecord[] = [];
+  let offset: string | undefined;
 
-  return (result.records || []).map((r: AirtableRecord) => ({
-    date: String(r.fields.date || ''),
-    impCnt: Number(r.fields.impCnt) || 0,
-    clkCnt: Number(r.fields.clkCnt) || 0,
-    salesAmt: Number(r.fields.salesAmt) || 0,
-    ctr: Number(r.fields.ctr) || 0,
-    cpc: Number(r.fields.cpc) || 0,
-    ccnt: Number(r.fields.ccnt) || 0,
-    syncedAt: r.fields.syncedAt ? String(r.fields.syncedAt) : undefined,
-  }));
+  do {
+    const params: Record<string, string> = {
+      filterByFormula: `AND({date} >= '${startDate}', {date} <= '${endDate}')`,
+      'sort[0][field]': 'date',
+      'sort[0][direction]': 'asc',
+      pageSize: '100',
+    };
+
+    if (offset) {
+      params.offset = offset;
+    }
+
+    const result = await airtableRequest(tableId, 'GET', undefined, params);
+
+    const records = (result.records || []).map((r: AirtableRecord) => ({
+      date: String(r.fields.date || ''),
+      impCnt: Number(r.fields.impCnt) || 0,
+      clkCnt: Number(r.fields.clkCnt) || 0,
+      salesAmt: Number(r.fields.salesAmt) || 0,
+      ctr: Number(r.fields.ctr) || 0,
+      cpc: Number(r.fields.cpc) || 0,
+      ccnt: Number(r.fields.ccnt) || 0,
+      syncedAt: r.fields.syncedAt ? String(r.fields.syncedAt) : undefined,
+    }));
+
+    allRecords.push(...records);
+    offset = result.offset;
+  } while (offset);
+
+  return allRecords;
 }
 
 // 네이버 광고 일별 데이터 중 누락된 날짜 확인
