@@ -224,12 +224,11 @@ export default function NaverAdsPage() {
     endDate: "",
   });
 
-  // 날짜 초기화 (이번 달 1일 ~ 오늘)
+  // 날짜 초기화 (2024-01-01 ~ 오늘, 전체 데이터 표시)
   useEffect(() => {
     const today = new Date();
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     setDateRange({
-      startDate: startOfMonth.toISOString().split("T")[0],
+      startDate: "2024-01-01",
       endDate: today.toISOString().split("T")[0],
     });
   }, []);
@@ -276,6 +275,31 @@ export default function NaverAdsPage() {
       }),
       { impCnt: 0, clkCnt: 0, salesAmt: 0, ccnt: 0 }
     );
+  }, [monthlyStats]);
+
+  // 연도별 월별 데이터 그룹핑 (소계 포함)
+  const monthlyByYear = useMemo(() => {
+    const grouped: Record<string, { months: MonthlyStat[]; totals: { salesAmt: number; impCnt: number; clkCnt: number } }> = {};
+
+    for (const stat of monthlyStats) {
+      const year = stat.month.slice(0, 4);
+      if (!grouped[year]) {
+        grouped[year] = { months: [], totals: { salesAmt: 0, impCnt: 0, clkCnt: 0 } };
+      }
+      grouped[year].months.push(stat);
+      grouped[year].totals.salesAmt += stat.salesAmt;
+      grouped[year].totals.impCnt += stat.impCnt;
+      grouped[year].totals.clkCnt += stat.clkCnt;
+    }
+
+    // 연도 내림차순, 월 내림차순 정렬
+    return Object.entries(grouped)
+      .sort(([a], [b]) => b.localeCompare(a))
+      .map(([year, data]) => ({
+        year,
+        months: [...data.months].sort((a, b) => b.month.localeCompare(a.month)),
+        totals: data.totals,
+      }));
   }, [monthlyStats]);
 
   // 연간 합계 계산
@@ -1060,29 +1084,53 @@ export default function NaverAdsPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {[...monthlyStats].reverse().map((stat) => (
-                      <tr key={stat.month} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium text-gray-900">{stat.monthLabel}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(stat.salesAmt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.impCnt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.clkCnt)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{stat.ctr.toFixed(2)}%</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(Math.round(stat.cpc))}</td>
-                      </tr>
+                    {monthlyByYear.map(({ year, months, totals }) => (
+                      <>
+                        {/* 연도 헤더 */}
+                        <tr key={`year-${year}`} className="bg-gray-100">
+                          <td colSpan={6} className="py-2 px-4 font-bold text-gray-800">
+                            {year}년
+                          </td>
+                        </tr>
+                        {/* 월별 데이터 */}
+                        {months.map((stat) => (
+                          <tr key={stat.month} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="py-3 px-4 font-medium text-gray-900 pl-8">{stat.monthLabel}</td>
+                            <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(stat.salesAmt)}</td>
+                            <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.impCnt)}</td>
+                            <td className="py-3 px-4 text-right text-gray-700">{formatNumber(stat.clkCnt)}</td>
+                            <td className="py-3 px-4 text-right text-gray-700">{stat.ctr.toFixed(2)}%</td>
+                            <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(Math.round(stat.cpc))}</td>
+                          </tr>
+                        ))}
+                        {/* 연간 소계 */}
+                        <tr key={`subtotal-${year}`} className="bg-blue-50 font-semibold">
+                          <td className="py-3 px-4 text-blue-800">{year}년 소계</td>
+                          <td className="py-3 px-4 text-right text-blue-800">{formatCurrency(totals.salesAmt)}</td>
+                          <td className="py-3 px-4 text-right text-blue-800">{formatNumber(totals.impCnt)}</td>
+                          <td className="py-3 px-4 text-right text-blue-800">{formatNumber(totals.clkCnt)}</td>
+                          <td className="py-3 px-4 text-right text-blue-800">
+                            {totals.impCnt > 0 ? ((totals.clkCnt / totals.impCnt) * 100).toFixed(2) : 0}%
+                          </td>
+                          <td className="py-3 px-4 text-right text-blue-800">
+                            {totals.clkCnt > 0 ? formatCurrency(Math.round(totals.salesAmt / totals.clkCnt)) : "-"}
+                          </td>
+                        </tr>
+                      </>
                     ))}
                   </tbody>
-                  <tfoot className="bg-gray-50">
-                    <tr className="font-semibold">
-                      <td className="py-3 px-4 text-gray-900">합계</td>
-                      <td className="py-3 px-4 text-right text-gray-900">{formatCurrency(monthlyTotals.salesAmt)}</td>
-                      <td className="py-3 px-4 text-right text-gray-900">{formatNumber(monthlyTotals.impCnt)}</td>
-                      <td className="py-3 px-4 text-right text-gray-900">{formatNumber(monthlyTotals.clkCnt)}</td>
-                      <td className="py-3 px-4 text-right text-gray-900">
+                  <tfoot className="bg-green-50">
+                    <tr className="font-bold">
+                      <td className="py-3 px-4 text-green-800">전체 합계</td>
+                      <td className="py-3 px-4 text-right text-green-800">{formatCurrency(monthlyTotals.salesAmt)}</td>
+                      <td className="py-3 px-4 text-right text-green-800">{formatNumber(monthlyTotals.impCnt)}</td>
+                      <td className="py-3 px-4 text-right text-green-800">{formatNumber(monthlyTotals.clkCnt)}</td>
+                      <td className="py-3 px-4 text-right text-green-800">
                         {monthlyTotals.impCnt > 0
                           ? ((monthlyTotals.clkCnt / monthlyTotals.impCnt) * 100).toFixed(2)
                           : 0}%
                       </td>
-                      <td className="py-3 px-4 text-right text-gray-900">
+                      <td className="py-3 px-4 text-right text-green-800">
                         {monthlyTotals.clkCnt > 0
                           ? formatCurrency(Math.round(monthlyTotals.salesAmt / monthlyTotals.clkCnt))
                           : "-"}

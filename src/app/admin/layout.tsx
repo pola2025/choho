@@ -15,12 +15,14 @@ import {
   EyeOff,
   BarChart3,
   TrendingUp,
+  Search,
 } from "lucide-react";
 
 const navItems = [
   { href: "/admin", label: "대시보드", icon: LayoutDashboard },
   { href: "/admin/analytics", label: "방문통계", icon: BarChart3 },
   { href: "/admin/naver-ads", label: "네이버 광고", icon: TrendingUp },
+  { href: "/admin/naver-ads/keywords", label: "키워드 효율분석", icon: Search },
   { href: "/admin/images", label: "이미지 관리", icon: Image },
   { href: "/admin/menu", label: "카페 메뉴", icon: Coffee },
   { href: "/admin/popup-archive", label: "팝업 아카이브", icon: Megaphone },
