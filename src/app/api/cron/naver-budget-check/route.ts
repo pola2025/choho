@@ -6,8 +6,8 @@ import { sendNaverAdBudgetAlert, sendNaverAdBudgetDepletedAlert } from '@/lib/te
 const CRON_SECRET = process.env.CRON_SECRET;
 
 // 예산 임계값 설정 (원)
-const BUDGET_WARNING_THRESHOLD = 100000;  // 10만원 이하 시 경고
-const BUDGET_CRITICAL_THRESHOLD = 30000;  // 3만원 이하 시 긴급 알림
+const BUDGET_WARNING_THRESHOLD = 50000;   // 5만원 이하 시 경고
+const BUDGET_CRITICAL_THRESHOLD = 20000;  // 2만원 이하 시 긴급 알림
 
 export async function GET(request: Request) {
   // Cron 인증 확인 (선택사항)

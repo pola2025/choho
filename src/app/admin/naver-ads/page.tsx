@@ -139,7 +139,7 @@ interface MonthComparison {
   };
 }
 
-type TabType = "summary" | "daily" | "weekly" | "monthly" | "yearly" | "keywords";
+type TabType = "summary" | "daily" | "weekly" | "monthly" | "yearly";
 
 // 숫자 포맷팅
 function formatNumber(num: number): string {
@@ -462,7 +462,6 @@ export default function NaverAdsPage() {
     { id: "weekly", label: "주간별", icon: <LineChartIcon className="w-4 h-4" /> },
     { id: "monthly", label: "월별", icon: <TrendingUp className="w-4 h-4" /> },
     { id: "yearly", label: "연간", icon: <TrendingDown className="w-4 h-4" /> },
-    { id: "keywords", label: "키워드통계", icon: <Search className="w-4 h-4" /> },
   ];
 
   if (isLoading && !summary) {
@@ -538,6 +537,14 @@ export default function NaverAdsPage() {
             {tab.label}
           </button>
         ))}
+        {/* 키워드 분석 페이지 링크 */}
+        <a
+          href="/admin/naver-ads/keywords"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors bg-purple-100 text-purple-700 hover:bg-purple-200"
+        >
+          <Search className="w-4 h-4" />
+          키워드 효율분석
+        </a>
       </div>
 
       {/* 요약 탭 */}
@@ -1300,145 +1307,6 @@ export default function NaverAdsPage() {
         </div>
       )}
 
-      {/* 키워드통계 탭 */}
-      {activeTab === "keywords" && (
-        <div className="space-y-6">
-          {/* 키워드 전체 통계 테이블 */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              검색 키워드 통계 (클릭수 기준 TOP 20)
-            </h2>
-            {keywords.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4 font-medium text-gray-600">순위</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-600">키워드</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">클릭수</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">노출수</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">CTR</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">광고비</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">CPC</th>
-                      <th className="text-right py-3 px-4 font-medium text-gray-600">전환수</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {keywords.slice(0, 20).map((kw, index) => (
-                      <tr key={kw.keyword} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-3 px-4">
-                          <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium ${
-                            index < 3 ? "bg-yellow-100 text-yellow-800" : "bg-gray-100 text-gray-600"
-                          }`}>
-                            {index + 1}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 font-medium text-gray-900">{kw.keyword}</td>
-                        <td className="py-3 px-4 text-right text-blue-600 font-semibold">{formatNumber(kw.clicks)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatNumber(kw.impressions)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{kw.ctr.toFixed(2)}%</td>
-                        <td className="py-3 px-4 text-right text-gray-700">{formatCurrency(kw.cost)}</td>
-                        <td className="py-3 px-4 text-right text-gray-700">
-                          {kw.clicks > 0 ? formatCurrency(Math.round(kw.cost / kw.clicks)) : "-"}
-                        </td>
-                        <td className="py-3 px-4 text-right text-green-600">{formatNumber(kw.conversions)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-32 text-gray-400">
-                키워드 데이터가 없습니다
-              </div>
-            )}
-          </div>
-
-          {/* 키워드 성과 분포 시각화 */}
-          {keywords.length > 0 && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* TOP 10 클릭수 차트 */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  TOP 10 키워드 (클릭수)
-                </h3>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={keywords.slice(0, 10).map((kw) => ({
-                        키워드: kw.keyword.length > 8 ? kw.keyword.slice(0, 8) + "..." : kw.keyword,
-                        클릭수: kw.clicks,
-                      }))}
-                      layout="vertical"
-                    >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis type="number" tick={{ fontSize: 11 }} />
-                      <YAxis type="category" dataKey="키워드" tick={{ fontSize: 10 }} width={80} />
-                      <Tooltip formatter={(value) => formatNumber(Number(value))} />
-                      <Bar dataKey="클릭수" fill="#3b82f6" radius={[0, 4, 4, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              {/* TOP 10 광고비 차트 */}
-              <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  TOP 10 키워드 (광고비)
-                </h3>
-                <div className="h-[300px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={[...keywords]
-                        .sort((a, b) => b.cost - a.cost)
-                        .slice(0, 10)
-                        .map((kw) => ({
-                          키워드: kw.keyword.length > 8 ? kw.keyword.slice(0, 8) + "..." : kw.keyword,
-                          광고비: Math.round(kw.cost / 1000),
-                        }))}
-                      layout="vertical"
-                    >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis type="number" tick={{ fontSize: 11 }} />
-                      <YAxis type="category" dataKey="키워드" tick={{ fontSize: 10 }} width={80} />
-                      <Tooltip formatter={(value) => formatCurrency(Number(value) * 1000)} />
-                      <Bar dataKey="광고비" fill="#10b981" radius={[0, 4, 4, 0]} name="광고비 (천원)" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 키워드 요약 통계 */}
-          {keywords.length > 0 && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <div className="text-sm text-gray-500 mb-1">등록 키워드 수</div>
-                <p className="text-2xl font-bold text-gray-900">{keywords.length}개</p>
-              </div>
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <div className="text-sm text-gray-500 mb-1">총 클릭수</div>
-                <p className="text-2xl font-bold text-blue-600">
-                  {formatNumber(keywords.reduce((sum, kw) => sum + kw.clicks, 0))}
-                </p>
-              </div>
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <div className="text-sm text-gray-500 mb-1">총 노출수</div>
-                <p className="text-2xl font-bold text-gray-900">
-                  {formatNumber(keywords.reduce((sum, kw) => sum + kw.impressions, 0))}
-                </p>
-              </div>
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <div className="text-sm text-gray-500 mb-1">총 광고비</div>
-                <p className="text-2xl font-bold text-green-600">
-                  {formatCurrency(keywords.reduce((sum, kw) => sum + kw.cost, 0))}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
