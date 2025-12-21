@@ -34,24 +34,18 @@ export async function GET(request: Request) {
     let smsSent = false;
     let alertType = 'none';
 
-    // 예산 체크 및 알림 발송 (텔레그램 + SMS)
+    // 예산 체크 및 알림 발송 (SMS 먼저 → 텔레그램에 결과 포함)
     if (currentBudget <= BUDGET_CRITICAL_THRESHOLD) {
       // 긴급 알림 (2만원 이하)
-      const [telegramResult, smsResult] = await Promise.all([
-        sendNaverAdBudgetDepletedAlert(currentBudget),
-        sendNaverAdBudgetDepletedSMS(currentBudget),
-      ]);
-      telegramSent = telegramResult;
+      const smsResult = await sendNaverAdBudgetDepletedSMS(currentBudget);
       smsSent = smsResult.success;
+      telegramSent = await sendNaverAdBudgetDepletedAlert(currentBudget, smsSent);
       alertType = 'critical';
     } else if (currentBudget <= BUDGET_WARNING_THRESHOLD) {
       // 경고 알림 (5만원 이하)
-      const [telegramResult, smsResult] = await Promise.all([
-        sendNaverAdBudgetAlert(currentBudget, BUDGET_WARNING_THRESHOLD),
-        sendNaverAdBudgetSMS(currentBudget, BUDGET_WARNING_THRESHOLD),
-      ]);
-      telegramSent = telegramResult;
+      const smsResult = await sendNaverAdBudgetSMS(currentBudget, BUDGET_WARNING_THRESHOLD);
       smsSent = smsResult.success;
+      telegramSent = await sendNaverAdBudgetAlert(currentBudget, BUDGET_WARNING_THRESHOLD, smsSent);
       alertType = 'warning';
     }
 

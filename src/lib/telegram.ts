@@ -61,11 +61,16 @@ export async function sendTelegramMessage({
  */
 export async function sendNaverAdBudgetAlert(
   currentBudget: number,
-  threshold: number = 50000
+  threshold: number = 50000,
+  smsSent?: boolean
 ): Promise<boolean> {
   if (currentBudget >= threshold) {
     return false; // 예산이 충분하면 알림 안 보냄
   }
+
+  const smsStatus = smsSent === undefined ? '' : smsSent
+    ? '\n\n📱 SMS 문자 알림 완료'
+    : '\n\n⚠️ SMS 발송 실패';
 
   const message = `
 ⚠️ <b>[초호] 네이버 검색광고 예산 부족</b>
@@ -74,7 +79,7 @@ export async function sendNaverAdBudgetAlert(
 
 💳 비즈머니 충전이 필요합니다!
 
-🔗 <a href="https://searchad.naver.com">네이버 검색광고 관리</a>
+🔗 <a href="https://searchad.naver.com">네이버 검색광고 관리</a>${smsStatus}
   `.trim();
 
   return sendTelegramMessage({
@@ -88,8 +93,13 @@ export async function sendNaverAdBudgetAlert(
  * 네이버 광고 예산 소진 알림
  */
 export async function sendNaverAdBudgetDepletedAlert(
-  currentBudget: number
+  currentBudget: number,
+  smsSent?: boolean
 ): Promise<boolean> {
+  const smsStatus = smsSent === undefined ? '' : smsSent
+    ? '\n\n📱 SMS 문자 알림 완료'
+    : '\n\n⚠️ SMS 발송 실패';
+
   const message = `
 🚨 <b>[초호] 네이버 검색광고 예산 소진 임박!</b>
 
@@ -98,7 +108,7 @@ export async function sendNaverAdBudgetDepletedAlert(
 광고가 곧 중단됩니다!
 즉시 충전해주세요!
 
-🔗 <a href="https://searchad.naver.com">네이버 검색광고 관리</a>
+🔗 <a href="https://searchad.naver.com">네이버 검색광고 관리</a>${smsStatus}
   `.trim();
 
   return sendTelegramMessage({
