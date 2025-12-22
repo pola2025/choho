@@ -19,10 +19,8 @@ import {
   ChevronRight,
   Database,
 } from "lucide-react";
-import {
-  CAMPAIGN_GROUP_TABS,
-  type CampaignGroup,
-} from "@/lib/campaign-groups";
+// 캠페인 그룹은 추후 캠페인별 캐시 구현 시 사용
+// import { CAMPAIGN_GROUP_TABS, type CampaignGroup } from "@/lib/campaign-groups";
 import {
   generateWeeklyInsights,
   generateMonthlyInsights,
@@ -351,7 +349,6 @@ function getMonthlyRanges() {
 }
 
 export default function AIReportPage() {
-  const [activeGroup, setActiveGroup] = useState<CampaignGroup>("place-personal");
   const [preset, setPreset] = useState<PresetType>("weekly");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -584,24 +581,10 @@ export default function AIReportPage() {
         </div>
       )}
 
-      {/* 캠페인 그룹 탭 */}
-      <div className="flex gap-2 overflow-x-auto pb-2">
-        {CAMPAIGN_GROUP_TABS.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveGroup(tab.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
-              activeGroup === tab.id
-                ? "bg-green-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-        <span className="px-3 py-2 text-xs text-gray-400 self-center">
-          (캠페인별 필터는 추후 지원)
-        </span>
+      {/* 전체 광고 데이터 안내 */}
+      <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg text-sm text-gray-600">
+        <Database className="w-4 h-4" />
+        전체 네이버 광고 데이터 기준 분석
       </div>
 
       {/* 기간 프리셋 탭 */}
