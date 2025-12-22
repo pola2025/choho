@@ -122,13 +122,23 @@ export default function KeywordAnalysisPage() {
 
   const dateRange = useMemo(() => getDateRange(period), [period]);
   const topN = period === "cumulative" ? 20 : 10;
+  const [loadedPeriod, setLoadedPeriod] = useState<string | null>(null);
+  const [dataSource, setDataSource] = useState<string | null>(null);
 
-  // 데이터 로드
+  // 데이터 로드 (Airtable 캐시에서)
   const loadData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
+    setKeywords([]); // 기존 데이터 초기화하여 로딩 상태 명확히
 
     try {
+      // 시작/종료 월 계산
+      const startYearMonth = dateRange.startDate.slice(0, 7); // YYYY-MM
+      const endYearMonth = dateRange.endDate.slice(0, 7);
+
+      console.log(`[키워드 캐시] 조회: ${startYearMonth} ~ ${endYearMonth}`);
+
+      // Airtable 캐시에서 직접 조회 (naver-keywords-sync 대신 range 조회)
       const params = new URLSearchParams({
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
@@ -137,13 +147,16 @@ export default function KeywordAnalysisPage() {
       const res = await fetch(`/api/analytics?type=naver-keywords-sync&${params}`);
       if (res.ok) {
         const data = await res.json();
+        console.log(`[키워드 캐시] 응답: ${data.keywords?.length || 0}개, period: ${data.period}`);
         setKeywords(data.keywords || []);
+        setLoadedPeriod(data.period || `${startYearMonth} ~ ${endYearMonth}`);
+        setDataSource("airtable");
       } else {
-        setError("데이터를 불러오는데 실패했습니다.");
+        setError("캐시 데이터를 불러오는데 실패했습니다.");
       }
     } catch (err) {
       console.error("Failed to load keywords:", err);
-      setError("데이터를 불러오는데 실패했습니다.");
+      setError("캐시 데이터를 불러오는데 실패했습니다.");
     } finally {
       setIsLoading(false);
     }
@@ -280,9 +293,20 @@ export default function KeywordAnalysisPage() {
           ))}
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <Calendar className="w-4 h-4" />
-          {dateRange.label}
+        <div className="flex items-center gap-2 text-sm">
+          <Calendar className="w-4 h-4 text-gray-500" />
+          <span className="text-gray-700 font-medium">{dateRange.label}</span>
+          {loadedPeriod && (
+            <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+              캐시: {loadedPeriod}
+            </span>
+          )}
+          {isLoading && (
+            <div className="flex items-center gap-1 text-green-600">
+              <div className="w-4 h-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs">로딩중...</span>
+            </div>
+          )}
         </div>
 
         {/* 정렬 옵션 */}
@@ -309,7 +333,11 @@ export default function KeywordAnalysisPage() {
             <Search className="w-4 h-4" />
             등록 키워드
           </div>
-          <p className="text-2xl font-bold text-gray-900">{keywords.length}개</p>
+          {isLoading ? (
+            <div className="h-8 w-16 bg-gray-200 rounded animate-pulse" />
+          ) : (
+            <p className="text-2xl font-bold text-gray-900">{keywords.length}개</p>
+          )}
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -317,7 +345,11 @@ export default function KeywordAnalysisPage() {
             <MousePointer className="w-4 h-4" />
             총 클릭수
           </div>
-          <p className="text-2xl font-bold text-blue-600">{formatNumber(totals.clicks)}</p>
+          {isLoading ? (
+            <div className="h-8 w-20 bg-gray-200 rounded animate-pulse" />
+          ) : (
+            <p className="text-2xl font-bold text-blue-600">{formatNumber(totals.clicks)}</p>
+          )}
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -325,7 +357,11 @@ export default function KeywordAnalysisPage() {
             <Eye className="w-4 h-4" />
             총 노출수
           </div>
-          <p className="text-2xl font-bold text-gray-900">{formatNumber(totals.impressions)}</p>
+          {isLoading ? (
+            <div className="h-8 w-20 bg-gray-200 rounded animate-pulse" />
+          ) : (
+            <p className="text-2xl font-bold text-gray-900">{formatNumber(totals.impressions)}</p>
+          )}
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -333,7 +369,11 @@ export default function KeywordAnalysisPage() {
             <Wallet className="w-4 h-4" />
             총 광고비
           </div>
-          <p className="text-2xl font-bold text-green-600">{formatCurrency(totals.cost)}</p>
+          {isLoading ? (
+            <div className="h-8 w-24 bg-gray-200 rounded animate-pulse" />
+          ) : (
+            <p className="text-2xl font-bold text-green-600">{formatCurrency(totals.cost)}</p>
+          )}
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -341,7 +381,11 @@ export default function KeywordAnalysisPage() {
             <TrendingUp className="w-4 h-4" />
             평균 CTR
           </div>
-          <p className="text-2xl font-bold text-purple-600">{totals.avgCtr.toFixed(2)}%</p>
+          {isLoading ? (
+            <div className="h-8 w-16 bg-gray-200 rounded animate-pulse" />
+          ) : (
+            <p className="text-2xl font-bold text-purple-600">{totals.avgCtr.toFixed(2)}%</p>
+          )}
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -349,7 +393,11 @@ export default function KeywordAnalysisPage() {
             <Award className="w-4 h-4" />
             평균 CPC
           </div>
-          <p className="text-2xl font-bold text-orange-600">{formatCurrency(Math.round(totals.avgCpc))}</p>
+          {isLoading ? (
+            <div className="h-8 w-20 bg-gray-200 rounded animate-pulse" />
+          ) : (
+            <p className="text-2xl font-bold text-orange-600">{formatCurrency(Math.round(totals.avgCpc))}</p>
+          )}
         </div>
       </div>
 
@@ -358,9 +406,24 @@ export default function KeywordAnalysisPage() {
         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <Award className="w-5 h-5 text-yellow-500" />
           TOP {topN} 키워드 ({sortOptions.find((o) => o.id === sortBy)?.label})
+          {isLoading && (
+            <div className="w-4 h-4 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
+          )}
         </h2>
 
-        {sortedKeywords.length > 0 ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="flex items-center gap-4">
+                <div className="w-6 h-6 bg-gray-200 rounded-full animate-pulse" />
+                <div className="flex-1 h-4 bg-gray-200 rounded animate-pulse" />
+                <div className="w-16 h-4 bg-gray-200 rounded animate-pulse" />
+                <div className="w-16 h-4 bg-gray-200 rounded animate-pulse" />
+                <div className="w-12 h-4 bg-gray-200 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+        ) : sortedKeywords.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
