@@ -168,12 +168,6 @@ export function CombinedWinterPopup() {
         <div className="absolute w-1 h-1 bg-white rounded-full opacity-90 animate-[fall_3.2s_linear_infinite]" style={{left: '15%', animationDelay: '2.5s'}} />
         <div className="absolute w-2 h-2 bg-white rounded-full opacity-50 animate-[fall_5s_linear_infinite]" style={{left: '60%', animationDelay: '0.3s'}} />
       </div>
-      {/* 산/눈썰매장 배경 */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 rounded-b-xl sm:rounded-b-2xl overflow-hidden">
-        <div className="absolute bottom-0 left-0 w-0 h-0 border-l-[100px] border-r-[100px] border-b-[80px] border-l-transparent border-r-transparent border-b-white/30" style={{left: '-20px'}} />
-        <div className="absolute bottom-0 w-0 h-0 border-l-[80px] border-r-[80px] border-b-[60px] border-l-transparent border-r-transparent border-b-white/20" style={{left: '60px'}} />
-        <div className="absolute bottom-0 right-0 w-0 h-0 border-l-[120px] border-r-[120px] border-b-[90px] border-l-transparent border-r-transparent border-b-white/30" style={{right: '-40px'}} />
-      </div>
       {/* 상단 중앙 아이콘 - 박스 바깥 */}
       <div className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 z-20">
         <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-sky-500">
@@ -182,36 +176,41 @@ export function CombinedWinterPopup() {
       </div>
       <div className="relative z-10 p-4 md:p-6 pt-8 md:pt-10 h-full flex flex-col justify-between">
         <div>
-          <div className="text-center mb-3 md:mb-4">
-            <span className="inline-block px-2.5 py-0.5 md:px-3 md:py-1 bg-yellow-400 text-yellow-900 text-xs md:text-sm font-bold rounded-full mb-1">
-              ❄️ 겨울 할인
-            </span>
-            <h2 className="text-lg md:text-2xl font-bold text-white leading-tight drop-shadow-lg">
-              눈썰매장 입장권 할인
+          <div className="text-center mb-2 md:mb-3">
+            <h2 className="text-lg md:text-2xl font-bold text-white leading-tight drop-shadow-lg mb-2">
+              눈썰매장 티켓 6천원
             </h2>
+            <div className="inline-block px-3 py-1.5 md:px-4 md:py-2 bg-red-500 text-white text-xs md:text-sm font-bold rounded-lg animate-pulse">
+              ⚠️ 초호펜션 이용고객만 구매 가능
+            </div>
           </div>
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 md:p-5 mb-3 md:mb-4 shadow-lg">
-            <p className="text-blue-700 font-bold text-base md:text-lg mb-2 text-center">
-              🎿 초호펜션 이용고객
-            </p>
-            <p className="text-neutral-700 text-sm md:text-base leading-relaxed text-center font-medium">
-              초리골 눈썰매장 입장권을<br/>
-              <span className="text-blue-600 font-bold text-lg">할인된 가격</span>으로<br/>
-              구매할 수 있습니다!
-            </p>
+          {/* 티켓 이미지 */}
+          <div className="relative w-full aspect-[3/4] max-h-[180px] md:max-h-[200px] mx-auto mb-3 md:mb-4 rounded-lg overflow-hidden shadow-lg border-2 border-white/50">
+            <Image
+              src="/images/journal/sled-ticket/sled-ticket-front.jpg"
+              alt="눈썰매장 티켓"
+              fill
+              className="object-cover"
+            />
+          </div>
+          {/* 가격 강조 */}
+          <div className="bg-white rounded-xl p-3 md:p-4 mb-3 md:mb-4 shadow-lg text-center">
+            <p className="text-neutral-500 text-xs md:text-sm line-through mb-1">정가 15,900원</p>
+            <p className="text-red-600 font-black text-3xl md:text-4xl">6,000원</p>
+            <p className="text-blue-600 text-xs md:text-sm font-medium mt-1">1인 1매 구매 가능</p>
           </div>
         </div>
         <div className="space-y-2 md:space-y-3">
-          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-2.5 md:p-3 text-center shadow">
-            <p className="text-neutral-700 text-xs md:text-sm font-medium">
-              ⛷️ 관리자 연락 또는 펜션 예약시<br/>신청바랍니다
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2 md:p-2.5 text-center border border-white/30">
+            <p className="text-white text-xs md:text-sm font-medium">
+              ⛷️ 펜션 예약시 신청 또는 관리자 연락
             </p>
           </div>
           <button
             onClick={handleCall}
             className="w-full py-3 md:py-4 bg-white text-blue-600 font-bold rounded-xl text-center hover:bg-white/90 transition-colors flex items-center justify-center gap-2 text-sm md:text-base shadow-lg"
           >
-            <Phone className="w-4 h-4 md:w-5 md:h-5" />
+            <Ticket className="w-4 h-4 md:w-5 md:h-5" />
             지금 신청하기
           </button>
         </div>

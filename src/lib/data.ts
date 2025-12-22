@@ -284,6 +284,32 @@ export const rooms: Room[] = [
 
 export const journals: Journal[] = [
   {
+    id: "sled-ticket-6000-2025",
+    category: "event",
+    title: "눈썰매장 티켓 6천원",
+    excerpt: "⚠️ 초호펜션 이용고객만 구매 가능! 정가 15,900원 → 6,000원 특가",
+    content: `눈내리는 초리골 눈썰매장 티켓을 특가로 구매하세요!
+
+🎫 티켓 가격: 6,000원 (정가 15,900원)
+📌 구매 조건: 초호펜션 이용고객만 구매 가능
+👤 구매 수량: 1인 1매
+
+신청 방법:
+- 펜션 예약시 함께 신청
+- 관리자 연락 (010-7932-0029)
+
+* 본 티켓은 초리골 눈썰매장 1일 이용권과 교환 가능한 티켓입니다.
+* 1인 1매를 초리골눈썰매장에 오시면 교환 가능합니다.
+
+아이들과 함께 즐거운 겨울 추억을 만들어보세요!`,
+    createdAt: "2025-12-22",
+    thumbnail: "/images/journal/sled-ticket/sled-ticket-front.jpg",
+    images: [
+      "/images/journal/sled-ticket/sled-ticket-front.jpg",
+      "/images/journal/sled-ticket/sled-ticket-back.jpg",
+    ],
+  },
+  {
     id: "sled-ticket-discount-2025",
     category: "event",
     title: "눈썰매장 입장권 할인",
