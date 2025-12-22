@@ -62,6 +62,72 @@ function isValidAirtableData(data: unknown[]): boolean {
   return Array.isArray(data) && data.length > 0;
 }
 
+// KST 기준 날짜 문자열 반환 (YYYY-MM-DD)
+function getKSTDateString(date: Date = new Date()): string {
+  const formatter = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' });
+  return formatter.format(date);
+}
+
+// KST 기준 N개월 전 날짜 (월 경계 안전 처리)
+function getKSTMonthsAgo(months: number): string {
+  const now = new Date();
+  // KST 기준 현재 시간
+  const kstNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
+  const year = kstNow.getFullYear();
+  const month = kstNow.getMonth() - months;
+  const day = kstNow.getDate();
+
+  // 월 경계 안전 처리: 해당 월의 마지막 날을 초과하지 않도록
+  const targetDate = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+  targetDate.setDate(Math.min(day, lastDayOfMonth));
+
+  return getKSTDateString(targetDate);
+}
+
+// KST 기준 이번 달 1일
+function getKSTMonthStart(): string {
+  const now = new Date();
+  const kstNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
+  const year = kstNow.getFullYear();
+  const month = String(kstNow.getMonth() + 1).padStart(2, '0');
+  return `${year}-${month}-01`;
+}
+
+// 날짜 형식 검증 (YYYY-MM-DD)
+function isValidDateFormat(dateStr: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+  const [year, month, day] = dateStr.split('-').map(Number);
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > 31) return false;
+  // 실제 유효한 날짜인지 확인
+  const date = new Date(year, month - 1, day);
+  return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+}
+
+// 날짜 범위 검증 및 정제
+function validateDateRange(
+  startDate: string | undefined,
+  endDate: string | undefined,
+  defaultStart: string,
+  defaultEnd: string
+): { start: string; end: string; error?: string } {
+  const start = startDate || defaultStart;
+  const end = endDate || defaultEnd;
+
+  if (!isValidDateFormat(start)) {
+    return { start: defaultStart, end: defaultEnd, error: `Invalid startDate format: ${startDate}` };
+  }
+  if (!isValidDateFormat(end)) {
+    return { start: defaultStart, end: defaultEnd, error: `Invalid endDate format: ${endDate}` };
+  }
+  if (start > end) {
+    return { start: defaultStart, end: defaultEnd, error: 'startDate cannot be after endDate' };
+  }
+
+  return { start, end };
+}
+
 // Summary 데이터 변환 (Airtable -> API 응답 형식)
 interface SummaryTotals {
   totalUsers: number;
@@ -542,13 +608,12 @@ export async function GET(request: Request) {
           });
         }
 
-        // 기본: 현재 월 네이버 API 실시간 조회
-        const yearMonth = searchParams.get('yearMonth') ||
-          `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+        // 기본: 현재 월 네이버 API 실시간 조회 (KST 기준)
+        const yearMonth = searchParams.get('yearMonth') || getKSTMonthStart().slice(0, 7);
 
         const [year, month] = yearMonth.split('-').map(Number);
         const monthStartDate = `${year}-${String(month).padStart(2, '0')}-01`;
-        const monthEndDate = new Date().toISOString().split('T')[0];
+        const monthEndDate = getKSTDateString();
 
         const stats = await getAllKeywordStats(monthStartDate, monthEndDate);
 
@@ -653,20 +718,25 @@ export async function GET(request: Request) {
     // 네이버 광고 캠페인 그룹별 일별 통계 (캐시 전용)
     if (type === 'naver-campaign-daily') {
       try {
-        const today = new Date();
-        const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+        // KST 기준 날짜 계산 및 검증
+        const dateRange = validateDateRange(
+          startDate,
+          endDate,
+          getKSTMonthsAgo(3),
+          getKSTDateString()
+        );
+        if (dateRange.error) {
+          console.warn('Date validation warning:', dateRange.error);
+        }
 
-        const queryStartDate = startDate || threeMonthsAgo.toISOString().split('T')[0];
-        const queryEndDate = endDate || today.toISOString().split('T')[0];
         const campaignGroup = searchParams.get('campaignGroup') || undefined;
-
-        const daily = await getNaverAdCampaignDaily(queryStartDate, queryEndDate, campaignGroup);
+        const daily = await getNaverAdCampaignDaily(dateRange.start, dateRange.end, campaignGroup);
         return NextResponse.json({
           daily,
           source: 'cache',
           cached: daily.length,
           campaignGroup: campaignGroup || 'all',
+          period: `${dateRange.start} ~ ${dateRange.end}`,
         });
       } catch (error) {
         console.error('Naver campaign daily error:', error);
@@ -677,14 +747,18 @@ export async function GET(request: Request) {
     // 네이버 광고 캠페인 그룹별 집계 통계 (캐시 전용)
     if (type === 'naver-campaign-summary') {
       try {
-        const today = new Date();
-        const thisMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
-        const todayStr = today.toISOString().split('T')[0];
+        // KST 기준 날짜 계산 및 검증
+        const dateRange = validateDateRange(
+          startDate,
+          endDate,
+          getKSTMonthStart(),
+          getKSTDateString()
+        );
+        if (dateRange.error) {
+          console.warn('Date validation warning:', dateRange.error);
+        }
 
-        const queryStartDate = startDate || thisMonthStart;
-        const queryEndDate = endDate || todayStr;
         const campaignGroup = searchParams.get('campaignGroup');
-
         if (!campaignGroup) {
           return NextResponse.json(
             { error: 'campaignGroup parameter is required' },
@@ -693,15 +767,15 @@ export async function GET(request: Request) {
         }
 
         const summary = await getNaverAdCampaignDailyAggregated(
-          queryStartDate,
-          queryEndDate,
+          dateRange.start,
+          dateRange.end,
           campaignGroup
         );
         return NextResponse.json({
           summary,
           source: 'cache',
           campaignGroup,
-          period: `${queryStartDate} ~ ${queryEndDate}`,
+          period: `${dateRange.start} ~ ${dateRange.end}`,
         });
       } catch (error) {
         console.error('Naver campaign summary error:', error);
