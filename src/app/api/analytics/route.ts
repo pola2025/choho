@@ -52,6 +52,8 @@ import {
   getMissingNaverAdDates,
   saveNaverAdCampaigns,
   getNaverAdCampaigns,
+  getNaverAdCampaignDaily,
+  getNaverAdCampaignDailyAggregated,
   type NaverAdDailyRecord,
 } from '@/lib/analytics-airtable';
 
@@ -645,6 +647,68 @@ export async function GET(request: Request) {
       } catch (error) {
         console.error('Naver daily error:', error);
         return NextResponse.json({ daily: [], source: 'cache', cached: 0 });
+      }
+    }
+
+    // 네이버 광고 캠페인 그룹별 일별 통계 (캐시 전용)
+    if (type === 'naver-campaign-daily') {
+      try {
+        const today = new Date();
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+        const queryStartDate = startDate || threeMonthsAgo.toISOString().split('T')[0];
+        const queryEndDate = endDate || today.toISOString().split('T')[0];
+        const campaignGroup = searchParams.get('campaignGroup') || undefined;
+
+        const daily = await getNaverAdCampaignDaily(queryStartDate, queryEndDate, campaignGroup);
+        return NextResponse.json({
+          daily,
+          source: 'cache',
+          cached: daily.length,
+          campaignGroup: campaignGroup || 'all',
+        });
+      } catch (error) {
+        console.error('Naver campaign daily error:', error);
+        return NextResponse.json({ daily: [], source: 'cache', cached: 0 });
+      }
+    }
+
+    // 네이버 광고 캠페인 그룹별 집계 통계 (캐시 전용)
+    if (type === 'naver-campaign-summary') {
+      try {
+        const today = new Date();
+        const thisMonthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
+        const todayStr = today.toISOString().split('T')[0];
+
+        const queryStartDate = startDate || thisMonthStart;
+        const queryEndDate = endDate || todayStr;
+        const campaignGroup = searchParams.get('campaignGroup');
+
+        if (!campaignGroup) {
+          return NextResponse.json(
+            { error: 'campaignGroup parameter is required' },
+            { status: 400 }
+          );
+        }
+
+        const summary = await getNaverAdCampaignDailyAggregated(
+          queryStartDate,
+          queryEndDate,
+          campaignGroup
+        );
+        return NextResponse.json({
+          summary,
+          source: 'cache',
+          campaignGroup,
+          period: `${queryStartDate} ~ ${queryEndDate}`,
+        });
+      } catch (error) {
+        console.error('Naver campaign summary error:', error);
+        return NextResponse.json(
+          { error: 'Failed to fetch campaign summary', details: String(error) },
+          { status: 500 }
+        );
       }
     }
 

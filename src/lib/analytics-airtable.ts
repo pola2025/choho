@@ -14,6 +14,7 @@ const TABLES = {
   naverKeywords: process.env.AIRTABLE_NAVER_KEYWORDS_TABLE,
   naverAdDaily: process.env.AIRTABLE_NAVER_AD_DAILY_TABLE,
   naverAdCampaigns: process.env.AIRTABLE_NAVER_AD_CAMPAIGNS_TABLE,
+  naverAdCampaignDaily: process.env.AIRTABLE_NAVER_AD_CAMPAIGN_DAILY_TABLE,
 } as const;
 
 type TableName = keyof typeof TABLES;
@@ -789,4 +790,107 @@ export async function getNaverAdCampaigns(
     ccnt: Number(r.fields.ccnt) || 0,
     syncedAt: r.fields.syncedAt ? String(r.fields.syncedAt) : undefined,
   }));
+}
+
+// ============================================
+// 네이버 광고 캠페인별 일별 통계 (AI 리포트용)
+// ============================================
+
+export interface NaverAdCampaignDailyRecord {
+  date: string;
+  campaignId: string;
+  campaignName: string;
+  campaignGroup: string;
+  impCnt: number;
+  clkCnt: number;
+  salesAmt: number;
+  ctr: number;
+  cpc: number;
+  ccnt: number;
+  syncedAt?: string;
+}
+
+// 캠페인 그룹별 일별 데이터 조회
+export async function getNaverAdCampaignDaily(
+  startDate: string,
+  endDate: string,
+  campaignGroup?: string
+): Promise<NaverAdCampaignDailyRecord[]> {
+  const tableId = TABLES.naverAdCampaignDaily;
+  if (!tableId) {
+    console.log('AIRTABLE_NAVER_AD_CAMPAIGN_DAILY_TABLE not configured');
+    return [];
+  }
+
+  const allRecords: NaverAdCampaignDailyRecord[] = [];
+  let offset: string | undefined;
+
+  do {
+    let formula = `AND({date} >= '${startDate}', {date} <= '${endDate}')`;
+    if (campaignGroup) {
+      formula = `AND({date} >= '${startDate}', {date} <= '${endDate}', {campaignGroup} = '${campaignGroup}')`;
+    }
+
+    const params: Record<string, string> = {
+      filterByFormula: formula,
+      'sort[0][field]': 'date',
+      'sort[0][direction]': 'desc',
+      pageSize: '100',
+    };
+
+    if (offset) {
+      params.offset = offset;
+    }
+
+    const result = await airtableRequest(tableId, 'GET', undefined, params);
+
+    const records = (result.records || []).map((r: AirtableRecord) => ({
+      date: String(r.fields.date || ''),
+      campaignId: String(r.fields.campaignId || ''),
+      campaignName: String(r.fields.campaignName || ''),
+      campaignGroup: String(r.fields.campaignGroup || ''),
+      impCnt: Number(r.fields.impCnt) || 0,
+      clkCnt: Number(r.fields.clkCnt) || 0,
+      salesAmt: Number(r.fields.salesAmt) || 0,
+      ctr: Number(r.fields.ctr) || 0,
+      cpc: Number(r.fields.cpc) || 0,
+      ccnt: Number(r.fields.ccnt) || 0,
+      syncedAt: r.fields.syncedAt ? String(r.fields.syncedAt) : undefined,
+    }));
+
+    allRecords.push(...records);
+    offset = result.offset;
+  } while (offset);
+
+  return allRecords;
+}
+
+// 캠페인 그룹별 집계 데이터 조회
+export async function getNaverAdCampaignDailyAggregated(
+  startDate: string,
+  endDate: string,
+  campaignGroup: string
+): Promise<{
+  impressions: number;
+  clicks: number;
+  cost: number;
+  ctr: number;
+  cpc: number;
+}> {
+  const records = await getNaverAdCampaignDaily(startDate, endDate, campaignGroup);
+
+  const totals = records.reduce(
+    (acc, r) => ({
+      impressions: acc.impressions + r.impCnt,
+      clicks: acc.clicks + r.clkCnt,
+      cost: acc.cost + r.salesAmt,
+    }),
+    { impressions: 0, clicks: 0, cost: 0 }
+  );
+
+  return {
+    ...totals,
+    ctr: totals.impressions > 0 ? (totals.clicks / totals.impressions) * 100 : 0,
+    cpc: totals.clicks > 0 ? totals.cost / totals.clicks : 0,
+  };
 }
