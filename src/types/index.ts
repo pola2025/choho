@@ -44,6 +44,7 @@ export interface Journal {
   createdAt: string;
   thumbnail?: string;
   images?: string[];
+  isPublished?: boolean; // 비공개 처리용
 }
 
 export interface MenuItem {
