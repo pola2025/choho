@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>얼음썰매 무료이용</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Pretendard', sans-serif; }
+
+        .container {
+            width: 600px;
+            height: auto;
+            min-height: 1100px;
+            background: linear-gradient(180deg, #87CEEB 0%, #B0E0E6 30%, #E0F7FA 60%, #FFFFFF 100%);
+            position: relative;
+            padding-top: 20px;
+            padding-bottom: 50px;
+        }
+
+        /* 눈 내리는 효과 */
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            text-shadow: 0 0 5px rgba(255,255,255,0.8);
+            animation: fall 4s linear infinite;
+            opacity: 0.8;
+        }
+        .snowflake:nth-child(1) { left: 5%; animation-delay: 0s; font-size: 18px; }
+        .snowflake:nth-child(2) { left: 15%; animation-delay: 1s; font-size: 24px; }
+        .snowflake:nth-child(3) { left: 25%; animation-delay: 2s; font-size: 16px; }
+        .snowflake:nth-child(4) { left: 35%; animation-delay: 0.5s; font-size: 22px; }
+        .snowflake:nth-child(5) { left: 45%; animation-delay: 1.5s; font-size: 20px; }
+        .snowflake:nth-child(6) { left: 55%; animation-delay: 2.5s; font-size: 18px; }
+        .snowflake:nth-child(7) { left: 65%; animation-delay: 0.8s; font-size: 26px; }
+        .snowflake:nth-child(8) { left: 75%; animation-delay: 1.8s; font-size: 16px; }
+        .snowflake:nth-child(9) { left: 85%; animation-delay: 0.3s; font-size: 20px; }
+        .snowflake:nth-child(10) { left: 95%; animation-delay: 2.2s; font-size: 22px; }
+
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(950px) rotate(360deg); opacity: 0.3; }
+        }
+
+        /* 배경 산 */
+        .mountains {
+            position: absolute;
+            bottom: 200px;
+            left: 0;
+            right: 0;
+            height: 200px;
+        }
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 120px solid transparent;
+            border-right: 120px solid transparent;
+            border-bottom: 180px solid #94A3B8;
+        }
+        .mountain::after {
+            content: '';
+            position: absolute;
+            top: -180px;
+            left: -60px;
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-bottom: 60px solid white;
+        }
+        .mountain:nth-child(1) { left: -50px; }
+        .mountain:nth-child(2) { left: 150px; border-bottom-color: #64748B; }
+        .mountain:nth-child(3) { left: 350px; }
+
+        /* 얼음 호수 */
+        .lake {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 120px;
+            background: linear-gradient(180deg, #B3E5FC 0%, #81D4FA 50%, #4FC3F7 100%);
+            border-radius: 50%;
+            box-shadow: inset 0 -10px 30px rgba(255,255,255,0.5), 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .lake::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50px;
+            width: 100px;
+            height: 30px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 50%;
+        }
+
+        /* 눈사람 */
+        .snowman {
+            position: absolute;
+            bottom: 150px;
+            left: 50px;
+        }
+        .snowman-body {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: inset -5px -5px 15px rgba(200,200,200,0.5);
+        }
+        .snowman-head {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: -35px;
+            left: 10px;
+            box-shadow: inset -3px -3px 10px rgba(200,200,200,0.5);
+        }
+        .snowman-hat {
+            width: 30px;
+            height: 20px;
+            background: #1E3A5F;
+            position: absolute;
+            top: -55px;
+            left: 15px;
+            border-radius: 3px 3px 0 0;
+        }
+        .snowman-hat::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: -5px;
+            width: 40px;
+            height: 8px;
+            background: #1E3A5F;
+            border-radius: 3px;
+        }
+        .snowman-eyes {
+            position: absolute;
+            top: -28px;
+            left: 18px;
+            width: 5px;
+            height: 5px;
+            background: black;
+            border-radius: 50%;
+            box-shadow: 12px 0 0 black;
+        }
+        .snowman-nose {
+            position: absolute;
+            top: -22px;
+            left: 26px;
+            width: 0;
+            height: 0;
+            border-left: 12px solid orange;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+
+        /* 썰매 타는 아이들 */
+        .sled-kid {
+            position: absolute;
+            bottom: 180px;
+            right: 80px;
+            font-size: 50px;
+        }
+        .sled-kid2 {
+            position: absolute;
+            bottom: 200px;
+            right: 160px;
+            font-size: 40px;
+            transform: scaleX(-1);
+        }
+
+        /* 상단 배지 */
+        .badge {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #0EA5E9, #0284C7);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 메인 컨텐츠 카드 */
+        .content-card {
+            position: relative;
+            margin: 100px 30px 30px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 30px 25px 180px 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        /* 카드 내 배경 요소들 */
+        .card-bg-lake {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            height: 100px;
+            background: linear-gradient(180deg, #B3E5FC 0%, #81D4FA 50%, #4FC3F7 100%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .card-bg-snowman {
+            position: absolute;
+            bottom: 70px;
+            left: 20px;
+            z-index: 2;
+            font-size: 40px;
+        }
+        .card-bg-person1 {
+            position: absolute;
+            bottom: 85px;
+            left: 70px;
+            z-index: 3;
+            font-size: 28px;
+        }
+        .card-bg-person2 {
+            position: absolute;
+            bottom: 75px;
+            left: 120px;
+            z-index: 2;
+            font-size: 32px;
+        }
+        .card-bg-person3 {
+            position: absolute;
+            bottom: 90px;
+            left: 180px;
+            z-index: 3;
+            font-size: 26px;
+        }
+        .card-bg-person4 {
+            position: absolute;
+            bottom: 80px;
+            left: 230px;
+            z-index: 2;
+            font-size: 30px;
+        }
+        .card-bg-person5 {
+            position: absolute;
+            bottom: 85px;
+            right: 180px;
+            z-index: 3;
+            font-size: 28px;
+        }
+        .card-bg-person6 {
+            position: absolute;
+            bottom: 75px;
+            right: 120px;
+            z-index: 2;
+            font-size: 32px;
+        }
+        .card-bg-person7 {
+            position: absolute;
+            bottom: 90px;
+            right: 60px;
+            z-index: 3;
+            font-size: 26px;
+        }
+        .card-bg-sled {
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+            z-index: 2;
+            font-size: 38px;
+        }
+        .card-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .main-title h1 {
+            font-size: 36px;
+            font-weight: 800;
+            color: #0369A1;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+        .main-title .sub {
+            font-size: 20px;
+            color: #0EA5E9;
+            font-weight: 600;
+        }
+
+        /* 최대 2시간 강조 배지 */
+        .time-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: 10px;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        /* 네이버 배지 */
+        .naver-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #03C75A, #02B350);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+
+        /* 메인 조건 박스 - 크게 강조 */
+        .main-condition-box {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            border: 3px solid #F59E0B;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .main-condition-box .main-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #92400E;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .main-condition-box .naver-green {
+            color: #03C75A;
+            font-weight: 800;
+        }
+        .main-condition-box .highlight-text {
+            font-size: 28px;
+            font-weight: 900;
+            color: #DC2626;
+            line-height: 1.3;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* 무료 강조 - 네이버 녹색 */
+        .free-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #03C75A, #02B350);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 22px;
+            font-weight: 800;
+            margin: 15px 0;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .naver-text {
+            color: #03C75A;
+            font-weight: 800;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* 조건 박스 */
+        .condition-box {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            border: 2px solid #F59E0B;
+            border-radius: 16px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .condition-box p {
+            font-size: 16px;
+            font-weight: 700;
+            color: #92400E;
+            line-height: 1.5;
+        }
+        .condition-box .highlight {
+            color: #DC2626;
+            font-size: 18px;
+        }
+
+        /* 정보 리스트 */
+        .info-list {
+            margin: 20px 0;
+        }
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px dashed #E5E7EB;
+        }
+        .info-item:last-child {
+            border-bottom: none;
+        }
+        .info-icon {
+            width: 28px;
+            height: 28px;
+            background: #0EA5E9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .info-text {
+            font-size: 15px;
+            color: #374151;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        .info-text strong {
+            color: #0369A1;
+        }
+
+        /* 시작일 강조 */
+        .start-date {
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: white;
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .start-date .date {
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .start-date .label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* 경고 박스 */
+        .warning-box {
+            background: #FEF2F2;
+            border: 1px solid #FECACA;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+        .warning-box p {
+            font-size: 12px;
+            color: #991B1B;
+            line-height: 1.6;
+        }
+        .warning-box .title {
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 눈 내리는 효과 -->
+        <div class="snowflake">❄</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+
+        <!-- 배경 산 -->
+        <div class="mountains">
+            <div class="mountain"></div>
+            <div class="mountain"></div>
+            <div class="mountain"></div>
+        </div>
+
+        <!-- 얼음 호수 -->
+        <div class="lake"></div>
+
+        <!-- 눈사람 -->
+        <div class="snowman">
+            <div class="snowman-hat"></div>
+            <div class="snowman-head"></div>
+            <div class="snowman-eyes"></div>
+            <div class="snowman-nose"></div>
+            <div class="snowman-body"></div>
+        </div>
+
+        <!-- 썰매 타는 아이들 -->
+        <div class="sled-kid">🛷</div>
+        <div class="sled-kid2">⛷️</div>
+
+        <!-- 상단 배지 -->
+        <div class="badge">
+            <span>❄️</span>
+            <span>겨울 시즌</span>
+        </div>
+
+        <!-- 메인 컨텐츠 카드 -->
+        <div class="content-card">
+            <!-- 카드 내 배경 요소 -->
+            <div class="card-bg-lake"></div>
+            <div class="card-bg-snowman">⛄</div>
+            <div class="card-bg-person1">⛷️</div>
+            <div class="card-bg-person2">🏂</div>
+            <div class="card-bg-person3">⛸️</div>
+            <div class="card-bg-person4">🎿</div>
+            <div class="card-bg-person5">⛷️</div>
+            <div class="card-bg-person6">🏂</div>
+            <div class="card-bg-person7">⛸️</div>
+            <div class="card-bg-sled">🛷</div>
+
+            <!-- 카드 콘텐츠 -->
+            <div class="card-content">
+            <div class="main-title">
+                <h1>얼음썰매<br>무료이용</h1>
+                <div class="time-badge">⏱️ 최대 2시간</div>
+            </div>
+
+            <div style="text-align: center;">
+                <div class="naver-badge">☕ 카페 <span style="background:#fff;color:#03C75A;padding:2px 8px;border-radius:6px;margin:0 4px;">Naver</span> 리뷰</div>
+            </div>
+
+            <div class="main-condition-box">
+                <p class="main-text">초리골164 카페<br><span class="naver-green">네이버 리뷰</span> 작성 후</p>
+                <p class="highlight-text">썰매 1개 무료이용!</p>
+            </div>
+
+            <div class="start-date">
+                <div class="date">25.12.28(일) ~</div>
+                <div class="label">얼음썰매 이용 시작일</div>
+            </div>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <div class="info-icon">⏰</div>
+                    <div class="info-text"><strong>이용시간</strong> 오전 11시 ~ 오후 5시</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">📅</div>
+                    <div class="info-text">운영일은 <strong>기상상황에 따라 조정</strong>됩니다</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">🚫</div>
+                    <div class="info-text"><strong>개인썰매 이용 불가</strong>능합니다</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">👨‍👩‍👧</div>
+                    <div class="info-text">아이들은 <strong>반드시 부모님 감독 하에</strong> 이용</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <p class="title">⚠️ 안전 안내</p>
+                <p>보호자 감독 및 자녀 부주의로 발생한 사고는 이용자 본인 책임입니다.</p>
+            </div>
+            </div><!-- card-content 닫기 -->
+        </div>
+    </div>
+</body>
+</html>

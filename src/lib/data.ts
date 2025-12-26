@@ -284,6 +284,28 @@ export const rooms: Room[] = [
 
 export const journals: Journal[] = [
   {
+    id: "ice-sled-free-2025",
+    category: "event",
+    title: "얼음썰매 무료이용",
+    excerpt: "카페 네이버 리뷰 작성 후 썰매 1개 무료이용! 최대 2시간",
+    content: `초리골164 카페 네이버 리뷰 작성 후 썰매 1개 무료 이용!
+
+🗓️ 시작일: 25.12.28(일)부터
+⏰ 이용시간: 오전 11시 ~ 오후 5시
+⏱️ 최대 이용시간: 2시간
+
+📌 이용 안내:
+- 운영일은 기상상황에 따라 조정됩니다
+- 개인썰매 이용 불가능합니다
+- 아이들 이용시 반드시 부모님 감독하에 이용
+- 보호자 감독 및 자녀 부주의로 발생한 사고는 이용자 본인 책임입니다
+
+문의: 010-7932-0029`,
+    createdAt: "2025-12-26",
+    thumbnail: "/images/journal/ice-sled-free/ice-sled-free-thumb.png",
+    images: ["/images/journal/ice-sled-free/ice-sled-free-thumb.png"],
+  },
+  {
     id: "sled-ticket-6000-2025",
     category: "event",
     title: "눈썰매장 티켓 6천원",
