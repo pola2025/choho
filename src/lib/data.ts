@@ -288,7 +288,7 @@ export const journals: Journal[] = [
     category: "event",
     title: "얼음썰매 무료이용",
     excerpt: "카페 네이버 리뷰 작성 후 썰매 1개 무료이용! 최대 2시간",
-    isPublished: false, // 임시 비공개 처리
+    isPublished: true,
     content: `초리골164 카페 네이버 리뷰 작성 후 썰매 1개 무료 이용!
 
 🗓️ 시작일: 25.12.28(일)부터

@@ -38,11 +38,11 @@ export function CombinedWinterPopup() {
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % 4);
+    setCurrentSlide((prev) => (prev + 1) % 5);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + 4) % 4);
+    setCurrentSlide((prev) => (prev - 1 + 5) % 5);
   };
 
   if (!isOpen) return null;
@@ -232,7 +232,7 @@ export function CombinedWinterPopup() {
       {/* 상단 중앙 아이콘 */}
       <div className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 z-20">
         <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-sky-400">
-          <span className="text-2xl md:text-3xl">⛸️</span>
+          <span className="text-2xl md:text-3xl">🛷</span>
         </div>
       </div>
       <div className="relative z-10 p-4 md:p-6 pt-8 md:pt-10 h-full flex flex-col justify-between">
@@ -547,7 +547,7 @@ export function CombinedWinterPopup() {
   );
 
   const popupCards = [
-    // <IceSledFreeCard key="ice-sled-free" />, // 임시 비공개 처리
+    <IceSledFreeCard key="ice-sled-free" />,
     <LateCheckinCard key="late-checkin" />,
     <SledTicketCard key="sled-ticket" />,
     <CafeDiscountCard key="cafe-discount" />,
@@ -566,13 +566,14 @@ export function CombinedWinterPopup() {
       </button>
 
       {/* Desktop: Responsive Grid + BBQ Banner */}
-      <div className="hidden md:flex md:flex-col gap-4 max-w-[1600px] w-full animate-in fade-in zoom-in duration-300 my-4 xl:my-auto px-4">
-        {/* Tablet: 2 grid, Desktop: 1x4 grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 xl:gap-4 pt-8">
+      <div className="hidden md:flex md:flex-col gap-4 max-w-[1800px] w-full animate-in fade-in zoom-in duration-300 my-4 xl:my-auto px-4">
+        {/* Tablet: 2~3 grid, Desktop: 1x5 grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 xl:gap-4 pt-8">
           <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[0]}</div>
           <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[1]}</div>
           <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[2]}</div>
           <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[3]}</div>
+          <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[4]}</div>
         </div>
         {/* BBQ 배너 */}
         <div className="mt-6">
@@ -616,7 +617,7 @@ export function CombinedWinterPopup() {
 
         {/* Dots Indicator */}
         <div className="flex justify-center gap-2 mt-3">
-          {[0, 1, 2, 3].map((index) => (
+          {[0, 1, 2, 3, 4].map((index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
