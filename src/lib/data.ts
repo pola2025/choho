@@ -324,6 +324,9 @@ export const journals: Journal[] = [
 * 본 티켓은 초리골 눈썰매장 1일 이용권과 교환 가능한 티켓입니다.
 * 1인 1매를 초리골눈썰매장에 오시면 교환 가능합니다.
 
+⚠️ 잔여수량 소진후 판매종료 예정
+- 확보티켓 소진되면 이후 판매 종료됩니다.
+
 아이들과 함께 즐거운 겨울 추억을 만들어보세요!`,
     createdAt: "2025-12-22",
     thumbnail: "/images/journal/sled-ticket/sled-ticket-front.jpg",

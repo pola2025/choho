@@ -198,6 +198,7 @@ export function CombinedWinterPopup() {
             <p className="text-neutral-500 text-xs md:text-sm line-through mb-1">정가 15,900원</p>
             <p className="text-red-600 font-black text-3xl md:text-4xl">6,000원</p>
             <p className="text-blue-600 text-xs md:text-sm font-medium mt-1">1인 1매 구매 가능</p>
+            <p className="text-red-500 text-xs font-bold mt-2">⚠️ 잔여수량 소진시 판매종료</p>
           </div>
         </div>
         <div className="space-y-2 md:space-y-3">
