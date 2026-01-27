@@ -342,6 +342,41 @@ export default async function AboutPage() {
             </p>
             <p className="text-3xl font-bold text-primary">SINCE 1947</p>
           </div>
+
+          {/* 불한증막 섹션 */}
+          <div className="mt-16">
+            <div className="group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
+              {/* Background Image */}
+              <div className="relative w-full h-[500px] sm:h-[550px] lg:h-[600px]">
+                <Image
+                  src="/images/history/sauna-hero.webp"
+                  alt="1965년 국내 최초 불한증막 - 소나무 열단을 태우고 위에 흙을 덮어 물을 뿌리며 한증을 즐기던 전통 시설"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                />
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              </div>
+
+              {/* Content Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8 lg:p-10 text-white">
+                <span className="inline-block px-3 py-1 bg-amber-600 text-white text-xs font-bold rounded-full mb-4">
+                  1965
+                </span>
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3">
+                  국내 최초 불한증막
+                </h3>
+                <p className="text-sm sm:text-base text-white/90 mb-3 leading-relaxed max-w-2xl">
+                  소나무 열단을 태우고 위에 흙을 덮어 물을 뿌리며 한증을 즐기던 전통 방식의 불한증막입니다.
+                  초리골의 깊은 역사와 함께 60년 가까이 그 자리를 지켜온 소중한 문화유산입니다.
+                </p>
+                <p className="text-sm text-amber-400 font-medium">
+                  전통 방식 그대로 보존된 불한증막
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
