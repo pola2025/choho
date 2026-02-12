@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Snowflake, AlertTriangle, Phone, Coffee, Ticket, ChevronLeft, ChevronRight, Clock, Flame } from "lucide-react";
+import { X, Snowflake, AlertTriangle, Phone, Coffee, ChevronLeft, ChevronRight, Clock, Flame } from "lucide-react";
 
 export function CombinedWinterPopup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,11 +38,11 @@ export function CombinedWinterPopup() {
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % 5);
+    setCurrentSlide((prev) => (prev + 1) % 3);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + 5) % 5);
+    setCurrentSlide((prev) => (prev - 1 + 3) % 3);
   };
 
   if (!isOpen) return null;
@@ -151,132 +151,6 @@ export function CombinedWinterPopup() {
           <Phone className="w-4 h-4 md:w-5 md:h-5" />
           문의하기
         </button>
-      </div>
-    </div>
-  );
-
-  const SledTicketCard = () => (
-    <div className="relative bg-gradient-to-b from-sky-400 via-sky-500 to-blue-700 rounded-xl sm:rounded-2xl shadow-2xl overflow-visible h-full mt-6 md:mt-7">
-      {/* 눈 내리는 효과 */}
-      <div className="absolute inset-0 rounded-xl sm:rounded-2xl overflow-hidden pointer-events-none">
-        <div className="absolute w-2 h-2 bg-white rounded-full opacity-80 animate-[fall_3s_linear_infinite]" style={{left: '10%', animationDelay: '0s'}} />
-        <div className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-60 animate-[fall_4s_linear_infinite]" style={{left: '25%', animationDelay: '1s'}} />
-        <div className="absolute w-2 h-2 bg-white rounded-full opacity-70 animate-[fall_3.5s_linear_infinite]" style={{left: '40%', animationDelay: '0.5s'}} />
-        <div className="absolute w-1 h-1 bg-white rounded-full opacity-80 animate-[fall_4.5s_linear_infinite]" style={{left: '55%', animationDelay: '2s'}} />
-        <div className="absolute w-2 h-2 bg-white rounded-full opacity-60 animate-[fall_3s_linear_infinite]" style={{left: '70%', animationDelay: '1.5s'}} />
-        <div className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-70 animate-[fall_4s_linear_infinite]" style={{left: '85%', animationDelay: '0.8s'}} />
-        <div className="absolute w-1 h-1 bg-white rounded-full opacity-90 animate-[fall_3.2s_linear_infinite]" style={{left: '15%', animationDelay: '2.5s'}} />
-        <div className="absolute w-2 h-2 bg-white rounded-full opacity-50 animate-[fall_5s_linear_infinite]" style={{left: '60%', animationDelay: '0.3s'}} />
-      </div>
-      {/* 상단 중앙 아이콘 - 박스 바깥 */}
-      <div className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 z-20">
-        <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-sky-500">
-          <span className="text-2xl md:text-3xl">🛷</span>
-        </div>
-      </div>
-      <div className="relative z-10 p-4 md:p-6 pt-8 md:pt-10 h-full flex flex-col justify-between">
-        <div>
-          <div className="text-center mb-2 md:mb-3">
-            <h2 className="text-lg md:text-2xl font-bold text-white leading-tight drop-shadow-lg mb-2">
-              눈썰매장 티켓 6천원
-            </h2>
-            <div className="inline-block px-3 py-1.5 md:px-4 md:py-2 bg-red-500 text-white text-xs md:text-sm font-bold rounded-lg animate-pulse">
-              ⚠️ 초호펜션 이용고객만 구매 가능
-            </div>
-          </div>
-          {/* 티켓 이미지 */}
-          <div className="relative w-full aspect-[3/4] max-h-[180px] md:max-h-[200px] mx-auto mb-3 md:mb-4 rounded-lg overflow-hidden shadow-lg border-2 border-white/50">
-            <Image
-              src="/images/journal/sled-ticket/sled-ticket-front.jpg"
-              alt="눈썰매장 티켓"
-              fill
-              className="object-cover"
-            />
-          </div>
-          {/* 가격 강조 */}
-          <div className="bg-white rounded-xl p-3 md:p-4 mb-3 md:mb-4 shadow-lg text-center">
-            <p className="text-neutral-500 text-xs md:text-sm line-through mb-1">정가 15,900원</p>
-            <p className="text-red-600 font-black text-3xl md:text-4xl">6,000원</p>
-            <p className="text-blue-600 text-xs md:text-sm font-medium mt-1">1인 1매 구매 가능</p>
-            <p className="text-red-500 text-xs font-bold mt-2">⚠️ 잔여수량 소진시 판매종료</p>
-          </div>
-        </div>
-        <div className="space-y-2 md:space-y-3">
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2 md:p-2.5 text-center border border-white/30">
-            <p className="text-white text-xs md:text-sm font-medium">
-              ⛷️ 펜션 예약시 신청 또는 관리자 연락
-            </p>
-          </div>
-          <button
-            onClick={handleCall}
-            className="w-full py-3 md:py-4 bg-white text-blue-600 font-bold rounded-xl text-center hover:bg-white/90 transition-colors flex items-center justify-center gap-2 text-sm md:text-base shadow-lg"
-          >
-            <Ticket className="w-4 h-4 md:w-5 md:h-5" />
-            지금 신청하기
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  const IceSledFreeCard = () => (
-    <div className="relative bg-gradient-to-b from-sky-300 via-sky-400 to-blue-500 rounded-xl sm:rounded-2xl shadow-2xl overflow-visible h-full mt-6 md:mt-7">
-      {/* 눈 내리는 효과 */}
-      <div className="absolute inset-0 rounded-xl sm:rounded-2xl overflow-hidden pointer-events-none">
-        <div className="absolute w-2 h-2 bg-white rounded-full opacity-80 animate-[fall_3s_linear_infinite]" style={{left: '8%', animationDelay: '0s'}} />
-        <div className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-60 animate-[fall_4s_linear_infinite]" style={{left: '22%', animationDelay: '1s'}} />
-        <div className="absolute w-2 h-2 bg-white rounded-full opacity-70 animate-[fall_3.5s_linear_infinite]" style={{left: '45%', animationDelay: '0.5s'}} />
-        <div className="absolute w-1 h-1 bg-white rounded-full opacity-80 animate-[fall_4.5s_linear_infinite]" style={{left: '60%', animationDelay: '2s'}} />
-        <div className="absolute w-2 h-2 bg-white rounded-full opacity-60 animate-[fall_3s_linear_infinite]" style={{left: '78%', animationDelay: '1.5s'}} />
-        <div className="absolute w-1.5 h-1.5 bg-white rounded-full opacity-70 animate-[fall_4s_linear_infinite]" style={{left: '92%', animationDelay: '0.8s'}} />
-      </div>
-      {/* 상단 중앙 아이콘 */}
-      <div className="absolute -top-6 md:-top-7 left-1/2 -translate-x-1/2 z-20">
-        <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-sky-400">
-          <span className="text-2xl md:text-3xl">🛷</span>
-        </div>
-      </div>
-      <div className="relative z-10 p-4 md:p-6 pt-8 md:pt-10 h-full flex flex-col justify-between">
-        <div>
-          <div className="text-center mb-2 md:mb-3">
-            <h2 className="text-lg md:text-2xl font-bold text-white leading-tight drop-shadow-lg mb-1">
-              얼음썰매 무료이용
-            </h2>
-            <div className="inline-block px-3 py-1.5 md:px-4 md:py-2 bg-red-500 text-white text-xs md:text-sm font-bold rounded-lg animate-pulse">
-              ⏱️ 최대 2시간
-            </div>
-          </div>
-          {/* 네이버 리뷰 조건 */}
-          <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-3 md:p-4 mb-3 md:mb-4 text-center shadow-lg">
-            <p className="text-white font-bold text-sm md:text-base mb-1">☕ 카페 Naver 리뷰</p>
-            <p className="text-yellow-300 font-black text-xl md:text-2xl">썰매 1개 무료!</p>
-          </div>
-          {/* 시작일 */}
-          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 md:p-4 mb-3 md:mb-4 text-center border border-white/30">
-            <p className="text-white font-bold text-lg md:text-xl">25.12.28(일) ~</p>
-            <p className="text-white/80 text-xs md:text-sm">이용시간 11시~17시</p>
-          </div>
-          {/* 안내사항 */}
-          <div className="space-y-1.5 md:space-y-2">
-            <div className="flex items-center gap-2 text-white text-xs md:text-sm">
-              <span>📅</span>
-              <span>운영일 기상상황 따라 조정</span>
-            </div>
-            <div className="flex items-center gap-2 text-white text-xs md:text-sm">
-              <span>🚫</span>
-              <span>개인썰매 이용 불가</span>
-            </div>
-            <div className="flex items-center gap-2 text-white text-xs md:text-sm">
-              <span>👨‍👩‍👧</span>
-              <span>부모님 감독 하에 이용</span>
-            </div>
-          </div>
-        </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-2 md:p-3 mt-3">
-          <p className="text-red-700 text-[10px] md:text-xs text-center font-medium">
-            ⚠️ 사고는 이용자 본인 책임입니다
-          </p>
-        </div>
       </div>
     </div>
   );
@@ -548,9 +422,7 @@ export function CombinedWinterPopup() {
   );
 
   const popupCards = [
-    <IceSledFreeCard key="ice-sled-free" />,
     <LateCheckinCard key="late-checkin" />,
-    <SledTicketCard key="sled-ticket" />,
     <CafeDiscountCard key="cafe-discount" />,
     <WinterNoticeCard key="winter-notice" />,
   ];
@@ -569,12 +441,10 @@ export function CombinedWinterPopup() {
       {/* Desktop: Responsive Grid + BBQ Banner */}
       <div className="hidden md:flex md:flex-col gap-4 max-w-[1800px] w-full animate-in fade-in zoom-in duration-300 my-4 xl:my-auto px-4">
         {/* Tablet: 2~3 grid, Desktop: 1x5 grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 xl:gap-4 pt-8">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 xl:gap-4 pt-8">
           <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[0]}</div>
           <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[1]}</div>
           <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[2]}</div>
-          <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[3]}</div>
-          <div className="min-h-[480px] lg:min-h-[520px]">{popupCards[4]}</div>
         </div>
         {/* BBQ 배너 */}
         <div className="mt-6">
@@ -618,7 +488,7 @@ export function CombinedWinterPopup() {
 
         {/* Dots Indicator */}
         <div className="flex justify-center gap-2 mt-3">
-          {[0, 1, 2, 3, 4].map((index) => (
+          {[0, 1, 2].map((index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
