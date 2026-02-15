@@ -143,6 +143,15 @@ export function CombinedWinterPopup() {
               </div>
             </div>
           </div>
+          <div className="bg-rose-50 border border-rose-200 rounded-lg p-2.5 md:p-3">
+            <div className="flex items-start gap-2">
+              <span className="flex-shrink-0 w-5 h-5 bg-rose-500 text-white rounded-full flex items-center justify-center text-xs font-bold">5</span>
+              <div>
+                <h3 className="font-semibold text-rose-900 text-sm md:text-base">수압 및 온수 안내</h3>
+                <p className="text-xs md:text-sm text-rose-700">객실 특성상 일시적으로 원활하지 않을 수 있습니다. 문제 발생 시 관리자에게 연락주시면 바로 점검해드립니다.</p>
+              </div>
+            </div>
+          </div>
         </div>
         <button
           onClick={handleCall}
