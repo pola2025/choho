@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 
 const heroImages = [
-  "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08362.webp",
-  "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08370.webp",
-  "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08371.webp",
-  "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08373.webp",
-  "https://pub-a9d6e869ce90467d9e8967240133a847.r2.dev/hero/dsc08376.webp",
+  "/images/spring/webp/dsc01999.webp",
+  "/images/spring/webp/dsc02005.webp",
+  "/images/spring/webp/dsc02010.webp",
+  "/images/spring/webp/dsc02038.webp",
+  "/images/spring/webp/dsc02077.webp",
 ];
 
 export function Hero() {
@@ -30,7 +30,6 @@ export function Hero() {
           style={{ backgroundImage: `url(${image})` }}
         />
       ))}
-
 
       {/* Bottom Gradient Fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />

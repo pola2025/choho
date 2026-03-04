@@ -1,6 +1,16 @@
 @import "tailwindcss";
 
 @theme inline {
+  --color-brand-50: #fef5f2;
+  --color-brand-100: #fce4de;
+  --color-brand-200: #f9c7bc;
+  --color-brand-300: #f2a08e;
+  --color-brand-400: #e87a6a;
+  --color-brand-500: #d9576a;
+  --color-brand-600: #c24458;
+  --color-brand-700: #a33548;
+  --color-brand-800: #872b3c;
+  --color-brand-900: #6e2333;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
@@ -114,7 +124,12 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-family:
+      "Pretendard",
+      -apple-system,
+      BlinkMacSystemFont,
+      system-ui,
+      sans-serif;
   }
 }
 
@@ -134,8 +149,12 @@
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slide-in-left {
@@ -161,23 +180,42 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes scale-in {
@@ -192,26 +230,70 @@
 }
 
 @keyframes bounce-subtle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-3deg); }
-  75% { transform: rotate(3deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
 }
 
 @keyframes draw-line {
-  from { stroke-dashoffset: 1000; }
-  to { stroke-dashoffset: 0; }
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translateY(-5%) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(50vh) translateX(30px) rotate(180deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(110vh) translateX(-15px) rotate(360deg);
+    opacity: 0;
+  }
 }
 
 @keyframes fall {
-  0% { transform: translateY(-10px); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(520px); opacity: 0; }
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(520px);
+    opacity: 0;
+  }
 }
 
 /* ============================================
@@ -249,7 +331,7 @@
   }
 
   .animate-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
   }
@@ -268,14 +350,30 @@
   }
 
   /* 지연 클래스 */
-  .delay-100 { animation-delay: 100ms; }
-  .delay-200 { animation-delay: 200ms; }
-  .delay-300 { animation-delay: 300ms; }
-  .delay-400 { animation-delay: 400ms; }
-  .delay-500 { animation-delay: 500ms; }
-  .delay-600 { animation-delay: 600ms; }
-  .delay-700 { animation-delay: 700ms; }
-  .delay-800 { animation-delay: 800ms; }
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+  .delay-600 {
+    animation-delay: 600ms;
+  }
+  .delay-700 {
+    animation-delay: 700ms;
+  }
+  .delay-800 {
+    animation-delay: 800ms;
+  }
 
   /* 그라디언트 텍스트 */
   .gradient-text {
@@ -286,7 +384,12 @@
   }
 
   .gradient-text-gold {
-    background: linear-gradient(135deg, hsl(45 85% 55%) 0%, hsl(35 90% 45%) 50%, hsl(45 85% 55%) 100%);
+    background: linear-gradient(
+      135deg,
+      hsl(45 85% 55%) 0%,
+      hsl(35 90% 45%) 50%,
+      hsl(45 85% 55%) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -309,7 +412,9 @@
 
   /* 호버 효과 */
   .hover-lift {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
   }
   .hover-lift:hover {
     transform: translateY(-8px);
@@ -332,7 +437,8 @@
 
   /* 그라디언트 배경 */
   .bg-gradient-hero {
-    background: linear-gradient(135deg,
+    background: linear-gradient(
+      135deg,
       rgba(0, 0, 0, 0.6) 0%,
       rgba(0, 0, 0, 0.3) 50%,
       rgba(34, 120, 74, 0.2) 100%
@@ -340,21 +446,16 @@
   }
 
   .bg-gradient-warm {
-    background: linear-gradient(180deg,
-      hsl(45 30% 97%) 0%,
-      hsl(30 25% 95%) 100%
-    );
+    background: linear-gradient(180deg, hsl(45 30% 97%) 0%, hsl(30 25% 95%) 100%);
   }
 
   .bg-gradient-nature {
-    background: linear-gradient(180deg,
-      transparent 0%,
-      hsl(150 60% 96%) 100%
-    );
+    background: linear-gradient(180deg, transparent 0%, hsl(150 60% 96%) 100%);
   }
 
   .bg-gradient-section {
-    background: linear-gradient(180deg,
+    background: linear-gradient(
+      180deg,
       hsl(150 20% 98%) 0%,
       hsl(150 15% 96%) 50%,
       hsl(150 20% 98%) 100%
@@ -394,7 +495,9 @@
   .scroll-fade-in {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
   }
 
   .scroll-fade-in.visible {
@@ -408,7 +511,7 @@
   }
 
   .section-divider::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -452,7 +555,6 @@
     transform: translateY(-4px);
   }
 
-
   /* ============================================
    * 뱃지 & 버튼 디자인 시스템 (Green Theme)
    * ============================================ */
@@ -470,13 +572,13 @@
     backdrop-filter: blur(12px);
     border: 1px solid rgba(187, 247, 208, 0.5); /* green-200/50 */
     border-radius: 9999px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
   }
 
   .badge-glass:hover {
     background: rgba(187, 247, 208, 0.9);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transform: scale(1.05);
   }
 
@@ -494,13 +596,13 @@
     backdrop-filter: blur(12px);
     border: 1px solid rgba(187, 247, 208, 0.5);
     border-radius: 9999px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
   }
 
   .btn-glass-green:hover {
     background: rgba(187, 247, 208, 0.9);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     transform: scale(1.05);
   }
 
@@ -516,13 +618,13 @@
     color: white;
     background: #16a34a; /* green-600 */
     border-radius: 9999px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
   }
 
   .btn-solid-green:hover {
     background: #15803d; /* green-700 */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     transform: scale(1.05);
   }
 
@@ -533,7 +635,7 @@
     background: #f5f5f5; /* neutral-100 */
     border-radius: 9999px;
     border: 1px solid #e5e5e5; /* neutral-200 */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 
   /* 필터 필 - 활성 */
@@ -547,7 +649,7 @@
     color: white;
     background: #16a34a;
     border-radius: 9999px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
   }
 
@@ -583,7 +685,6 @@
     color: #15803d;
     background: rgba(240, 253, 244, 1);
   }
-
 }
 
 /* ============================================

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { TreePine, Clock, Flower2, PawPrint, Leaf } from "lucide-react";
 
 // YouTube 영상 ID
-const YOUTUBE_VIDEO_ID = "j5gMc3QxURA";
+const YOUTUBE_VIDEO_ID = "XcY-rWWkkBc";
 
 const features = [
   {
@@ -89,8 +89,7 @@ export function Welcome() {
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 drop-shadow-lg">
-            Welcome to{" "}
-            <span className="text-green-300">초호펜션</span>
+            Welcome to <span className="text-green-300">초호펜션</span>
           </h2>
 
           <p className="text-base sm:text-lg text-white/90 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
@@ -129,9 +128,7 @@ export function Welcome() {
               </h3>
 
               {/* Description */}
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {feature.description}
-              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
             </div>
           ))}
         </div>

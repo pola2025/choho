@@ -1,9 +1,11 @@
 import { Metadata } from "next";
 import { Coffee, Leaf, GlassWater, IceCream } from "lucide-react";
+import { AnimalStrip } from "@/components/WanderingAnimals";
 
 export const metadata: Metadata = {
   title: "초리골164 카페 | 초호펜션",
-  description: "넓은 야외공간과 뉴트로한 외관의 카페, 초리골164. 귀여운 거위가족과 함께 이색적인 힐링카페를 만나보세요.",
+  description:
+    "넓은 야외공간과 뉴트로한 외관의 카페, 초리골164. 귀여운 거위가족과 함께 이색적인 힐링카페를 만나보세요.",
   alternates: {
     canonical: "/cafe",
   },
@@ -89,10 +91,16 @@ const galleryImages = [
 function MenuSection({
   title,
   items,
-  showHotIced = true
+  showHotIced = true,
 }: {
   title: string;
-  items: Array<{ name: string; hot?: string | null; iced?: string | null; price?: string; badge?: string }>;
+  items: Array<{
+    name: string;
+    hot?: string | null;
+    iced?: string | null;
+    price?: string;
+    badge?: string;
+  }>;
   showHotIced?: boolean;
 }) {
   return (
@@ -121,12 +129,8 @@ function MenuSection({
             </div>
             {showHotIced ? (
               <div className="flex gap-4">
-                <span className="w-10 text-center text-muted-foreground">
-                  {item.hot || "-"}
-                </span>
-                <span className="w-10 text-center text-muted-foreground">
-                  {item.iced || "-"}
-                </span>
+                <span className="w-10 text-center text-muted-foreground">{item.hot || "-"}</span>
+                <span className="w-10 text-center text-muted-foreground">{item.iced || "-"}</span>
               </div>
             ) : (
               <span className="text-muted-foreground">{item.price}</span>
@@ -145,7 +149,8 @@ export default function CafePage() {
       <section
         className="relative h-[50vh] min-h-[400px] flex items-center justify-center"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/hero/cafe-hero.webp')",
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/hero/cafe-hero.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#4a5c4a",
@@ -153,9 +158,7 @@ export default function CafePage() {
       >
         <div className="text-center text-white px-4">
           <p className="text-sm tracking-widest mb-2 opacity-80">CAFE</p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-            초리골164
-          </h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">초리골164</h1>
           <p className="text-base sm:text-lg opacity-90 max-w-xl mx-auto">
             넓은 야외공간과 뉴트로한 외관의 카페
           </p>
@@ -176,6 +179,8 @@ export default function CafePage() {
           </p>
         </div>
       </section>
+
+      <AnimalStrip animals={["white-rabbit", "alpaca"]} />
 
       {/* Menu Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
@@ -203,13 +208,13 @@ export default function CafePage() {
             <p className="text-sm text-amber-800">
               <strong>6세부터 1인1메뉴입니다.</strong>
               <br />
-              <span className="text-xs">
-                음료의 양은 1인 1잔입니다.
-              </span>
+              <span className="text-xs">음료의 양은 1인 1잔입니다.</span>
             </p>
           </div>
         </div>
       </section>
+
+      <AnimalStrip animals={["black-rabbit", "goose"]} />
 
       {/* Animal Friends Section */}
       <section className="py-12 px-4 sm:px-6 lg:px-8 bg-primary/5">
@@ -265,6 +270,8 @@ export default function CafePage() {
           </div>
         </div>
       </section>
+
+      <AnimalStrip animals={["gray-rabbit", "alpaca", "goose"]} />
 
       {/* Gallery Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/30">

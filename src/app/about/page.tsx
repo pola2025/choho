@@ -1,10 +1,15 @@
 import { Metadata } from "next";
 import Image from "next/image";
-import ChorigolHistorySection, { ChorigolHistory, defaultHistoryData } from "@/components/ChorigolHistorySection";
+import ChorigolHistorySection, {
+  ChorigolHistory,
+  defaultHistoryData,
+} from "@/components/ChorigolHistorySection";
+import { AnimalStrip } from "@/components/WanderingAnimals";
 
 export const metadata: Metadata = {
   title: "초호 소개 | 초호펜션",
-  description: "1947년부터 이어온 초호의 이야기. 나누고 베푸는 마음으로 초리골에서 실천된 초호정의 기적을 만나보세요.",
+  description:
+    "1947년부터 이어온 초호의 이야기. 나누고 베푸는 마음으로 초리골에서 실천된 초호정의 기적을 만나보세요.",
   alternates: {
     canonical: "/about",
   },
@@ -163,7 +168,8 @@ export default async function AboutPage() {
       <section
         className="relative h-[50vh] min-h-[400px] flex items-center justify-center"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero/about-hero.webp')",
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero/about-hero.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#3d4a3d",
@@ -171,9 +177,7 @@ export default async function AboutPage() {
       >
         <div className="text-center text-white px-4">
           <p className="text-sm tracking-widest mb-2 opacity-80">ABOUT</p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
-            초호의 역사
-          </h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">초호의 역사</h1>
           <p className="text-base sm:text-lg opacity-90 max-w-xl mx-auto">
             1947년부터 이어온 나눔과 베풂의 정신
           </p>
@@ -193,16 +197,25 @@ export default async function AboutPage() {
             <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl p-8 border border-primary/20">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="w-6 h-6 text-primary"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-primary">1947 - 1997</h3>
               </div>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                1947년 완성된 초호정을 중심으로
-                편안한 휴식과 쉼을 누릴 수 있는 공간을
-                정성껏 가꿔왔습니다.
+                1947년 완성된 초호정을 중심으로 편안한 휴식과 쉼을 누릴 수 있는 공간을 정성껏
+                가꿔왔습니다.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
                 <li className="flex items-start gap-2">
@@ -224,16 +237,24 @@ export default async function AboutPage() {
             <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl p-8 border border-emerald-200">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-emerald-200 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                  <svg
+                    className="w-6 h-6 text-emerald-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    />
                   </svg>
                 </div>
                 <h3 className="text-2xl font-bold text-emerald-600">2025</h3>
               </div>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                초리골 숲의 기운을 담아
-                자연 속에서 온전히 쉴 수 있는
-                새로운 공간을 조성하였습니다.
+                초리골 숲의 기운을 담아 자연 속에서 온전히 쉴 수 있는 새로운 공간을 조성하였습니다.
               </p>
               <ul className="text-sm text-muted-foreground space-y-2">
                 <li className="flex items-start gap-2">
@@ -280,28 +301,30 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      <AnimalStrip animals={["gray-rabbit", "goose"]} />
+
       {/* Message Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#3d5a3d] text-white">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-6">
-            초호를 찾아주셔서 감사합니다
-          </h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6">초호를 찾아주셔서 감사합니다</h2>
           <p className="text-sm opacity-80 mb-8">1947년부터 이어온 나눔과 베풂의 정신</p>
 
           <div className="text-left space-y-4 text-sm sm:text-base opacity-90">
             <p>
-              <strong>경제성장을 앞세운 현대화 물결</strong> 속에서 숲과 자연이 훼손되는 안타까움이 컸습니다.
+              <strong>경제성장을 앞세운 현대화 물결</strong> 속에서 숲과 자연이 훼손되는 안타까움이
+              컸습니다.
             </p>
             <p>
-              <strong>대대로 물려받은 소중한 숲과 땅</strong> 위에 누구나 쉴 수 있는 휴식처를 가꾸고자
-              설계에서부터 시공까지 모든 공간에 정성을 가득 담았습니다.
+              <strong>대대로 물려받은 소중한 숲과 땅</strong> 위에 누구나 쉴 수 있는 휴식처를
+              가꾸고자 설계에서부터 시공까지 모든 공간에 정성을 가득 담았습니다.
             </p>
             <p>
-              <strong>옛날 초호정이 조성될 때 뜻을 담아</strong> 찾는 분들 모두가 일상으로 돌아가기 전까지
-              힐링이 되는 공간으로 편안하게 누리셨으면 좋겠습니다.
+              <strong>옛날 초호정이 조성될 때 뜻을 담아</strong> 찾는 분들 모두가 일상으로 돌아가기
+              전까지 힐링이 되는 공간으로 편안하게 누리셨으면 좋겠습니다.
             </p>
             <p>
-              <strong>나누고 베푸는 마음</strong>으로 언제나 초호를 찾는 분들에게 감사인사를 드립니다.
+              <strong>나누고 베푸는 마음</strong>으로 언제나 초호를 찾는 분들에게 감사인사를
+              드립니다.
             </p>
           </div>
         </div>
@@ -311,12 +334,8 @@ export default async function AboutPage() {
       <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              초호의 발자취
-            </h2>
-            <p className="text-muted-foreground">
-              초리골에서 실천된 초호정의 기적
-            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">초호의 발자취</h2>
+            <p className="text-muted-foreground">초리골에서 실천된 초호정의 기적</p>
           </div>
 
           {/* Grid Layout */}
@@ -337,9 +356,7 @@ export default async function AboutPage() {
           {/* Bottom Badge */}
           <div className="text-center mt-16 p-8 bg-white rounded-2xl shadow-sm border border-border">
             <h3 className="text-2xl font-bold text-primary mb-2">나누고 베풀다</h3>
-            <p className="text-muted-foreground mb-4">
-              초리골에서 실천된 초호정의 기적
-            </p>
+            <p className="text-muted-foreground mb-4">초리골에서 실천된 초호정의 기적</p>
             <p className="text-3xl font-bold text-primary">SINCE 1947</p>
           </div>
 
@@ -368,8 +385,9 @@ export default async function AboutPage() {
                   국내 최초 불한증막
                 </h3>
                 <p className="text-sm sm:text-base text-white/90 mb-3 leading-relaxed max-w-2xl">
-                  소나무 열단을 태우고 위에 흙을 덮어 물을 뿌리며 한증을 즐기던 전통 방식의 불한증막입니다.
-                  초리골의 깊은 역사와 함께 60년 가까이 그 자리를 지켜온 소중한 문화유산입니다.
+                  소나무 열단을 태우고 위에 흙을 덮어 물을 뿌리며 한증을 즐기던 전통 방식의
+                  불한증막입니다. 초리골의 깊은 역사와 함께 60년 가까이 그 자리를 지켜온 소중한
+                  문화유산입니다.
                 </p>
                 <p className="text-sm text-amber-400 font-medium">
                   전통 방식 그대로 보존된 불한증막
@@ -379,6 +397,8 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+
+      <AnimalStrip animals={["white-rabbit", "alpaca", "black-rabbit"]} />
 
       {/* Chorigol History Section - 초리골 역사 기록 */}
       <ChorigolHistorySection data={chorigolHistory} />

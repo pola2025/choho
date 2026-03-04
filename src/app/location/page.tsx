@@ -2,10 +2,12 @@ import { Metadata } from "next";
 import { MapPin, Phone, Car, ExternalLink } from "lucide-react";
 import { SITE_CONFIG } from "@/lib/constants";
 import { CopyButton } from "@/components/ui/CopyButton";
+import { AnimalStrip } from "@/components/WanderingAnimals";
 
 export const metadata: Metadata = {
   title: "찾아오시는 길 | 초호펜션",
-  description: "초호펜션 오시는 길 안내. 경기도 파주시 법원읍 초리골길 134. 서울에서 1시간 거리의 힐링 공간.",
+  description:
+    "초호펜션 오시는 길 안내. 경기도 파주시 법원읍 초리골길 134. 서울에서 1시간 거리의 힐링 공간.",
   alternates: {
     canonical: "/location",
   },
@@ -18,7 +20,8 @@ export default function LocationPage() {
       <section
         className="relative h-[40vh] min-h-[300px] flex items-center justify-center"
         style={{
-          backgroundImage: "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero/location-hero.webp')",
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/hero/location-hero.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundColor: "#3d4a3d",
@@ -29,14 +32,12 @@ export default function LocationPage() {
             <MapPin className="w-6 h-6" />
             <p className="text-sm tracking-widest opacity-80">LOCATION</p>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            찾아오시는 길
-          </h1>
-          <p className="text-base sm:text-lg opacity-90">
-            초호 펜션으로 오시는 길
-          </p>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">찾아오시는 길</h1>
+          <p className="text-base sm:text-lg opacity-90">초호 펜션으로 오시는 길</p>
         </div>
       </section>
+
+      <AnimalStrip animals={["alpaca", "white-rabbit"]} />
 
       {/* Info Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
@@ -134,7 +135,9 @@ export default function LocationPage() {
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
                     <ExternalLink className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">네이버 지도에서 보기</span>
+                    <span className="text-sm font-medium text-foreground">
+                      네이버 지도에서 보기
+                    </span>
                   </div>
                 </div>
               </div>
@@ -157,13 +160,18 @@ export default function LocationPage() {
           <div className="mt-8 p-6 bg-muted/30 rounded-xl">
             <h3 className="font-bold text-foreground mb-4">참고 사항</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• 내비게이션에 <strong>&quot;초호펜션&quot;</strong> 또는 <strong>&quot;초리골164&quot;</strong>를 검색하세요.</li>
+              <li>
+                • 내비게이션에 <strong>&quot;초호펜션&quot;</strong> 또는{" "}
+                <strong>&quot;초리골164&quot;</strong>를 검색하세요.
+              </li>
               <li>• 주차장은 펜션 내 무료로 이용 가능합니다.</li>
               <li>• 도착 후 본관(카페 초리골164)에서 체크인을 진행해주세요.</li>
             </ul>
           </div>
         </div>
       </section>
+
+      <AnimalStrip animals={["black-rabbit", "goose"]} />
     </main>
   );
 }

@@ -7,7 +7,8 @@ import {
   Facilities,
   JournalPreview,
 } from "@/components/sections";
-import { CombinedWinterPopup } from "@/components/CombinedWinterPopup";
+import { SpringPopup } from "@/components/SpringPopup";
+import { AnimalStrip } from "@/components/WanderingAnimals";
 import { FAQJsonLd } from "@/components/JsonLd";
 
 export const metadata: Metadata = {
@@ -53,11 +54,15 @@ export default function Home() {
       <main className="-mt-16">
         <Hero />
         <Welcome />
+        <AnimalStrip animals={["black-rabbit", "alpaca"]} />
         <RoomList />
+        <AnimalStrip animals={["white-rabbit", "goose"]} />
         <CheckinGuide />
+        <AnimalStrip animals={["gray-rabbit", "alpaca", "goose"]} />
         <Facilities />
+        <AnimalStrip animals={["black-rabbit", "white-rabbit"]} />
         <JournalPreview />
-        <CombinedWinterPopup />
+        <SpringPopup />
       </main>
     </>
   );
