@@ -387,7 +387,7 @@ export function SpringPopup() {
       {/* ========== Desktop ========== */}
       <div className="hidden md:flex md:flex-col gap-5 max-w-[1400px] w-full my-6 xl:my-auto px-6">
         <div className="text-center pt-2">
-          <p className="text-white/50 text-xs tracking-[0.3em] uppercase mb-1">Choho Shelter</p>
+          <p className="text-white/50 text-xs tracking-[0.3em] uppercase mb-1">Chohopark</p>
           <h1 className="font-serif text-white text-2xl font-semibold tracking-wide">이용 안내</h1>
         </div>
 
@@ -418,9 +418,7 @@ export function SpringPopup() {
       {/* ========== Mobile ========== */}
       <div className="md:hidden w-full max-w-sm mx-auto my-4 py-4 overflow-x-hidden">
         <div className="text-center mb-4">
-          <p className="text-white/40 text-[10px] tracking-[0.3em] uppercase mb-0.5">
-            Choho Shelter
-          </p>
+          <p className="text-white/40 text-[10px] tracking-[0.3em] uppercase mb-0.5">Chohopark</p>
           <h1 className="font-serif text-white text-lg font-semibold tracking-wide">이용 안내</h1>
         </div>
 
