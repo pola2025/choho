@@ -8,7 +8,8 @@ export const rooms: Room[] = [
     type: "bed",
     capacity: { standard: 4, maximum: 6 },
     area: 20,
-    description: "아름다운 호수를 바라보며 즐기는 특별한 휴식. 숲과 호수를 만날 수 있는 객실입니다.",
+    description:
+      "아름다운 호수를 바라보며 즐기는 특별한 휴식. 숲과 호수를 만날 수 있는 객실입니다.",
     thumbnail: "/images/rooms/lakeview/main.webp",
     images: [
       { src: "/images/rooms/lakeview/33b7b5a1c1d9c.webp", alt: "호수뷰 객실 전경" },
@@ -67,7 +68,8 @@ export const rooms: Room[] = [
     type: "bed",
     capacity: { standard: 2, maximum: 4 },
     area: 12,
-    description: "숲속 산새 소리와 함께 하는 힐링 스테이. 숲속에서 즐기는 편안한 휴식을 위한 침대 객실입니다.",
+    description:
+      "숲속 산새 소리와 함께 하는 힐링 스테이. 숲속에서 즐기는 편안한 휴식을 위한 침대 객실입니다.",
     thumbnail: "/images/rooms/forest/main.webp",
     images: [
       { src: "/images/rooms/forest/0062fb88ef43a.webp", alt: "Forest 객실 전경" },
@@ -182,7 +184,8 @@ export const rooms: Room[] = [
     type: "ondol",
     capacity: { standard: 5, maximum: 5 },
     area: 12,
-    description: "가족과 함께 즐기는 편안한 휴식. 어른 4명 + 아이 1명만 이용 가능한 온돌 객실입니다.",
+    description:
+      "가족과 함께 즐기는 편안한 휴식. 어른 4명 + 아이 1명만 이용 가능한 온돌 객실입니다.",
     thumbnail: "/images/rooms/forest-family/main.webp",
     images: [
       { src: "/images/rooms/forest-family/20230428_131830.webp", alt: "Forest 패밀리 객실 전경" },
@@ -243,9 +246,18 @@ export const rooms: Room[] = [
     description: "합리적으로 쉴 수 있는 객실. 어른 2명 + 아이 1명만 이용 가능한 온돌 객실입니다.",
     thumbnail: "/images/rooms/forest-mini-family/main.webp",
     images: [
-      { src: "/images/rooms/forest-mini-family/20230428_132325_1.webp", alt: "Forest Mini 패밀리 객실 전경" },
-      { src: "/images/rooms/forest-mini-family/20230428_132427_1.webp", alt: "Forest Mini 패밀리 객실 내부" },
-      { src: "/images/rooms/forest-mini-family/20230428_132548_1.webp", alt: "Forest Mini 패밀리 객실 테라스" },
+      {
+        src: "/images/rooms/forest-mini-family/20230428_132325_1.webp",
+        alt: "Forest Mini 패밀리 객실 전경",
+      },
+      {
+        src: "/images/rooms/forest-mini-family/20230428_132427_1.webp",
+        alt: "Forest Mini 패밀리 객실 내부",
+      },
+      {
+        src: "/images/rooms/forest-mini-family/20230428_132548_1.webp",
+        alt: "Forest Mini 패밀리 객실 테라스",
+      },
     ],
     amenities: {
       provided: [
@@ -293,6 +305,30 @@ export const rooms: Room[] = [
 ];
 
 export const journals: Journal[] = [
+  {
+    id: "cafe-extra-drink-discount-2025",
+    category: "notice",
+    title: "펜션 손님 카페 음료 20% 할인",
+    excerpt:
+      "초호펜션 투숙객은 초리골164 카페에서 추가 음료 구매 시 20% 할인! 무료 커피는 기본 제공됩니다.",
+    isPublished: true,
+    content: `초호펜션 투숙객 전용 카페 할인 혜택 안내
+
+☕ 무료 커피: 투숙인원에 맞게 기본 제공 (기존과 동일)
+🥤 추가 음료 구매 시: 20% 할인
+
+📌 이용 안내:
+- 체크인 시 초리골164 베이커리 카페에서 바로 이용 가능
+- 기준인원 + 추가인원 모두 무료 커피 제공
+- 무료 제공 외 추가로 음료를 드시고 싶은 분들께 20% 할인 적용
+
+따뜻한 커피와 함께 편안한 휴식을 즐겨보세요!
+
+문의: 010-7932-0029`,
+    createdAt: "2026-04-04",
+    thumbnail: "/images/rooms/forest/main.webp",
+    images: [],
+  },
   {
     id: "ice-sled-free-2025",
     category: "event",
@@ -386,7 +422,8 @@ export const journals: Journal[] = [
     id: "christmas-event-2025",
     category: "event",
     title: "크리스마스 이벤트",
-    excerpt: "크리스마스에 초리골164 베이커리 카페 이용고객님께 알파카 미니피규어 키링을 제공해드립니다!",
+    excerpt:
+      "크리스마스에 초리골164 베이커리 카페 이용고객님께 알파카 미니피규어 키링을 제공해드립니다!",
     content: `크리스마스에 초리골164 베이커리 카페 이용고객님께 특별한 선물을 준비했습니다!
 
 귀여운 알파카 미니피규어 키링을 제공해드립니다.
@@ -427,9 +464,7 @@ export const journals: Journal[] = [
 올 겨울 초호펜션에서 특별한 빙벽 체험을 즐겨보세요!`,
     createdAt: "2025-12-04",
     thumbnail: "/images/journal/ice-wall/ice-wall-thumb.webp",
-    images: [
-      "/images/journal/ice-wall/ice-wall-2.webp",
-    ],
+    images: ["/images/journal/ice-wall/ice-wall-2.webp"],
   },
 ];
 

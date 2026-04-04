@@ -270,6 +270,69 @@ function LateCheckoutCard() {
   );
 }
 
+/* ===== 카드 4: 카페 추가 음료 할인 ===== */
+function CafeDiscountCard() {
+  return (
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-full border border-stone-100">
+      <div className="h-1.5 bg-gradient-to-r from-brand-300 via-brand-200 to-brand-300" />
+      <div className="p-5 md:p-6 flex flex-col h-full">
+        <div className="flex items-center gap-3 mb-4 md:mb-5">
+          <div className="w-9 h-9 md:w-10 md:h-10 bg-brand-50 rounded-xl flex items-center justify-center border border-brand-100">
+            <svg
+              className="w-4 h-4 md:w-5 md:h-5 text-brand-500"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.5}
+              viewBox="0 0 24 24"
+            >
+              <path d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-base md:text-lg font-semibold text-stone-800">카페 음료 할인</h2>
+            <p className="text-[10px] md:text-xs text-stone-500">Cafe Drink Discount</p>
+          </div>
+        </div>
+
+        <div className="bg-brand-50 rounded-xl p-5 md:p-6 text-center mb-4 md:mb-5 border border-brand-100 relative overflow-hidden">
+          <div className="absolute top-1 right-2 md:top-2 md:right-3 text-brand-200 text-xl md:text-2xl opacity-80">
+            &#9749;
+          </div>
+          <p className="text-stone-500 text-xs md:text-sm mb-2">추가 음료 구매 시</p>
+          <p className="text-stone-800 font-bold text-3xl md:text-4xl font-serif mb-1">
+            20% <span className="text-xl md:text-2xl">할인</span>
+          </p>
+          <div className="w-10 md:w-12 h-px bg-brand-300 mx-auto my-2 md:my-3" />
+          <p className="text-brand-500 text-xs md:text-sm font-medium">초리골164 베이커리 카페</p>
+        </div>
+
+        <div className="space-y-2 md:space-y-3 flex-1">
+          {[
+            "투숙인원 무료 커피는 기본 제공",
+            "추가 음료 주문 시 20% 할인 적용",
+            "체크인 시 카페에서 바로 이용",
+          ].map((text) => (
+            <div key={text} className="flex items-center gap-2 md:gap-2.5">
+              <span className="w-4 h-4 md:w-5 md:h-5 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-bold flex-shrink-0">
+                &#10003;
+              </span>
+              <p className="text-stone-600 text-xs md:text-sm">{text}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-auto pt-3 md:pt-4">
+          <div className="bg-brand-50 rounded-xl p-3 text-center border border-brand-100">
+            <p className="text-brand-600 text-xs md:text-sm font-medium">
+              펜션 손님 전용 특별 혜택
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ===== BBQ 배너 ===== */
 function BBQBanner() {
   const items = [
@@ -366,8 +429,8 @@ export function SpringPopup() {
     setIsOpen(false);
   }, []);
 
-  const nextSlide = useCallback(() => setCurrentSlide((p) => (p + 1) % 3), []);
-  const prevSlide = useCallback(() => setCurrentSlide((p) => (p - 1 + 3) % 3), []);
+  const nextSlide = useCallback(() => setCurrentSlide((p) => (p + 1) % 4), []);
+  const prevSlide = useCallback(() => setCurrentSlide((p) => (p - 1 + 4) % 4), []);
 
   if (!isOpen) return null;
 
@@ -391,12 +454,15 @@ export function SpringPopup() {
           <h1 className="font-serif text-white text-2xl font-semibold tracking-wide">이용 안내</h1>
         </div>
 
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-4 gap-5">
           <div className="animate-fade-in-up">
             <CheckinCard />
           </div>
           <div className="animate-fade-in-up delay-200">
             <CoffeeCard />
+          </div>
+          <div className="animate-fade-in-up delay-400">
+            <CafeDiscountCard />
           </div>
           <div className="animate-fade-in-up delay-400">
             <LateCheckoutCard />
@@ -435,6 +501,9 @@ export function SpringPopup() {
                 <CoffeeCard />
               </div>
               <div className="w-full flex-shrink-0 px-2">
+                <CafeDiscountCard />
+              </div>
+              <div className="w-full flex-shrink-0 px-2">
                 <LateCheckoutCard />
               </div>
             </div>
@@ -458,7 +527,7 @@ export function SpringPopup() {
 
         {/* Dots */}
         <div className="flex justify-center gap-2 mt-3">
-          {[0, 1, 2].map((i) => (
+          {[0, 1, 2, 3].map((i) => (
             <button
               key={i}
               onClick={() => setCurrentSlide(i)}
