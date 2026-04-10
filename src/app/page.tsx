@@ -9,6 +9,7 @@ import {
 } from "@/components/sections";
 import { SpringPopup } from "@/components/SpringPopup";
 import { CherryBlossomStatusPopup } from "@/components/CherryBlossomStatusPopup";
+import { SummerInsectPopup } from "@/components/SummerInsectPopup";
 import { AnimalStrip } from "@/components/WanderingAnimals";
 import { FAQJsonLd } from "@/components/JsonLd";
 
@@ -63,6 +64,7 @@ export default function Home() {
         <Facilities />
         <AnimalStrip animals={["black-rabbit", "white-rabbit"]} />
         <JournalPreview />
+        <SummerInsectPopup />
         <CherryBlossomStatusPopup />
         <SpringPopup />
       </main>
