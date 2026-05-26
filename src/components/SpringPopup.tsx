@@ -147,13 +147,24 @@ function CoffeeCard() {
 
         {/* 카페 운영시간 */}
         <div className="bg-stone-50 rounded-xl p-3 md:p-3.5 mb-3 md:mb-4 border border-stone-100">
-          <p className="text-stone-500 text-[10px] md:text-xs text-center mb-1.5 tracking-wider">
+          <p className="text-stone-500 text-[10px] md:text-xs text-center mb-2 tracking-wider">
             카페 운영시간
           </p>
-          <p className="text-stone-800 font-bold text-base md:text-lg font-serif text-center">
-            11:00 <span className="text-brand-400 font-normal mx-1">–</span> 19:00
-          </p>
-          <p className="text-red-600 text-[10px] md:text-xs text-center mt-1 font-semibold">
+          <div className="space-y-1 md:space-y-1.5">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-stone-500 text-[10px] md:text-xs">주말</span>
+              <span className="text-stone-800 font-bold text-xs md:text-sm font-serif">
+                10:30 <span className="text-brand-400 font-normal mx-0.5">–</span> 19:00
+              </span>
+            </div>
+            <div className="flex items-center justify-between px-1">
+              <span className="text-stone-500 text-[10px] md:text-xs">평일</span>
+              <span className="text-stone-800 font-bold text-xs md:text-sm font-serif">
+                11:00 <span className="text-brand-400 font-normal mx-0.5">–</span> 19:00
+              </span>
+            </div>
+          </div>
+          <p className="text-red-600 text-[10px] md:text-xs text-center mt-2 pt-2 border-t border-stone-200 font-semibold">
             매주 수요일 휴무
           </p>
         </div>
