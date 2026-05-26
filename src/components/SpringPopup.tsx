@@ -168,11 +168,7 @@ function CoffeeCard() {
         </div>
 
         <div className="space-y-1.5 md:space-y-2 flex-1">
-          {[
-            "입실 시 카페에서 이용 가능",
-            "퇴실 전 오전 11시 이전까지 이용 가능",
-            "기준인원 + 추가인원 모두 제공",
-          ].map((text) => (
+          {["입실 시 카페에서 이용 가능", "퇴실 전 오전 11시 이전까지 이용 가능"].map((text) => (
             <div key={text} className="flex items-center gap-2 md:gap-2.5">
               <span className="w-4 h-4 md:w-5 md:h-5 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-bold flex-shrink-0">
                 &#10003;
