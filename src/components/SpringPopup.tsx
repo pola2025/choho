@@ -126,40 +126,63 @@ function CoffeeCard() {
           </div>
         </div>
 
-        <div className="bg-brand-50 rounded-xl p-5 md:p-6 text-center mb-4 md:mb-5 border border-brand-100 relative overflow-hidden">
+        <div className="bg-brand-50 rounded-xl p-4 md:p-5 text-center mb-3 md:mb-4 border border-brand-100 relative overflow-hidden">
           <div className="absolute top-1 right-2 md:top-2 md:right-3 text-brand-200 text-xl md:text-2xl opacity-80">
             &#10047;
           </div>
           <div className="absolute bottom-2 left-2 md:bottom-3 md:left-3 text-brand-200 text-base md:text-lg opacity-40">
             &#10047;
           </div>
-          <p className="text-stone-500 text-xs md:text-sm mb-2">객실 이용 고객</p>
-          <p className="text-stone-800 font-bold text-xl md:text-2xl font-serif mb-2">
+          <p className="text-stone-500 text-xs md:text-sm mb-1">객실 이용 고객</p>
+          <p className="text-stone-800 font-bold text-lg md:text-xl font-serif mb-1.5">
             투숙인원에 맞게
             <br />
             커피 제공
           </p>
-          <div className="w-10 md:w-12 h-px bg-brand-300 mx-auto my-2 md:my-3" />
-          <p className="text-brand-500 text-xs md:text-sm font-medium">초리골164 베이커리 카페</p>
+          <div className="w-10 md:w-12 h-px bg-brand-300 mx-auto my-1.5 md:my-2" />
+          <p className="text-brand-500 text-[11px] md:text-xs font-medium">
+            초리골164 베이커리 카페
+          </p>
         </div>
 
-        <div className="space-y-2 md:space-y-3 flex-1">
-          {["체크인 시 카페에서 이용 가능", "기준인원 + 추가인원 모두 제공"].map((text) => (
+        {/* 이용 가능 시간 */}
+        <div className="bg-stone-50 rounded-xl p-3 md:p-3.5 mb-3 md:mb-4 border border-stone-100">
+          <p className="text-stone-500 text-[10px] md:text-xs text-center mb-2 tracking-wider">
+            이용 가능 시간
+          </p>
+          <div className="flex items-center justify-center gap-2 md:gap-3">
+            <div className="text-center">
+              <p className="text-stone-400 text-[9px] md:text-[10px] mb-0.5">입실 시</p>
+              <p className="text-stone-700 font-bold text-sm md:text-base font-serif">체크인</p>
+            </div>
+            <span className="text-brand-300 text-xs md:text-sm">|</span>
+            <div className="text-center">
+              <p className="text-stone-400 text-[9px] md:text-[10px] mb-0.5">퇴실 전</p>
+              <p className="text-stone-700 font-bold text-sm md:text-base font-serif">~11:00</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 수요일 휴무 안내 */}
+        <div className="bg-red-50 rounded-xl p-3 md:p-3.5 mb-3 md:mb-4 border border-red-100">
+          <p className="text-red-700 font-semibold text-xs md:text-sm text-center mb-0.5">
+            매주 수요일 카페 휴무
+          </p>
+          <p className="text-stone-600 text-[10px] md:text-xs text-center leading-relaxed">
+            수요일은 커피 제공이 어려운 점<br />
+            양해 부탁드립니다.
+          </p>
+        </div>
+
+        <div className="space-y-1.5 md:space-y-2 flex-1">
+          {["카페 운영시간 기준 이용 가능", "기준인원 + 추가인원 모두 제공"].map((text) => (
             <div key={text} className="flex items-center gap-2 md:gap-2.5">
               <span className="w-4 h-4 md:w-5 md:h-5 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-bold flex-shrink-0">
                 &#10003;
               </span>
-              <p className="text-stone-600 text-xs md:text-sm">{text}</p>
+              <p className="text-stone-600 text-[11px] md:text-xs">{text}</p>
             </div>
           ))}
-        </div>
-
-        <div className="mt-auto pt-3 md:pt-4">
-          <div className="bg-brand-50 rounded-xl p-3 text-center border border-brand-100">
-            <p className="text-brand-600 text-xs md:text-sm font-medium">
-              따뜻한 커피와 함께 쉬어가세요
-            </p>
-          </div>
         </div>
       </div>
     </div>
