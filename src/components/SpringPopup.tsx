@@ -102,7 +102,7 @@ function CheckinCard() {
   );
 }
 
-/* ===== 카드 2: 커피 제공 ===== */
+/* ===== 카드 2: 음료쿠폰 제공 ===== */
 function CoffeeCard() {
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-full border border-stone-100">
@@ -121,8 +121,8 @@ function CoffeeCard() {
             </svg>
           </div>
           <div>
-            <h2 className="text-base md:text-lg font-semibold text-stone-800">커피 제공</h2>
-            <p className="text-[10px] md:text-xs text-stone-500">Complimentary Coffee</p>
+            <h2 className="text-base md:text-lg font-semibold text-stone-800">음료쿠폰 제공</h2>
+            <p className="text-[10px] md:text-xs text-stone-500">Complimentary Beverage</p>
           </div>
         </div>
 
@@ -135,9 +135,7 @@ function CoffeeCard() {
           </div>
           <p className="text-stone-500 text-xs md:text-sm mb-1">객실 이용 고객</p>
           <p className="text-stone-800 font-bold text-lg md:text-xl font-serif mb-1.5">
-            투숙인원에 맞게
-            <br />
-            커피 제공
+            음료쿠폰 제공
           </p>
           <div className="w-10 md:w-12 h-px bg-brand-300 mx-auto my-1.5 md:my-2" />
           <p className="text-brand-500 text-[11px] md:text-xs font-medium">
@@ -330,7 +328,7 @@ function CafeDiscountCard() {
 
         <div className="space-y-2 md:space-y-3 flex-1">
           {[
-            "투숙인원 무료 커피는 기본 제공",
+            "투숙인원 음료쿠폰 기본 제공",
             "추가 음료 주문 시 20% 할인 적용",
             "체크인 시 카페에서 바로 이용",
           ].map((text) => (
