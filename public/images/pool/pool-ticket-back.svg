@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="90mm" height="50mm" viewBox="0 0 900 500" font-family="'Noto Sans KR','Malgun Gothic',sans-serif">
+  <defs>
+    <clipPath id="card2"><rect x="0" y="0" width="900" height="500" rx="28"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#card2)">
+    <!-- 배경 -->
+    <rect x="0" y="0" width="900" height="500" fill="#ffffff"/>
+    <!-- 상단 헤더 바 -->
+    <rect x="0" y="0" width="900" height="92" fill="#0891b2"/>
+    <text x="50" y="58" font-size="30" font-weight="800" fill="#ffffff">수영장 입장권 이용 안내</text>
+    <text x="850" y="56" font-size="18" font-weight="600" letter-spacing="3" fill="#cffafe" text-anchor="end">CHOHO&#160;PENSION</text>
+
+    <!-- 체크리스트 -->
+    <g font-size="22" fill="#334155">
+      <!-- 1 -->
+      <circle cx="64" cy="150" r="13" fill="#cffafe"/>
+      <text x="64" y="157" font-size="17" font-weight="900" fill="#0891b2" text-anchor="middle">✓</text>
+      <text x="92" y="157" font-weight="500">펜션 투숙객만 할인 적용 <tspan fill="#64748b" font-size="19">(미투숙 추가할인 불가)</tspan></text>
+
+      <!-- 2 -->
+      <circle cx="64" cy="206" r="13" fill="#cffafe"/>
+      <text x="64" y="213" font-size="17" font-weight="900" fill="#0891b2" text-anchor="middle">✓</text>
+      <text x="92" y="213" font-weight="500"><tspan font-weight="800" fill="#0e7490">입장권만</tspan> 해당 — 평상은 할인 제외</text>
+
+      <!-- 3 -->
+      <circle cx="64" cy="262" r="13" fill="#cffafe"/>
+      <text x="64" y="269" font-size="17" font-weight="900" fill="#0891b2" text-anchor="middle">✓</text>
+      <text x="92" y="269" font-weight="500">평상은 더초리골 현장 직접 결제·이용 <tspan fill="#64748b" font-size="19">(예약 불가)</tspan></text>
+
+      <!-- 4 강조 -->
+      <circle cx="64" cy="318" r="13" fill="#fde68a"/>
+      <text x="64" y="325" font-size="17" font-weight="900" fill="#b45309" text-anchor="middle">!</text>
+      <text x="92" y="325" font-weight="800" fill="#b45309">할인 티켓 수령은 초호펜션 관리자 연락 필수</text>
+    </g>
+
+    <!-- 구분선 -->
+    <line x1="50" y1="372" x2="850" y2="372" stroke="#e2e8f0" stroke-width="2"/>
+
+    <!-- 하단 연락처 + 규정 -->
+    <text x="50" y="420" font-size="20" font-weight="500" fill="#475569">평상 이용규정은 <tspan font-weight="700" fill="#334155">더초리골 규정</tspan>에 따릅니다.</text>
+    <rect x="50" y="436" width="300" height="44" rx="22" fill="#0891b2"/>
+    <text x="200" y="465" font-size="21" font-weight="800" fill="#ffffff" text-anchor="middle">초호펜션 010-7932-0029</text>
+    <text x="850" y="465" font-size="18" font-weight="600" fill="#94a3b8" text-anchor="end">더초리골 수영장 · 객실 이용고객 혜택</text>
+  </g>
+
+  <rect x="1" y="1" width="898" height="498" rx="28" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+</svg>

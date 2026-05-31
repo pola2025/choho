@@ -1,0 +1,74 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { X } from "lucide-react";
+import Image from "next/image";
+
+export function PoolDiscountPopup() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const hideUntil = localStorage.getItem("poolDiscountPopupHideUntil");
+    if (hideUntil && new Date() < new Date(hideUntil)) return;
+    const timer = setTimeout(() => setIsOpen(true), 600);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleClose = useCallback(() => setIsOpen(false), []);
+
+  const handleHideToday = useCallback(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    localStorage.setItem("poolDiscountPopupHideUntil", tomorrow.toISOString());
+    setIsOpen(false);
+  }, []);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[56] flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto p-4">
+      {/* Close */}
+      <button
+        onClick={handleClose}
+        className="fixed top-3 right-3 md:top-4 md:right-4 z-[66] w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all shadow-sm border border-stone-200"
+        aria-label="닫기"
+      >
+        <X className="w-4 h-4 text-stone-700" />
+      </button>
+
+      {/* 팝업 본체 */}
+      <div className="w-full max-w-[420px] mx-auto my-4">
+        <div className="animate-fade-in-up">
+          {/* 800x800 팝업 이미지 */}
+          <Image
+            src="/images/pool/popup-pool-discount-800.png"
+            alt="더초리골 수영장 입장권 50% 할인 - 초호펜션 객실 이용고객 전용"
+            width={800}
+            height={800}
+            className="w-full h-auto drop-shadow-2xl"
+            priority
+          />
+
+          {/* 예약 버튼 */}
+          <a
+            href="https://m.place.naver.com/accommodation/1102553988/home"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full mt-4 py-3 bg-cyan-600 text-white text-base font-semibold rounded-xl text-center hover:bg-cyan-700 transition-colors shadow-lg"
+          >
+            객실 예약하기
+          </a>
+
+          {/* 오늘 하루 보지 않기 */}
+          <button
+            onClick={handleHideToday}
+            className="w-full mt-2 py-2 text-sm text-white/60 hover:text-white/90 transition-colors text-center"
+          >
+            오늘 하루 보지 않기
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

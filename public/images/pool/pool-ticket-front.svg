@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="90mm" height="50mm" viewBox="0 0 900 500" font-family="'Noto Sans KR','Malgun Gothic',sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0e7490"/>
+      <stop offset="0.5" stop-color="#0891b2"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+    <clipPath id="card"><rect x="0" y="0" width="900" height="500" rx="28"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#card)">
+    <!-- 배경 -->
+    <rect x="0" y="0" width="900" height="500" fill="url(#bg)"/>
+
+    <!-- 물결 장식 -->
+    <path d="M0,400 C180,470 340,330 560,410 C720,470 820,400 900,430 L900,500 L0,500 Z" fill="#ffffff" opacity="0.07"/>
+    <path d="M0,440 C220,380 420,480 640,420 C760,388 840,430 900,415 L900,500 L0,500 Z" fill="#ffffff" opacity="0.06"/>
+    <!-- 버블 -->
+    <circle cx="120" cy="70" r="46" fill="#ffffff" opacity="0.06"/>
+    <circle cx="180" cy="150" r="22" fill="#ffffff" opacity="0.08"/>
+
+    <!-- ===== 좌측 메인 ===== -->
+    <text x="52" y="74" font-size="21" font-weight="700" letter-spacing="6" fill="#ffffff" opacity="0.82">CHOHO&#160;PENSION</text>
+    <text x="52" y="120" font-size="26" font-weight="700" fill="#cffafe">더초리골 수영장 입장권</text>
+
+    <!-- 50% 큰 강조 -->
+    <text x="50" y="270" font-family="'Noto Serif KR',serif" font-size="150" font-weight="900" fill="#ffffff" style="font-variant-numeric:tabular-nums">50<tspan font-size="80">%</tspan></text>
+    <text x="372" y="222" font-size="46" font-weight="900" fill="#ffffff" letter-spacing="1">DISCOUNT</text>
+    <text x="374" y="262" font-size="27" font-weight="700" fill="#cffafe">입장권 반값 할인</text>
+    <text x="54" y="320" font-size="22" font-weight="500" fill="#ecfeff" opacity="0.92">객실 이용고객 전용 혜택</text>
+
+    <!-- 관리자 연락 강조 박스 -->
+    <rect x="50" y="356" width="560" height="96" rx="16" fill="#ffffff" opacity="0.16"/>
+    <rect x="50" y="356" width="560" height="96" rx="16" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1.5"/>
+    <text x="74" y="392" font-size="22" font-weight="700" fill="#ffffff">⚠ 할인 티켓 수령 시</text>
+    <text x="74" y="424" font-size="22" font-weight="700" fill="#fde68a">초호펜션 관리자 연락 필수</text>
+    <text x="74" y="448" font-size="17" font-weight="500" fill="#ffffff" opacity="0.85">문의 · 010-7932-0029</text>
+
+    <!-- ===== 절취선 + 노치 ===== -->
+    <line x1="648" y1="40" x2="648" y2="460" stroke="#ffffff" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="3 9" stroke-linecap="round"/>
+    <circle cx="648" cy="0" r="20" fill="#ffffff"/>
+    <circle cx="648" cy="500" r="20" fill="#ffffff"/>
+
+    <!-- ===== 우측 스텁 ===== -->
+    <text x="774" y="80" font-size="15" font-weight="700" letter-spacing="3" fill="#ecfeff" opacity="0.9" text-anchor="middle">ADMISSION TICKET</text>
+
+    <text x="774" y="174" font-family="'Noto Serif KR',serif" font-size="66" font-weight="900" fill="#ffffff" text-anchor="middle" style="font-variant-numeric:tabular-nums">50%</text>
+    <text x="774" y="210" font-size="24" font-weight="900" fill="#fde68a" text-anchor="middle" letter-spacing="2">OFF</text>
+
+    <!-- 관리자 기입란 -->
+    <rect x="686" y="244" width="176" height="50" rx="9" fill="#ffffff"/>
+    <text x="702" y="275" font-size="17" font-weight="700" fill="#0e7490">인원</text>
+    <text x="846" y="275" font-size="16" font-weight="500" fill="#94a3b8" text-anchor="end">명</text>
+
+    <rect x="686" y="304" width="176" height="50" rx="9" fill="#ffffff"/>
+    <text x="702" y="335" font-size="17" font-weight="700" fill="#0e7490">이용일</text>
+
+    <text x="774" y="392" font-size="15" font-weight="600" fill="#ecfeff" text-anchor="middle" opacity="0.85">초호펜션 관리자 작성</text>
+    <text x="774" y="414" font-size="14" font-weight="500" fill="#ecfeff" text-anchor="middle" opacity="0.7">객실 투숙객 전용</text>
+  </g>
+
+  <rect x="1" y="1" width="898" height="498" rx="28" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+</svg>

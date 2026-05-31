@@ -7,6 +7,7 @@ import {
   Facilities,
   JournalPreview,
 } from "@/components/sections";
+import { PoolDiscountPopup } from "@/components/PoolDiscountPopup";
 import { SpringPopup } from "@/components/SpringPopup";
 import { SummerInsectPopup } from "@/components/SummerInsectPopup";
 import { AnimalStrip } from "@/components/WanderingAnimals";
@@ -63,6 +64,8 @@ export default function Home() {
         <Facilities />
         <AnimalStrip animals={["black-rabbit", "white-rabbit"]} />
         <JournalPreview />
+        {/* 팝업 노출 순서: 수영장(맨 앞) → 닫으면 여름벌레 → 이용안내 순으로 보임 (z-index로 제어) */}
+        <PoolDiscountPopup />
         <SummerInsectPopup />
         <SpringPopup />
       </main>
