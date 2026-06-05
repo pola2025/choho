@@ -360,7 +360,7 @@ function CafeDiscountCard() {
 
         <div className="mt-auto pt-3 md:pt-4">
           <div className="bg-red-50 rounded-xl p-3 text-center border border-red-100">
-            <p className="text-red-600 text-xs md:text-sm font-medium">
+            <p className="text-red-600 text-[11px] md:text-sm font-medium whitespace-nowrap break-keep">
               &#x1F511; 객실키 지참 시 펜션 손님 전용 혜택
             </p>
           </div>
