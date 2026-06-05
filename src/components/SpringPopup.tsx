@@ -102,7 +102,7 @@ function CheckinCard() {
   );
 }
 
-/* ===== 카드 2: 커피쿠폰 제공 ===== */
+/* ===== 카드 2: 음료쿠폰 제공 ===== */
 function CoffeeCard() {
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-full border border-stone-100">
@@ -121,8 +121,8 @@ function CoffeeCard() {
             </svg>
           </div>
           <div>
-            <h2 className="text-base md:text-lg font-semibold text-stone-800">커피쿠폰 제공</h2>
-            <p className="text-[10px] md:text-xs text-stone-500">Coffee Coupon</p>
+            <h2 className="text-base md:text-lg font-semibold text-stone-800">음료쿠폰 제공</h2>
+            <p className="text-[10px] md:text-xs text-stone-500">Drink Coupon</p>
           </div>
         </div>
 
@@ -133,14 +133,35 @@ function CoffeeCard() {
           <div className="absolute bottom-2 left-2 md:bottom-3 md:left-3 text-brand-200 text-base md:text-lg opacity-40">
             &#10047;
           </div>
-          <p className="text-stone-500 text-xs md:text-sm mb-1">객실 이용 고객</p>
-          <p className="text-stone-800 font-bold text-lg md:text-xl font-serif mb-1.5">
-            커피쿠폰 제공
+          <p className="text-stone-500 text-xs md:text-sm mb-1.5">객실 이용 고객</p>
+          <p className="text-stone-800 font-bold text-base md:text-lg font-serif mb-2">
+            제공 가능 음료
           </p>
+          <div className="flex items-center justify-center gap-1.5 md:gap-2">
+            <span className="bg-white border border-brand-200 text-brand-600 font-semibold text-[11px] md:text-sm rounded-full px-2.5 md:px-3 py-0.5 md:py-1">
+              아메리카노
+            </span>
+            <span className="bg-white border border-brand-200 text-brand-600 font-semibold text-[11px] md:text-sm rounded-full px-2.5 md:px-3 py-0.5 md:py-1">
+              아이스티
+            </span>
+          </div>
           <div className="w-10 md:w-12 h-px bg-brand-300 mx-auto my-1.5 md:my-2" />
           <p className="text-brand-500 text-[11px] md:text-xs font-medium">
             초리골164 베이커리 카페
           </p>
+        </div>
+
+        {/* 객실키 필수 안내 */}
+        <div className="bg-red-50 rounded-xl p-3 md:p-3.5 mb-3 md:mb-4 border border-red-100 flex items-start gap-2 md:gap-2.5">
+          <span className="w-5 h-5 md:w-6 md:h-6 bg-red-500 text-white rounded-lg flex items-center justify-center text-xs md:text-sm flex-shrink-0">
+            &#x1F511;
+          </span>
+          <div>
+            <p className="font-semibold text-red-700 text-xs md:text-sm">객실키 필수 지참</p>
+            <p className="text-red-600 text-[10px] md:text-xs mt-0.5">
+              객실키 제시 시에만 음료쿠폰을 제공해 드립니다.
+            </p>
+          </div>
         </div>
 
         {/* 카페 운영시간 */}
@@ -286,7 +307,7 @@ function LateCheckoutCard() {
   );
 }
 
-/* ===== 카드 4: 카페 추가 음료 할인 ===== */
+/* ===== 카드 4: 그 외 음료 할인 ===== */
 function CafeDiscountCard() {
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-full border border-stone-100">
@@ -305,8 +326,8 @@ function CafeDiscountCard() {
             </svg>
           </div>
           <div>
-            <h2 className="text-base md:text-lg font-semibold text-stone-800">카페 음료 할인</h2>
-            <p className="text-[10px] md:text-xs text-stone-500">Cafe Drink Discount</p>
+            <h2 className="text-base md:text-lg font-semibold text-stone-800">그 외 음료 할인</h2>
+            <p className="text-[10px] md:text-xs text-stone-500">Other Drinks Discount</p>
           </div>
         </div>
 
@@ -314,7 +335,7 @@ function CafeDiscountCard() {
           <div className="absolute top-1 right-2 md:top-2 md:right-3 text-brand-200 text-xl md:text-2xl opacity-80">
             &#9749;
           </div>
-          <p className="text-stone-500 text-xs md:text-sm mb-2">추가 음료 구매 시</p>
+          <p className="text-stone-500 text-xs md:text-sm mb-2">쿠폰 외 음료 주문 시</p>
           <p className="text-stone-800 font-bold text-3xl md:text-4xl font-serif mb-1">
             20% <span className="text-xl md:text-2xl">할인</span>
           </p>
@@ -324,8 +345,8 @@ function CafeDiscountCard() {
 
         <div className="space-y-2 md:space-y-3 flex-1">
           {[
-            "객실 이용 고객 커피쿠폰 기본 제공",
-            "추가 음료 주문 시 20% 할인 적용",
+            "쿠폰 제공 음료(아메리카노·아이스티) 외 전 메뉴 적용",
+            "객실키 제시 시 20% 할인 적용",
             "체크인 시 카페에서 바로 이용",
           ].map((text) => (
             <div key={text} className="flex items-center gap-2 md:gap-2.5">
@@ -338,9 +359,9 @@ function CafeDiscountCard() {
         </div>
 
         <div className="mt-auto pt-3 md:pt-4">
-          <div className="bg-brand-50 rounded-xl p-3 text-center border border-brand-100">
-            <p className="text-brand-600 text-xs md:text-sm font-medium">
-              펜션 손님 전용 특별 혜택
+          <div className="bg-red-50 rounded-xl p-3 text-center border border-red-100">
+            <p className="text-red-600 text-xs md:text-sm font-medium">
+              &#x1F511; 객실키 지참 시 펜션 손님 전용 혜택
             </p>
           </div>
         </div>

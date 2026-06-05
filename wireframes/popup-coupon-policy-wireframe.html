@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>음료쿠폰 정책 변경 와이어프레임 — 초호펜션</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#fef5f2",
+                100: "#fce4de",
+                200: "#f9c7bc",
+                300: "#f2a08e",
+                400: "#e87a6a",
+                500: "#d9576a",
+                600: "#c24458",
+                700: "#a33548",
+                800: "#872b3c",
+                900: "#6e2333",
+              },
+            },
+            fontFamily: { serif: ["Georgia", "serif"] },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background: #f5f3f0;
+      }
+      .label-old {
+        text-decoration: line-through;
+        opacity: 0.45;
+      }
+      .badge-new {
+        background: #16a34a;
+        color: #fff;
+        font-size: 10px;
+        padding: 1px 6px;
+        border-radius: 9999px;
+        font-weight: 700;
+      }
+      .badge-change {
+        background: #d9576a;
+        color: #fff;
+        font-size: 10px;
+        padding: 1px 6px;
+        border-radius: 9999px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body class="p-6 md:p-10">
+    <div class="max-w-5xl mx-auto">
+      <div class="mb-6">
+        <h1 class="text-xl md:text-2xl font-bold text-stone-800">
+          음료쿠폰 정책 변경 — 팝업 와이어프레임
+        </h1>
+        <p class="text-stone-500 text-sm mt-1">
+          SpringPopup.tsx · 카드 2(음료쿠폰 제공) + 카드 4(카페 음료 할인) 조정안
+        </p>
+        <div class="mt-3 flex flex-wrap gap-2 text-xs">
+          <span class="bg-white border border-stone-200 rounded-lg px-3 py-1.5 text-stone-600"
+            >변경 1: 제공 음료를 <b class="text-brand-600">아메리카노 / 아이스티</b>로 한정</span
+          >
+          <span class="bg-white border border-stone-200 rounded-lg px-3 py-1.5 text-stone-600"
+            >변경 2: <b class="text-brand-600">객실키 필수 지참</b> 시에만 제공</span
+          >
+          <span class="bg-white border border-stone-200 rounded-lg px-3 py-1.5 text-stone-600"
+            >변경 3: 그 외 음료는 <b class="text-brand-600">20% 할인</b></span
+          >
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- ===== 카드 2: 음료쿠폰 제공 (조정안) ===== -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden h-full border border-stone-100">
+          <div class="h-1.5 bg-gradient-to-r from-brand-300 via-brand-200 to-brand-300"></div>
+          <div class="p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-5">
+              <div
+                class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center border border-brand-100"
+              >
+                <svg
+                  class="w-5 h-5 text-brand-500"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-lg font-semibold text-stone-800">
+                  음료쿠폰 제공 <span class="badge-change align-middle">변경</span>
+                </h2>
+                <p class="text-xs text-stone-500">Drink Coupon</p>
+              </div>
+            </div>
+
+            <!-- 제공 음료 한정 -->
+            <div
+              class="bg-brand-50 rounded-xl p-5 text-center mb-3 border border-brand-100 relative overflow-hidden"
+            >
+              <div class="absolute top-2 right-3 text-brand-200 text-2xl opacity-80">&#10047;</div>
+              <div class="absolute bottom-3 left-3 text-brand-200 text-lg opacity-40">&#10047;</div>
+              <p class="text-stone-500 text-sm mb-2">객실 이용 고객</p>
+              <p class="text-stone-800 font-bold text-lg font-serif mb-2">제공 가능 음료</p>
+              <div class="flex items-center justify-center gap-2 mb-1">
+                <span
+                  class="bg-white border border-brand-200 text-brand-600 font-semibold text-sm rounded-full px-3 py-1"
+                  >아메리카노</span
+                >
+                <span
+                  class="bg-white border border-brand-200 text-brand-600 font-semibold text-sm rounded-full px-3 py-1"
+                  >아이스티</span
+                >
+              </div>
+              <div class="w-12 h-px bg-brand-300 mx-auto my-2"></div>
+              <p class="text-brand-500 text-xs font-medium">초리골164 베이커리 카페</p>
+            </div>
+
+            <!-- 객실키 필수 안내 -->
+            <div
+              class="bg-red-50 rounded-xl p-3.5 mb-4 border border-red-100 flex items-start gap-2.5"
+            >
+              <span
+                class="w-6 h-6 bg-red-500 text-white rounded-lg flex items-center justify-center text-sm flex-shrink-0"
+                >&#x1F511;</span
+              >
+              <div>
+                <p class="font-semibold text-red-700 text-sm">객실키 필수 지참</p>
+                <p class="text-red-600 text-xs mt-0.5">
+                  객실키 제시 시에만 음료쿠폰을 제공해 드립니다.
+                </p>
+              </div>
+            </div>
+
+            <!-- 카페 운영시간 -->
+            <div class="bg-stone-50 rounded-xl p-3.5 mb-4 border border-stone-100">
+              <p class="text-stone-500 text-xs text-center mb-2 tracking-wider">카페 운영시간</p>
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between px-1">
+                  <span class="text-stone-500 text-xs">주말</span>
+                  <span class="text-stone-800 font-bold text-sm font-serif"
+                    >10:30 <span class="text-brand-400 font-normal mx-0.5">–</span> 19:00</span
+                  >
+                </div>
+                <div class="flex items-center justify-between px-1">
+                  <span class="text-stone-500 text-xs">평일</span>
+                  <span class="text-stone-800 font-bold text-sm font-serif"
+                    >11:00 <span class="text-brand-400 font-normal mx-0.5">–</span> 19:00</span
+                  >
+                </div>
+              </div>
+              <p
+                class="text-red-600 text-xs text-center mt-2 pt-2 border-t border-stone-200 font-semibold"
+              >
+                매주 수요일 휴무
+              </p>
+            </div>
+
+            <div class="space-y-2 flex-1">
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="w-5 h-5 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
+                  >&#10003;</span
+                >
+                <p class="text-stone-600 text-xs">입실 시 카페에서 이용 가능</p>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="w-5 h-5 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
+                  >&#10003;</span
+                >
+                <p class="text-stone-600 text-xs">퇴실 전 오전 11시 이전까지 이용 가능</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== 카드 4: 카페 음료 할인 (조정안) ===== -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden h-full border border-stone-100">
+          <div class="h-1.5 bg-gradient-to-r from-brand-300 via-brand-200 to-brand-300"></div>
+          <div class="p-6 flex flex-col h-full">
+            <div class="flex items-center gap-3 mb-5">
+              <div
+                class="w-10 h-10 bg-brand-50 rounded-xl flex items-center justify-center border border-brand-100"
+              >
+                <svg
+                  class="w-5 h-5 text-brand-500"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <h2 class="text-lg font-semibold text-stone-800">그 외 음료 할인</h2>
+                <p class="text-xs text-stone-500">Other Drinks Discount</p>
+              </div>
+            </div>
+
+            <div
+              class="bg-brand-50 rounded-xl p-6 text-center mb-5 border border-brand-100 relative overflow-hidden"
+            >
+              <div class="absolute top-2 right-3 text-brand-200 text-2xl opacity-80">&#9749;</div>
+              <p class="text-stone-500 text-sm mb-2">쿠폰 외 음료 주문 시</p>
+              <p class="text-stone-800 font-bold text-4xl font-serif mb-1">
+                20% <span class="text-2xl">할인</span>
+              </p>
+              <div class="w-12 h-px bg-brand-300 mx-auto my-3"></div>
+              <p class="text-brand-500 text-sm font-medium">초리골164 베이커리 카페</p>
+            </div>
+
+            <div class="space-y-3 flex-1">
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="w-5 h-5 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
+                  >&#10003;</span
+                >
+                <p class="text-stone-600 text-sm">
+                  쿠폰 제공 음료(아메리카노·아이스티) 외 전 메뉴 적용
+                </p>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="w-5 h-5 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
+                  >&#10003;</span
+                >
+                <p class="text-stone-600 text-sm">객실키 제시 시 20% 할인 적용</p>
+              </div>
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="w-5 h-5 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
+                  >&#10003;</span
+                >
+                <p class="text-stone-600 text-sm">체크인 시 카페에서 바로 이용</p>
+              </div>
+            </div>
+
+            <div class="mt-auto pt-4">
+              <div class="bg-red-50 rounded-xl p-3 text-center border border-red-100">
+                <p class="text-red-600 text-sm font-medium">
+                  &#x1F511; 객실키 지참 시 펜션 손님 전용 혜택
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 변경 전/후 요약 -->
+      <div class="mt-8 bg-white rounded-2xl border border-stone-200 p-5 md:p-6">
+        <h3 class="font-semibold text-stone-800 mb-4">변경 전 / 후 요약</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div class="border border-stone-200 rounded-xl p-4">
+            <p class="text-stone-400 font-semibold mb-2 text-xs tracking-wider">BEFORE</p>
+            <ul class="space-y-1.5 text-stone-500">
+              <li class="label-old">· 객실 이용 고객 커피쿠폰 제공 (음료 종류 제한 없음)</li>
+              <li class="label-old">· 객실키 조건 명시 없음</li>
+              <li class="label-old">· 추가 음료 주문 시 20% 할인</li>
+            </ul>
+          </div>
+          <div class="border border-brand-200 rounded-xl p-4 bg-brand-50/40">
+            <p class="text-brand-600 font-semibold mb-2 text-xs tracking-wider">AFTER</p>
+            <ul class="space-y-1.5 text-stone-700">
+              <li>· 제공 음료를 <span class="badge-new">아메리카노 · 아이스티</span> 로 한정</li>
+              <li>· <span class="badge-new">객실키 필수 지참</span> 시에만 제공</li>
+              <li>· 쿠폰 외(그 외) 음료는 <span class="badge-new">20% 할인</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
