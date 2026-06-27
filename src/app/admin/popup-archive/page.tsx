@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Calendar, Eye, EyeOff, Megaphone, Clock, Loader2, RefreshCw, Plus } from "lucide-react";
+import { Calendar, Eye, EyeOff, Megaphone, Clock, Loader2, RefreshCw } from "lucide-react";
 
 // 팝업 아카이브 데이터 타입
 interface PopupArchive {
@@ -93,9 +93,7 @@ export default function PopupArchivePage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">팝업 아카이브</h1>
-            <p className="text-sm text-gray-500">
-              사이트에 표시된 팝업 히스토리를 관리합니다
-            </p>
+            <p className="text-sm text-gray-500">사이트에 표시된 팝업 히스토리를 관리합니다</p>
           </div>
         </div>
         <button
@@ -172,9 +170,7 @@ export default function PopupArchivePage() {
               <Calendar className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">
-                {popups.length}
-              </p>
+              <p className="text-2xl font-bold text-gray-900">{popups.length}</p>
               <p className="text-sm text-gray-500">전체 팝업</p>
             </div>
           </div>
@@ -185,15 +181,6 @@ export default function PopupArchivePage() {
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
           <h2 className="font-semibold text-gray-900">팝업 히스토리</h2>
-          <a
-            href="https://airtable.com/appcA2d6nXAIkLydp/tblzLnNjgHFSkO0wT"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            에어테이블에서 추가
-          </a>
         </div>
 
         {filteredPopups.length === 0 ? (
@@ -259,9 +246,7 @@ export default function PopupArchivePage() {
                     <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-1">
                       {popup.name}
                     </h3>
-                    <p className="text-xs text-gray-500 line-clamp-2 mb-2">
-                      {popup.description}
-                    </p>
+                    <p className="text-xs text-gray-500 line-clamp-2 mb-2">{popup.description}</p>
 
                     {/* 기간 */}
                     <div className="flex items-center gap-1.5 text-xs text-gray-500">
@@ -289,16 +274,8 @@ export default function PopupArchivePage() {
           <div>
             <h3 className="font-semibold text-blue-900 mb-1">팝업 관리 안내</h3>
             <p className="text-sm text-blue-700">
-              팝업 추가/수정/삭제는{" "}
-              <a
-                href="https://airtable.com/appcA2d6nXAIkLydp/tblzLnNjgHFSkO0wT"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline font-medium"
-              >
-                에어테이블
-              </a>
-              에서 직접 관리하실 수 있습니다.
+              팝업 데이터는 Cloudflare D1에 저장되며,{" "}
+              <code className="font-medium">/api/popups</code> API로 추가/수정/삭제할 수 있습니다.
             </p>
           </div>
         </div>

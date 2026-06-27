@@ -28,42 +28,28 @@ export const metadata = {
 };
 
 async function getJournals(): Promise<Journal[]> {
-  const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
-  const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const AIRTABLE_TABLE_ID = process.env.AIRTABLE_JOURNAL_TABLE_ID;
-
-  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
-    return [];
-  }
-
   try {
-    const filterFormula = encodeURIComponent("{isPublished}=TRUE()");
-    const response = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?filterByFormula=${filterFormula}&sort[0][field]=createdAt&sort[0][direction]=desc`,
-      {
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      }
+    const { d1Query } = await import("@/lib/d1");
+    const rows = await d1Query<Record<string, unknown>>(
+      `SELECT * FROM journals WHERE isPublished = 1 ORDER BY createdAt DESC`
     );
-
-    if (!response.ok) return [];
-
-    const data = await response.json();
-    return data.records.map((record: { id: string; fields: Record<string, unknown> }) => ({
-      id: record.id,
-      title: record.fields.title || "",
-      excerpt: record.fields.excerpt || "",
-      content: record.fields.content || "",
-      category: record.fields.category || "event",
-      thumbnail: record.fields.thumbnail || "",
-      images: record.fields.images ? String(record.fields.images).split(",").map((s: string) => s.trim()) : [],
-      createdAt: record.fields.createdAt || "",
-      viewCount: record.fields.viewCount || 0,
-      order: record.fields.order || 0,
-      isPublished: record.fields.isPublished ?? true,
+    return rows.map((r) => ({
+      id: String(r.id),
+      title: String(r.title || ""),
+      excerpt: String(r.excerpt || ""),
+      content: String(r.content || ""),
+      category: String(r.category || "event") as Journal["category"],
+      thumbnail: String(r.thumbnail || ""),
+      images: r.images
+        ? String(r.images)
+            .split(",")
+            .map((s: string) => s.trim())
+            .filter(Boolean)
+        : [],
+      createdAt: String(r.createdAt || ""),
+      viewCount: Number(r.viewCount) || 0,
+      order: Number(r.order) || 0,
+      isPublished: Number(r.isPublished) === 1,
     }));
   } catch {
     return [];
@@ -92,12 +78,8 @@ export default async function JournalListPage() {
               <BookOpen className="w-6 h-6 text-primary" />
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-neutral-900">
-                초호 저널
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                초호펜션의 새로운 소식과 이벤트
-              </p>
+              <h1 className="text-3xl md:text-4xl font-bold text-neutral-900">초호 저널</h1>
+              <p className="text-muted-foreground mt-1">초호펜션의 새로운 소식과 이벤트</p>
             </div>
           </div>
         </div>
@@ -109,9 +91,9 @@ export default async function JournalListPage() {
         <div className="flex items-center gap-4 mb-8 text-sm text-muted-foreground">
           <span>전체 {journals.length}개</span>
           <span className="text-border">|</span>
-          <span>이벤트 {journals.filter(j => j.category === 'event').length}개</span>
+          <span>이벤트 {journals.filter((j) => j.category === "event").length}개</span>
           <span className="text-border">|</span>
-          <span>공지 {journals.filter(j => j.category === 'notice').length}개</span>
+          <span>공지 {journals.filter((j) => j.category === "notice").length}개</span>
         </div>
 
         {/* Journal Grid */}
@@ -125,7 +107,7 @@ export default async function JournalListPage() {
                 className="group bg-white rounded-2xl border border-border overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all duration-300"
               >
                 {/* Thumbnail */}
-                <div className="relative aspect-[5/7] overflow-hidden bg-neutral-100">
+                <div className="relative aspect-square overflow-hidden bg-neutral-100">
                   <Image
                     src={journal.thumbnail || "/images/placeholder.webp"}
                     alt={journal.title}
@@ -154,9 +136,7 @@ export default async function JournalListPage() {
                       <Calendar size={14} />
                       {formatDate(journal.createdAt)}
                     </div>
-                    {journal.viewCount > 0 && (
-                      <span>조회 {journal.viewCount}</span>
-                    )}
+                    {journal.viewCount > 0 && <span>조회 {journal.viewCount}</span>}
                   </div>
                 </div>
               </Link>

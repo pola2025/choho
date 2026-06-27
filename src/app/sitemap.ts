@@ -1,9 +1,20 @@
 import { MetadataRoute } from "next";
-import { rooms, journals } from "@/lib/data";
+import { rooms } from "@/lib/data";
+import { d1Query } from "@/lib/d1";
 
 const BASE_URL = "https://www.chorigol.co.kr";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+async function getJournalEntries(): Promise<{ id: string; createdAt: string }[]> {
+  try {
+    return await d1Query<{ id: string; createdAt: string }>(
+      `SELECT id, createdAt FROM journals WHERE isPublished = 1 ORDER BY createdAt DESC`
+    );
+  } catch {
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   // 정적 페이지
@@ -48,10 +59,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // 저널 상세 페이지
+  // 저널 상세 페이지 (D1)
+  const journals = await getJournalEntries();
   const journalPages: MetadataRoute.Sitemap = journals.map((journal) => ({
     url: `${BASE_URL}/about/journal/${journal.id}`,
-    lastModified: new Date(journal.createdAt),
+    lastModified: journal.createdAt ? new Date(journal.createdAt) : now,
     changeFrequency: "yearly" as const,
     priority: 0.5,
   }));

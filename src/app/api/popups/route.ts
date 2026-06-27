@@ -1,27 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
-const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
-const AIRTABLE_TABLE_ID = process.env.AIRTABLE_POPUP_TABLE_ID;
-
-const AIRTABLE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`;
-
-interface AirtableRecord {
-  id: string;
-  fields: {
-    Name?: string;
-    name?: string;
-    description?: string;
-    category?: string;
-    Status?: string;
-    status?: string;
-    startDate?: string;
-    endDate?: string;
-    thumbnailUrl?: string;
-    order?: number;
-    isActive?: boolean;
-  };
-}
+import { randomUUID } from "crypto";
+import { d1Query, d1First, d1Run } from "@/lib/d1";
 
 interface PopupArchive {
   id: string;
@@ -36,49 +15,40 @@ interface PopupArchive {
   isActive: boolean;
 }
 
-// Airtable 레코드를 PopupArchive로 변환
-// 에어테이블 필드명: Name, Status (대문자)
-function transformRecord(record: AirtableRecord): PopupArchive {
+type Row = Record<string, unknown>;
+
+function rowToPopup(r: Row): PopupArchive {
   return {
-    id: record.id,
-    name: record.fields.Name || record.fields.name || "",
-    description: record.fields.description || "",
-    category: (record.fields.category as PopupArchive["category"]) || "event",
-    status: (record.fields.Status || record.fields.status) as PopupArchive["status"] || "active",
-    startDate: record.fields.startDate || "",
-    endDate: record.fields.endDate || null,
-    thumbnailUrl: record.fields.thumbnailUrl || "",
-    order: record.fields.order || 0,
-    isActive: record.fields.isActive || false,
+    id: String(r.id),
+    name: String(r.name || ""),
+    description: String(r.description || ""),
+    category: String(r.category || "event") as PopupArchive["category"],
+    status: String(r.status || "active") as PopupArchive["status"],
+    startDate: String(r.startDate || ""),
+    endDate: r.endDate ? String(r.endDate) : null,
+    thumbnailUrl: String(r.thumbnailUrl || ""),
+    order: Number(r.order) || 0,
+    isActive: Number(r.isActive) === 1,
   };
 }
 
-// GET: 팝업 목록 조회
+const ALLOWED = [
+  "name",
+  "description",
+  "category",
+  "status",
+  "startDate",
+  "endDate",
+  "thumbnailUrl",
+  "order",
+  "isActive",
+];
+
+// GET: 팝업 목록 (order asc)
 export async function GET() {
-  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
-    return NextResponse.json(
-      { error: "Airtable 설정이 필요합니다" },
-      { status: 500 }
-    );
-  }
-
   try {
-    const response = await fetch(`${AIRTABLE_URL}?sort[0][field]=order&sort[0][direction]=asc`, {
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new Error(`Airtable API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const popups = data.records.map(transformRecord);
-
-    return NextResponse.json(popups);
+    const rows = await d1Query<Row>(`SELECT * FROM popups ORDER BY "order" ASC`);
+    return NextResponse.json(rows.map(rowToPopup));
   } catch (error) {
     console.error("GET popups error:", error);
     return NextResponse.json(
@@ -90,161 +60,67 @@ export async function GET() {
 
 // POST: 팝업 추가
 export async function POST(request: NextRequest) {
-  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
-    return NextResponse.json(
-      { error: "Airtable 설정이 필요합니다" },
-      { status: 500 }
-    );
-  }
-
   try {
     const body = await request.json();
-
-    const response = await fetch(AIRTABLE_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        records: [
-          {
-            fields: {
-              name: body.name,
-              description: body.description,
-              category: body.category,
-              status: body.status,
-              startDate: body.startDate,
-              endDate: body.endDate || null,
-              thumbnailUrl: body.thumbnailUrl,
-              order: body.order || 0,
-              isActive: body.isActive || false,
-            },
-          },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || "Airtable API error");
-    }
-
-    const data = await response.json();
-    const popup = transformRecord(data.records[0]);
-
-    return NextResponse.json({
-      success: true,
-      popup,
-    });
+    const id = body.id || randomUUID();
+    await d1Run(
+      `INSERT INTO popups (id, name, description, category, status, startDate, endDate, thumbnailUrl, "order", isActive)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        body.name || "",
+        body.description || "",
+        body.category || "event",
+        body.status || "active",
+        body.startDate || "",
+        body.endDate || "",
+        body.thumbnailUrl || "",
+        body.order || 0,
+        body.isActive ? 1 : 0,
+      ]
+    );
+    const row = await d1First<Row>(`SELECT * FROM popups WHERE id = ?`, [id]);
+    return NextResponse.json({ success: true, popup: row ? rowToPopup(row) : null });
   } catch (error) {
     console.error("POST popup error:", error);
-    return NextResponse.json(
-      { error: "팝업 추가 중 오류가 발생했습니다" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "팝업 추가 중 오류가 발생했습니다" }, { status: 500 });
   }
 }
 
 // PATCH: 팝업 수정
 export async function PATCH(request: NextRequest) {
-  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
-    return NextResponse.json(
-      { error: "Airtable 설정이 필요합니다" },
-      { status: 500 }
-    );
-  }
-
   try {
     const body = await request.json();
     const { id, ...fields } = body;
+    if (!id) return NextResponse.json({ error: "id가 필요합니다" }, { status: 400 });
 
-    if (!id) {
-      return NextResponse.json(
-        { error: "id가 필요합니다" },
-        { status: 400 }
-      );
-    }
+    if (typeof fields.isActive === "boolean") fields.isActive = fields.isActive ? 1 : 0;
+    const cols = Object.keys(fields).filter((k) => ALLOWED.includes(k));
+    if (cols.length === 0)
+      return NextResponse.json({ error: "수정할 필드가 없습니다" }, { status: 400 });
 
-    const response = await fetch(AIRTABLE_URL, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        records: [
-          {
-            id,
-            fields,
-          },
-        ],
-      }),
-    });
+    const setClause = cols.map((c) => `"${c}" = ?`).join(", ");
+    const params = cols.map((c) => fields[c] as string | number | null);
+    await d1Run(`UPDATE popups SET ${setClause} WHERE id = ?`, [...params, id]);
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || "Airtable API error");
-    }
-
-    const data = await response.json();
-    const popup = transformRecord(data.records[0]);
-
-    return NextResponse.json({
-      success: true,
-      popup,
-    });
+    const row = await d1First<Row>(`SELECT * FROM popups WHERE id = ?`, [id]);
+    return NextResponse.json({ success: true, popup: row ? rowToPopup(row) : null });
   } catch (error) {
     console.error("PATCH popup error:", error);
-    return NextResponse.json(
-      { error: "팝업 수정 중 오류가 발생했습니다" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "팝업 수정 중 오류가 발생했습니다" }, { status: 500 });
   }
 }
 
 // DELETE: 팝업 삭제
 export async function DELETE(request: NextRequest) {
-  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
-    return NextResponse.json(
-      { error: "Airtable 설정이 필요합니다" },
-      { status: 500 }
-    );
-  }
-
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
-
-    if (!id) {
-      return NextResponse.json(
-        { error: "id가 필요합니다" },
-        { status: 400 }
-      );
-    }
-
-    const response = await fetch(`${AIRTABLE_URL}?records[]=${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || "Airtable API error");
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: "팝업이 삭제되었습니다",
-    });
+    if (!id) return NextResponse.json({ error: "id가 필요합니다" }, { status: 400 });
+    await d1Run(`DELETE FROM popups WHERE id = ?`, [id]);
+    return NextResponse.json({ success: true, message: "팝업이 삭제되었습니다" });
   } catch (error) {
     console.error("DELETE popup error:", error);
-    return NextResponse.json(
-      { error: "팝업 삭제 중 오류가 발생했습니다" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "팝업 삭제 중 오류가 발생했습니다" }, { status: 500 });
   }
 }

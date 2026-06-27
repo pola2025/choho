@@ -38,7 +38,7 @@ export function PoolDiscountPopup() {
       </button>
 
       {/* 팝업 본체 */}
-      <div className="w-full max-w-[420px] mx-auto my-4">
+      <div className="w-full max-w-[420px] md:max-w-[588px] mx-auto my-4">
         <div className="animate-fade-in-up">
           {/* 800x800 팝업 이미지 */}
           <Image
@@ -52,7 +52,7 @@ export function PoolDiscountPopup() {
 
           {/* 예약 버튼 */}
           <a
-            href="https://m.place.naver.com/accommodation/1102553988/home"
+            href="https://pcmap.place.naver.com/accommodation/1149332657/room?bk_query=%EC%B4%88%ED%98%B8%ED%8E%9C%EC%85%98&entry=pbl&from=map&fromNxList=true&fromPanelNum=2&timestamp=202605312206&locale=ko&svcName=map_pcv5&searchText=%EC%B4%88%ED%98%B8%ED%8E%9C%EC%85%98&businessCategory=pension"
             target="_blank"
             rel="noopener noreferrer"
             className="block w-full mt-4 py-3 bg-cyan-600 text-white text-base font-semibold rounded-xl text-center hover:bg-cyan-700 transition-colors shadow-lg"

@@ -76,9 +76,7 @@ export function JournalPreview() {
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-3">
               초호 저널
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground">
-              초호의 소식과 주변 가이드
-            </p>
+            <p className="text-base sm:text-lg text-muted-foreground">초호의 소식과 주변 가이드</p>
           </div>
 
           {/* More Link - Desktop */}
@@ -104,11 +102,7 @@ export function JournalPreview() {
             {journals.map((journal, index) => {
               const categoryInfo = categoryLabels[journal.category] || categoryLabels.event;
               return (
-                <Link
-                  key={journal.id}
-                  href={`/about/journal/${journal.id}`}
-                  className="group"
-                >
+                <Link key={journal.id} href={`/about/journal/${journal.id}`} className="group">
                   <article
                     className="card-premium overflow-hidden h-full flex flex-col"
                     style={{
@@ -117,7 +111,7 @@ export function JournalPreview() {
                   >
                     {/* Thumbnail */}
                     {journal.thumbnail && (
-                      <div className="relative aspect-[5/7] overflow-hidden">
+                      <div className="relative aspect-square overflow-hidden">
                         <img
                           src={journal.thumbnail}
                           alt={journal.title}
@@ -155,9 +149,7 @@ export function JournalPreview() {
                           <Calendar className="w-3.5 h-3.5" />
                           <span>{journal.createdAt}</span>
                         </div>
-                        {journal.viewCount > 0 && (
-                          <span>조회 {journal.viewCount}</span>
-                        )}
+                        {journal.viewCount > 0 && <span>조회 {journal.viewCount}</span>}
                       </div>
                     </div>
                   </article>

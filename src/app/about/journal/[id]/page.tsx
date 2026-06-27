@@ -27,64 +27,34 @@ const categoryLabels: Record<string, { label: string; color: string }> = {
 };
 
 async function getJournal(id: string): Promise<Journal | null> {
-  const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
-  const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const AIRTABLE_TABLE_ID = process.env.AIRTABLE_JOURNAL_TABLE_ID;
-
-  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
-    return null;
-  }
-
   try {
-    const response = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) return null;
-
-    const record = await response.json();
+    const { d1First, d1Run } = await import("@/lib/d1");
+    const r = await d1First<Record<string, unknown>>(`SELECT * FROM journals WHERE id = ?`, [id]);
+    if (!r) return null;
 
     const journal: Journal = {
-      id: record.id,
-      title: record.fields.title || "",
-      excerpt: record.fields.excerpt || "",
-      content: record.fields.content || "",
-      category: record.fields.category || "event",
-      thumbnail: record.fields.thumbnail || "",
-      images: record.fields.images ? String(record.fields.images).split(",").map((s: string) => s.trim()) : [],
-      createdAt: record.fields.createdAt || "",
-      viewCount: record.fields.viewCount || 0,
-      order: record.fields.order || 0,
-      isPublished: record.fields.isPublished ?? true,
+      id: String(r.id),
+      title: String(r.title || ""),
+      excerpt: String(r.excerpt || ""),
+      content: String(r.content || ""),
+      category: String(r.category || "event") as Journal["category"],
+      thumbnail: String(r.thumbnail || ""),
+      images: r.images
+        ? String(r.images)
+            .split(",")
+            .map((s: string) => s.trim())
+            .filter(Boolean)
+        : [],
+      createdAt: String(r.createdAt || ""),
+      viewCount: Number(r.viewCount) || 0,
+      order: Number(r.order) || 0,
+      isPublished: Number(r.isPublished) === 1,
     };
 
     if (!journal.isPublished) return null;
 
     // 조회수 증가 (백그라운드)
-    fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        records: [
-          {
-            id,
-            fields: {
-              viewCount: (journal.viewCount || 0) + 1,
-            },
-          },
-        ],
-      }),
-    }).catch(console.error);
+    d1Run(`UPDATE journals SET viewCount = viewCount + 1 WHERE id = ?`, [id]).catch(console.error);
 
     return journal;
   } catch {
@@ -127,10 +97,7 @@ export default async function JournalDetailPage({ params }: PageProps) {
               홈
             </Link>
             <ChevronRight size={14} />
-            <Link
-              href="/about/journal"
-              className="hover:text-primary transition-colors"
-            >
+            <Link href="/about/journal" className="hover:text-primary transition-colors">
               초호 저널
             </Link>
           </nav>
@@ -181,18 +148,17 @@ export default async function JournalDetailPage({ params }: PageProps) {
           {/* Images - 원본 비율 유지 */}
           {journal.images && journal.images.length > 0 && journal.images[0] && (
             <div className="space-y-6 mb-10">
-              {journal.images.filter(img => img).map((image, index) => (
-                <div
-                  key={index}
-                  className="rounded-xl overflow-hidden border border-border"
-                >
-                  <img
-                    src={image}
-                    alt={`${journal.title} ${index + 1}`}
-                    className="w-full h-auto"
-                  />
-                </div>
-              ))}
+              {journal.images
+                .filter((img) => img)
+                .map((image, index) => (
+                  <div key={index} className="rounded-xl overflow-hidden border border-border">
+                    <img
+                      src={image}
+                      alt={`${journal.title} ${index + 1}`}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                ))}
             </div>
           )}
 

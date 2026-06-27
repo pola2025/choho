@@ -15,49 +15,29 @@ export const metadata: Metadata = {
   },
 };
 
-// 에어테이블에서 초리골 역사 데이터 가져오기
+// D1에서 초리골 역사 데이터 가져오기
 async function getChorigolHistory(): Promise<ChorigolHistory[]> {
-  const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
-  const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const AIRTABLE_TABLE_ID = process.env.AIRTABLE_CHORIGOL_HISTORY_TABLE_ID;
-
-  // 환경 변수가 없으면 기본 데이터 반환
-  if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_ID) {
-    return defaultHistoryData;
-  }
-
   try {
-    const filterFormula = encodeURIComponent("{isPublished}=TRUE()");
-    const response = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}?filterByFormula=${filterFormula}&sort[0][field]=order&sort[0][direction]=asc`,
-      {
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        next: { revalidate: 3600 }, // 1시간 캐시
-      }
+    const { d1Query, isD1Configured } = await import("@/lib/d1");
+    if (!isD1Configured()) return defaultHistoryData;
+
+    const rows = await d1Query<Record<string, unknown>>(
+      `SELECT * FROM chorigol_histories WHERE isPublished = 1 ORDER BY "order" ASC`
     );
 
-    if (!response.ok) return defaultHistoryData;
+    if (!rows || rows.length === 0) return defaultHistoryData;
 
-    const data = await response.json();
-
-    if (!data.records || data.records.length === 0) {
-      return defaultHistoryData;
-    }
-
-    return data.records.map((record: { id: string; fields: Record<string, unknown> }) => ({
-      id: record.id,
-      year: record.fields.year || "",
-      title: record.fields.title || "",
-      content: record.fields.content || "",
-      source: record.fields.source || "",
-      sourceUrl: record.fields.sourceUrl || "",
-      category: record.fields.category || "history",
-      order: record.fields.order || 0,
-      viewCount: (record.fields.viewCount as number) || 0,
-      isPublished: record.fields.isPublished ?? true,
+    return rows.map((r) => ({
+      id: String(r.id),
+      year: String(r.year || ""),
+      title: String(r.title || ""),
+      content: String(r.content || ""),
+      source: String(r.source || ""),
+      sourceUrl: String(r.sourceUrl || ""),
+      category: String(r.category || "history") as ChorigolHistory["category"],
+      order: Number(r.order) || 0,
+      viewCount: Number(r.viewCount) || 0,
+      isPublished: Number(r.isPublished) === 1,
     }));
   } catch {
     return defaultHistoryData;
