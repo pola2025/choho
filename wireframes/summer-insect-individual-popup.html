@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>여름철 날벌레 안내 — 개별 팝업 와이어프레임</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+      }
+      .font-serif {
+        font-family: "Noto Serif KR", serif;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeUp 0.6s ease-out both;
+      }
+      @keyframes drift {
+        0% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(4px, -6px);
+        }
+        100% {
+          transform: translate(0, 0);
+        }
+      }
+      .bug {
+        animation: drift 3s ease-in-out infinite;
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+      .bug2 {
+        animation: drift 3.6s ease-in-out infinite;
+      }
+      .bug3 {
+        animation: drift 4.2s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-stone-100 text-stone-800">
+    <div class="max-w-6xl mx-auto px-5 py-10">
+      <header class="mb-8 text-center">
+        <p class="text-xs tracking-[0.3em] text-stone-400 uppercase mb-1">
+          Wireframe · Confirm before build
+        </p>
+        <h1 class="font-serif text-2xl md:text-3xl font-bold text-stone-900">
+          여름철 날벌레 안내 — 개별 팝업 시안
+        </h1>
+        <p class="text-sm text-stone-500 mt-2">
+          담백한 '참고 안내' 톤 · 기존 체크리스트 팝업과 별개로 추가되는 신규 팝업입니다.
+        </p>
+        <p
+          class="text-[13px] text-stone-600 mt-3 bg-white inline-block px-4 py-2 rounded-full border border-stone-200"
+        >
+          문구:
+          <strong>"객실 주변으로 여름철 숲 특성상 날벌레가 많습니다. 이용에 참고 바랍니다."</strong>
+        </p>
+      </header>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- ========================= 시안 A ========================= -->
+        <section>
+          <div class="flex items-center gap-2 mb-3">
+            <span
+              class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold"
+              >A</span
+            >
+            <h2 class="font-semibold text-stone-800">미니멀 자연형 — 숲 그린 + 일러스트</h2>
+          </div>
+          <!-- 오버레이 재현 -->
+          <div
+            class="rounded-3xl bg-black/70 p-6 md:p-10 flex items-center justify-center min-h-[560px]"
+          >
+            <div
+              class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-[360px] w-full animate-fade-in-up relative"
+            >
+              <!-- close -->
+              <button
+                class="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-sm border border-stone-200"
+              >
+                <svg
+                  class="w-4 h-4 text-stone-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-width="2" d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+
+              <!-- 숲 일러스트 헤더 -->
+              <div
+                class="relative bg-gradient-to-b from-emerald-50 to-green-50 pt-8 pb-6 overflow-hidden"
+              >
+                <svg viewBox="0 0 280 120" class="w-full h-auto px-6" aria-hidden="true">
+                  <!-- 언덕 -->
+                  <ellipse cx="140" cy="118" rx="150" ry="20" fill="#d7ebd9" />
+                  <!-- 나무들 -->
+                  <g>
+                    <rect x="62" y="74" width="6" height="28" rx="2" fill="#a98467" />
+                    <path d="M65 26 L88 70 L42 70 Z" fill="#6aa56e" />
+                    <path d="M65 40 L84 76 L46 76 Z" fill="#7bb87f" />
+                  </g>
+                  <g>
+                    <rect x="210" y="80" width="5" height="24" rx="2" fill="#a98467" />
+                    <path d="M212 38 L230 76 L194 76 Z" fill="#74b178" />
+                    <path d="M212 50 L227 80 L197 80 Z" fill="#86c389" />
+                  </g>
+                  <!-- 가운데 큰 잎 -->
+                  <g transform="translate(140 60)">
+                    <ellipse cx="0" cy="0" rx="34" ry="20" fill="#8fcf93" />
+                    <path d="M-34 0 Q0 -4 34 0" stroke="#5d9e62" stroke-width="1.5" fill="none" />
+                    <path d="M0 -18 Q4 0 0 18" stroke="#5d9e62" stroke-width="1.2" fill="none" />
+                  </g>
+                  <!-- 날벌레 점선 -->
+                  <g stroke="#9aa0a6" stroke-width="1" fill="none">
+                    <g class="bug">
+                      <circle cx="100" cy="34" r="2.4" fill="#6b7280" />
+                      <path d="M97 32 q-4 -3 -7 0 M103 32 q4 -3 7 0" />
+                    </g>
+                    <g class="bug2">
+                      <circle cx="186" cy="46" r="2" fill="#6b7280" />
+                      <path d="M183 44 q-3 -2 -6 0 M189 44 q3 -2 6 0" />
+                    </g>
+                    <g class="bug3">
+                      <circle cx="150" cy="24" r="1.8" fill="#6b7280" />
+                      <path d="M147 22 q-3 -2 -5 0 M153 22 q3 -2 5 0" />
+                    </g>
+                  </g>
+                </svg>
+              </div>
+
+              <!-- 본문 -->
+              <div class="px-7 pt-5 pb-6 text-center">
+                <span
+                  class="inline-block text-[11px] font-semibold tracking-wider text-emerald-700 bg-emerald-50 rounded-full px-3 py-1 mb-3"
+                  >SUMMER NOTICE · 여름철 안내</span
+                >
+                <h3 class="font-serif text-[19px] font-bold text-stone-900 leading-snug mb-3">
+                  객실 주변으로<br />여름철 날벌레가 많습니다
+                </h3>
+                <p class="text-[13.5px] text-stone-500 leading-relaxed">
+                  초호는 자연 속 <strong class="text-stone-700">산기슭 숲</strong>에 위치해 있어,<br />
+                  여름철에는 날벌레가 많은 편입니다.<br />
+                  이용에 참고 부탁드립니다.
+                </p>
+
+                <button
+                  class="w-full mt-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition-colors"
+                >
+                  확인했습니다
+                </button>
+                <button
+                  class="w-full mt-2 py-2 text-xs text-stone-400 hover:text-stone-600 transition-colors"
+                >
+                  오늘 하루 보지 않기
+                </button>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs text-stone-500 mt-3 leading-relaxed">
+            · 숲/잎 일러스트로 '자연환경 특성'을 부드럽게 전달<br />
+            · 지시문 없이 정보 제공 톤 · 그린 컬러로 기존 amber 팝업과 시각적 구분
+          </p>
+        </section>
+
+        <!-- ========================= 시안 B ========================= -->
+        <section>
+          <div class="flex items-center gap-2 mb-3">
+            <span
+              class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-xs font-bold"
+              >B</span
+            >
+            <h2 class="font-semibold text-stone-800">컴팩트 안내형 — 아이콘 배지 + 한 단락</h2>
+          </div>
+          <div
+            class="rounded-3xl bg-black/70 p-6 md:p-10 flex items-center justify-center min-h-[560px]"
+          >
+            <div
+              class="bg-white rounded-2xl shadow-2xl overflow-hidden max-w-[340px] w-full animate-fade-in-up relative"
+            >
+              <button
+                class="absolute top-3 right-3 z-10 w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow-sm border border-stone-200"
+              >
+                <svg
+                  class="w-4 h-4 text-stone-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path stroke-linecap="round" stroke-width="2" d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+
+              <div class="px-7 pt-8 pb-7 text-center">
+                <!-- 아이콘 배지 -->
+                <div
+                  class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-lime-100 to-emerald-100 flex items-center justify-center border border-emerald-100"
+                >
+                  <svg viewBox="0 0 48 48" class="w-9 h-9" aria-hidden="true">
+                    <!-- 잎 -->
+                    <path d="M24 8 C12 12 10 30 24 40 C38 30 36 12 24 8 Z" fill="#86c389" />
+                    <path d="M24 12 L24 38" stroke="#5d9e62" stroke-width="1.5" />
+                    <path
+                      d="M24 20 L16 16 M24 26 L32 22 M24 32 L17 29"
+                      stroke="#5d9e62"
+                      stroke-width="1.2"
+                    />
+                    <!-- 작은 벌레 -->
+                    <g class="bug">
+                      <circle cx="36" cy="13" r="2.4" fill="#6b7280" />
+                      <path
+                        d="M33 11 q-3 -2 -5 0 M39 11 q3 -2 5 0"
+                        stroke="#9aa0a6"
+                        stroke-width="1"
+                        fill="none"
+                      />
+                    </g>
+                  </svg>
+                </div>
+
+                <h3 class="font-serif text-[18px] font-bold text-stone-900 mb-1">
+                  여름철 날벌레 안내
+                </h3>
+                <p class="text-[11px] tracking-wider text-amber-700 font-medium mb-4">
+                  SUMMER INSECT NOTICE
+                </p>
+
+                <div class="bg-stone-50 rounded-xl px-5 py-4 border border-stone-100">
+                  <p class="text-[14px] text-stone-700 leading-relaxed">
+                    객실 주변으로 여름철
+                    <strong class="text-stone-900">숲 특성상<br />날벌레가 많습니다.</strong>
+                  </p>
+                  <p class="text-[12.5px] text-stone-400 mt-2">이용에 참고 바랍니다.</p>
+                </div>
+
+                <button
+                  class="w-full mt-5 py-3 bg-stone-800 hover:bg-stone-900 text-white text-sm font-semibold rounded-xl transition-colors"
+                >
+                  확인했습니다
+                </button>
+                <button
+                  class="w-full mt-2 py-2 text-xs text-stone-400 hover:text-stone-600 transition-colors"
+                >
+                  오늘 하루 보지 않기
+                </button>
+              </div>
+            </div>
+          </div>
+          <p class="text-xs text-stone-500 mt-3 leading-relaxed">
+            · 가장 간결 · 주신 문구를 거의 그대로 노출<br />
+            · 작은 화면에서도 시선 집중 · 중립적 stone 버튼으로 담백함 강조
+          </p>
+        </section>
+      </div>
+
+      <!-- 모바일 미리보기 안내 -->
+      <div class="mt-10 text-center">
+        <div class="inline-block bg-white rounded-2xl border border-stone-200 px-6 py-4 shadow-sm">
+          <p class="text-sm text-stone-600">
+            📱 두 시안 모두 <strong>모바일 단일 컬럼</strong>으로 동작 (max-w 340~360px) · 노출
+            타이밍 0.8초 후 · <strong>localStorage</strong> '오늘 하루 보지 않기' 지원
+          </p>
+        </div>
+      </div>
+
+      <footer class="mt-8 text-center text-xs text-stone-400">
+        선택해 주시면 해당 시안으로 <code>SummerInsectIndividualPopup.tsx</code>를 구현하고
+        page.tsx에 추가합니다.
+      </footer>
+    </div>
+  </body>
+</html>

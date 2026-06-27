@@ -10,6 +10,7 @@ import {
 import { PoolDiscountPopup } from "@/components/PoolDiscountPopup";
 import { SpringPopup } from "@/components/SpringPopup";
 import { SummerInsectPopup } from "@/components/SummerInsectPopup";
+import { SummerInsectIndividualPopup } from "@/components/SummerInsectIndividualPopup";
 import { AnimalStrip } from "@/components/WanderingAnimals";
 import { FAQJsonLd } from "@/components/JsonLd";
 
@@ -64,8 +65,9 @@ export default function Home() {
         <Facilities />
         <AnimalStrip animals={["black-rabbit", "white-rabbit"]} />
         <JournalPreview />
-        {/* 팝업 노출 순서: 수영장(맨 앞) → 닫으면 여름벌레 → 이용안내 순으로 보임 (z-index로 제어) */}
+        {/* 팝업 노출 순서: 수영장(56) → 날벌레 안내(53) → 여름벌레 체크리스트(52) → 봄(51) (z-index로 제어) */}
         <PoolDiscountPopup />
+        <SummerInsectIndividualPopup />
         <SummerInsectPopup />
         <SpringPopup />
       </main>
