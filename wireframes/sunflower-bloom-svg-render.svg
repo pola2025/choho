@@ -85,7 +85,7 @@
     <text x="540" y="154" font-family="Malgun Gothic, Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="25" font-weight="900" fill="#7a540c">초호쉼터 소식</text>
     <text x="540" y="280" font-family="Batang, Gungsuh, Malgun Gothic, serif" font-size="84" font-weight="900" fill="#211d14" filter="url(#titleShadow)">해바라기</text>
     <text x="540" y="380" font-family="Batang, Gungsuh, Malgun Gothic, serif" font-size="84" font-weight="900" fill="#211d14" filter="url(#titleShadow)">개화 안내</text>
-    <text x="540" y="455" font-family="Malgun Gothic, Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="34" font-weight="800" fill="#635947">이번 주말부터 개화 시작 예상</text>
+    <text x="540" y="455" font-family="Malgun Gothic, Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="34" font-weight="800" fill="#635947">이번주말부터</text>
   </g>
 
   <g filter="url(#cardShadow)">
@@ -95,17 +95,17 @@
     <rect x="166" y="528" width="748" height="360" rx="36" fill="none" stroke="#ffffff" stroke-width="8"/>
   </g>
 
-  <g transform="translate(717 500)" filter="url(#softShadow)">
-    <path d="M34 0 H196 C219 0 238 18 238 41 C238 64 219 82 196 82 H34 C15 82 0 67 0 48 V34 C0 15 15 0 34 0 Z" fill="#ffffff" fill-opacity="0.93"/>
-    <path d="M35 10 H193 C210 10 224 24 224 41 C224 58 210 72 193 72 H35 C21 72 10 61 10 47 V35 C10 21 21 10 35 10 Z" fill="#f5c31f"/>
-    <path d="M209 20 C230 21 248 35 256 58 C232 61 215 54 202 39 C197 33 201 20 209 20 Z" fill="#8dbb64" opacity="0.78"/>
-    <path d="M50 48 C82 25 126 24 160 47" fill="none" stroke="#8a6814" stroke-width="4" stroke-linecap="round" opacity="0.35"/>
-    <text x="117" y="53" text-anchor="middle" font-family="Malgun Gothic, Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="25" font-weight="900" fill="#3f3211">산책로 옆</text>
+  <g transform="translate(612 500)" filter="url(#softShadow)">
+    <path d="M34 0 H302 C325 0 344 18 344 41 C344 64 325 82 302 82 H34 C15 82 0 67 0 48 V34 C0 15 15 0 34 0 Z" fill="#ffffff" fill-opacity="0.93"/>
+    <path d="M35 10 H299 C316 10 330 24 330 41 C330 58 316 72 299 72 H35 C21 72 10 61 10 47 V35 C10 21 21 10 35 10 Z" fill="#f5c31f"/>
+    <path d="M315 20 C336 21 354 35 362 58 C338 61 321 54 308 39 C303 33 307 20 315 20 Z" fill="#8dbb64" opacity="0.78"/>
+    <path d="M50 48 C100 25 174 24 226 47" fill="none" stroke="#8a6814" stroke-width="4" stroke-linecap="round" opacity="0.35"/>
+    <text x="170" y="53" text-anchor="middle" font-family="Malgun Gothic, Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="25" font-weight="900" fill="#3f3211">초호쉼터내 산책로 옆</text>
   </g>
 
   <g text-anchor="middle" font-family="Malgun Gothic, Apple SD Gothic Neo, Noto Sans KR, sans-serif">
     <rect x="504" y="927" width="72" height="6" rx="3" fill="#d8aa22"/>
     <text x="540" y="978" font-size="31" font-weight="900" fill="#5a513f">초호쉼터에서 활짝 핀 해바라기를 만나보세요</text>
-    <text x="540" y="1022" font-size="21" font-weight="800" fill="#958875">2026. 7. 1. · 초호펜션 초호쉼터</text>
+    <text x="540" y="1022" font-size="21" font-weight="800" fill="#958875">2026.07.04~</text>
   </g>
 </svg>
