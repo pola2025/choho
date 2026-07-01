@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, initial-scale=1.0" />
+    <title>초호쉼터 해바라기 개화 안내 렌더 이미지</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1080px;
+        height: 1080px;
+        margin: 0;
+        overflow: hidden;
+        font-family: "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        background: #f5efe0;
+      }
+
+      .canvas {
+        position: relative;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 18% 12%, rgba(255, 225, 90, 0.42) 0, rgba(255, 225, 90, 0) 250px),
+          radial-gradient(circle at 88% 82%, rgba(111, 156, 84, 0.35) 0, rgba(111, 156, 84, 0) 320px),
+          linear-gradient(145deg, #fff8df 0%, #f7f1df 45%, #eef4df 100%);
+      }
+
+      .sun {
+        position: absolute;
+        width: 270px;
+        height: 270px;
+        right: 92px;
+        top: 74px;
+        border-radius: 50%;
+        background: #ffd847;
+        box-shadow: 0 28px 65px rgba(192, 138, 18, 0.22);
+      }
+
+      .sun::before,
+      .sun::after {
+        content: "";
+        position: absolute;
+        inset: 38px;
+        border-radius: 50%;
+        border: 3px solid rgba(116, 85, 16, 0.22);
+      }
+
+      .sun::after {
+        inset: 78px;
+        border-color: rgba(116, 85, 16, 0.14);
+      }
+
+      .leaf {
+        position: absolute;
+        width: 170px;
+        height: 82px;
+        border-radius: 100% 0 100% 0;
+        background: rgba(114, 154, 82, 0.2);
+        transform: rotate(-24deg);
+      }
+
+      .leaf.one {
+        left: 78px;
+        top: 116px;
+      }
+
+      .leaf.two {
+        right: 76px;
+        bottom: 104px;
+        width: 220px;
+        height: 104px;
+        transform: rotate(23deg);
+        background: rgba(91, 132, 74, 0.18);
+      }
+
+      .content {
+        position: relative;
+        height: 100%;
+        padding: 76px 84px 68px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .brand {
+        color: #9b8a6e;
+        font-size: 22px;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      .pill {
+        margin-top: 20px;
+        padding: 13px 28px 14px;
+        border-radius: 999px;
+        border: 2px solid rgba(225, 172, 43, 0.48);
+        background: rgba(255, 255, 255, 0.7);
+        color: #8a650d;
+        font-size: 24px;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      h1 {
+        margin: 46px 0 0;
+        text-align: center;
+        color: #222016;
+        font-family: "Batang", "Gungsuh", "Malgun Gothic", serif;
+        font-size: 88px;
+        font-weight: 900;
+        line-height: 1.08;
+      }
+
+      .subtitle {
+        margin: 24px 0 0;
+        color: #685f4e;
+        text-align: center;
+        font-size: 31px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .photoWrap {
+        position: relative;
+        margin-top: 48px;
+        width: 742px;
+        height: 390px;
+      }
+
+      .photoFrame {
+        width: 100%;
+        height: 100%;
+        padding: 13px;
+        border-radius: 42px;
+        background: #ffffff;
+        box-shadow: 0 26px 58px rgba(68, 68, 42, 0.24);
+      }
+
+      .photoFrame img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 32px;
+        object-fit: cover;
+        object-position: 50% 54%;
+      }
+
+      .badge {
+        position: absolute;
+        right: -32px;
+        top: -30px;
+        width: 145px;
+        height: 145px;
+        border-radius: 50%;
+        border: 7px solid #ffffff;
+        background: #ffd847;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #493c13;
+        font-size: 24px;
+        font-weight: 900;
+        line-height: 1.16;
+        box-shadow: 0 17px 38px rgba(68, 68, 42, 0.22);
+        transform: rotate(7deg);
+      }
+
+      .bottom {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 13px;
+        color: #5b5647;
+        text-align: center;
+      }
+
+      .bottom .line {
+        width: 72px;
+        height: 5px;
+        border-radius: 999px;
+        background: #e5b72e;
+      }
+
+      .bottom strong {
+        font-size: 29px;
+        line-height: 1.35;
+      }
+
+      .bottom span {
+        color: #958874;
+        font-size: 20px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="canvas">
+      <div class="sun"></div>
+      <div class="leaf one"></div>
+      <div class="leaf two"></div>
+
+      <section class="content" aria-label="초호쉼터 해바라기 개화 안내">
+        <div class="brand">CHOHOPARK</div>
+        <div class="pill">초호쉼터 소식</div>
+
+        <h1>해바라기<br />개화 안내</h1>
+        <p class="subtitle">이번 주말부터 개화 시작 예상</p>
+
+        <div class="photoWrap">
+          <div class="photoFrame">
+            <img
+              src="../public/images/journal/sunflower-bloom-2026/sunflower-field-close.webp"
+              alt="초호쉼터 산책로 옆 해바라기"
+            />
+          </div>
+          <div class="badge">산책로<br />옆</div>
+        </div>
+
+        <div class="bottom">
+          <div class="line"></div>
+          <strong>초호쉼터에서 활짝 핀 해바라기를 만나보세요</strong>
+          <span>2026. 7. 1. · 초호펜션 초호쉼터</span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
