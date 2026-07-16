@@ -62,10 +62,16 @@ function iconOf(w: Weather, k: Kind) {
 const dirName = (d: number) =>
   ["북", "북동", "동", "남동", "남", "남서", "서", "북서"][Math.round(d / 45) % 8] + "풍";
 
+const SHOW_MS = 30_000; // 첫인상만 주고 사라진다. 계속 떠 있으면 히어로 사진을 가린다
+const FADE_MS = 1_200;
+
 export function WeatherBadge() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [wx, setWx] = useState<Weather | null>(null);
+  const [hidden, setHidden] = useState(false);
+  // 페이드가 끝나면 캔버스를 멈춰야 한다 — 안 보이는 걸 계속 그리면 배터리만 먹는다
+  const hiddenAtRef = useRef<number>(0);
 
   useEffect(() => {
     let alive = true;
@@ -80,6 +86,16 @@ export function WeatherBadge() {
       alive = false;
     };
   }, []);
+
+  // 날씨가 뜬 시점부터 30초 뒤 사라진다
+  useEffect(() => {
+    if (!wx) return;
+    const t = setTimeout(() => {
+      hiddenAtRef.current = performance.now();
+      setHidden(true);
+    }, SHOW_MS);
+    return () => clearTimeout(t);
+  }, [wx]);
 
   useEffect(() => {
     if (!wx) return;
@@ -434,6 +450,11 @@ export function WeatherBadge() {
     resize();
 
     const frame = (now: number) => {
+      // 페이드아웃이 끝났으면 rAF를 재요청하지 않는다 (안 보이는 캔버스를 계속 그릴 이유가 없다)
+      if (hiddenAtRef.current && now - hiddenAtRef.current > FADE_MS) {
+        c.clearRect(0, 0, W, H);
+        return;
+      }
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       t += dt;
@@ -535,8 +556,11 @@ export function WeatherBadge() {
       ref={wrapRef}
       // 상단 고정배너(공지)가 뷰포트마다 다른 높이까지 덮는다: 모바일 184 / md 168 / lg 152px.
       // 그 아래로 내려야 뱃지가 가려지지 않는다.
-      className="absolute top-48 left-4 z-10 lg:top-44 lg:left-8"
-      style={{ width: BADGE_W }}
+      className={`absolute top-48 left-4 z-10 pointer-events-none transition-opacity ease-out lg:top-44 lg:left-8 ${
+        hidden ? "opacity-0" : "opacity-100"
+      }`}
+      style={{ width: BADGE_W, transitionDuration: `${FADE_MS}ms` }}
+      aria-hidden={hidden}
     >
       <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/35 backdrop-blur-md border border-white/15">
         <span className="text-xl leading-none">{iconOf(wx, K)}</span>
