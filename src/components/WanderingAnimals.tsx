@@ -306,24 +306,38 @@ function Animal({ type, baseX }: { type: AnimalType; baseX: number }) {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [extraStyle, setExtraStyle] = useState("");
 
+  // 이동 범위: 스트립(=뷰포트 폭) 밖으로 나가면 가로 스크롤이 생기므로 폭을 실측해 제한
+  const boundsRef = useRef({ min: -120, max: 120 });
+
+  const measureBounds = useCallback(() => {
+    const stripW = containerRef.current?.parentElement?.clientWidth ?? 0;
+    if (!stripW) return;
+    // 토끼는 이동 중 1.3배로 늘어나므로 최대 폭 기준
+    const maxW = info.kind === "rabbit" ? info.size * 1.3 : info.size;
+    const originLeft = (baseX / 100) * stripW;
+    const min = Math.max(-120, -originLeft);
+    const max = Math.min(120, stripW - maxW - originLeft);
+    boundsRef.current = { min, max: Math.max(min, max) };
+  }, [info.kind, info.size, baseX]);
+
+  useEffect(() => {
+    measureBounds();
+    window.addEventListener("resize", measureBounds);
+    return () => window.removeEventListener("resize", measureBounds);
+  }, [measureBounds]);
+
   const startMove = useCallback(() => {
     const s = stateRef.current;
     const kind = info.kind;
+    const { min, max } = boundsRef.current;
+    const clamp = (x: number) => Math.max(min, Math.min(max, x));
 
-    if (kind === "rabbit") {
-      // 깡총: 30~70px 점프
-      const hopDist = 30 + Math.random() * 40;
-      const dir = Math.random() > 0.5 ? 1 : -1;
-      s.targetX = s.x + dir * hopDist;
-      // 범위 제한 (-120 ~ 120)
-      s.targetX = Math.max(-120, Math.min(120, s.targetX));
-    } else {
-      // 알파카/거위: 40~100px 이동
-      const dist = 40 + Math.random() * 60;
-      const dir = Math.random() > 0.5 ? 1 : -1;
-      s.targetX = s.x + dir * dist;
-      s.targetX = Math.max(-120, Math.min(120, s.targetX));
-    }
+    // 깡총: 30~70px 점프 / 알파카·거위: 40~100px 이동
+    const dist = kind === "rabbit" ? 30 + Math.random() * 40 : 40 + Math.random() * 60;
+    const dir = Math.random() > 0.5 ? 1 : -1;
+    s.targetX = clamp(s.x + dir * dist);
+    // 가장자리에 막히면 반대 방향으로 (제자리에 붙어있지 않도록)
+    if (Math.abs(s.targetX - s.x) < 5) s.targetX = clamp(s.x - dir * dist);
 
     s.facing = s.targetX > s.x ? 1 : -1;
     s.phase = "moving";
@@ -453,6 +467,9 @@ function Animal({ type, baseX }: { type: AnimalType; baseX: number }) {
           }
         }
       }
+
+      // 리사이즈·회전으로 범위가 좁아진 경우 보정
+      s.x = Math.max(boundsRef.current.min, Math.min(boundsRef.current.max, s.x));
 
       setPos({ x: s.x, y: s.y });
 
