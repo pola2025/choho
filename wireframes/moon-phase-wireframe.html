@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>초호쉼터 — 밤 달 위상 와이어프레임</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <style>
+      body {
+        font-family: Pretendard, system-ui, sans-serif;
+      }
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        height: 4px;
+        border-radius: 99px;
+        background: #3f3f46;
+        outline: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 99px;
+        background: #fbbf24;
+        cursor: pointer;
+        border: 2px solid #18181b;
+      }
+      .hero-fallback {
+        background: linear-gradient(#1e3a5f, #0f172a 55%, #1a1f2e);
+      }
+    </style>
+  </head>
+  <body class="bg-zinc-950 text-zinc-100">
+    <div class="max-w-[1400px] mx-auto px-6 py-8">
+      <header class="mb-6">
+        <h1 class="text-2xl font-bold">
+          밤 달 위상 <span class="text-zinc-500 font-normal text-lg">— 와이어프레임</span>
+        </h1>
+        <p class="text-sm text-zinc-400 mt-1.5">
+          해가 지면 뱃지의 해가 <b class="text-amber-300">그날의 실제 달</b>로 바뀐다.
+          위상·기울기·고도 전부 파주 초리골(37.8641, 126.9347) 기준 계산값.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 items-start">
+        <!-- ========== 히어로 미리보기 ========== -->
+        <div>
+          <div
+            id="hero"
+            class="hero-fallback relative rounded-2xl overflow-hidden border border-zinc-800"
+            style="height: 620px; background-size: cover; background-position: center"
+          >
+            <!-- 밤 오버레이: 해가 질수록 히어로가 어두워진다 -->
+            <div
+              id="nightVeil"
+              class="absolute inset-0 pointer-events-none transition-opacity duration-500"
+            ></div>
+
+            <!-- 상단 고정배너 자리 (실제 페이지의 공지배너) -->
+            <div
+              class="absolute top-0 inset-x-0 h-[152px] bg-zinc-900/70 backdrop-blur-sm border-b border-white/10 flex items-center justify-center"
+            >
+              <span class="text-[11px] text-zinc-500 tracking-widest"
+                >상단 고정배너 영역 (152px · lg 기준)</span
+              >
+            </div>
+
+            <!-- 뱃지 -->
+            <div
+              id="badge"
+              class="absolute left-8 z-10 pointer-events-none"
+              style="top: 176px; width: 210px"
+            >
+              <div
+                class="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/35 backdrop-blur-md border border-white/15"
+              >
+                <span id="bIcon" class="text-xl leading-none">🌙</span>
+                <div class="leading-tight min-w-0">
+                  <div id="bMain" class="text-white text-sm font-semibold truncate">
+                    초승달 · 24°
+                  </div>
+                  <div id="bSub" class="text-white/60 text-[10px] truncate">
+                    파주 초리골 · 바람 1.4m/s 남서풍
+                  </div>
+                  <div id="bMoon" class="text-amber-200/70 text-[10px] truncate">
+                    월령 2.9일 · 13% · 21:54 짐
+                  </div>
+                </div>
+              </div>
+              <canvas id="cv" class="block mt-1.5"></canvas>
+            </div>
+
+            <div class="absolute bottom-4 right-4 text-[11px] text-white/40 font-mono" id="clock">
+              2026-07-17 21:00 KST
+            </div>
+          </div>
+
+          <!-- ========== 한 달 위상 스트립 ========== -->
+          <div class="mt-5 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+            <div class="flex items-baseline justify-between mb-3">
+              <h2 class="text-sm font-semibold text-zinc-200">
+                이번 삭망월 <span id="stripRange" class="text-zinc-500 font-normal"></span>
+              </h2>
+              <span class="text-[11px] text-zinc-500">클릭하면 그 날짜로 이동</span>
+            </div>
+            <div id="strip" class="grid grid-cols-10 sm:grid-cols-15 gap-1.5"></div>
+          </div>
+        </div>
+
+        <!-- ========== 컨트롤 ========== -->
+        <div class="space-y-4">
+          <div class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 space-y-4">
+            <h2 class="text-sm font-semibold text-zinc-200">시각</h2>
+
+            <label class="block">
+              <span class="text-[11px] text-zinc-500">날짜</span>
+              <input
+                id="date"
+                type="date"
+                value="2026-07-17"
+                class="mt-1 w-full bg-zinc-800 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-sm"
+              />
+            </label>
+
+            <label class="block">
+              <div class="flex justify-between text-[11px]">
+                <span class="text-zinc-500">시각</span>
+                <span id="timeVal" class="text-amber-300 font-mono">21:00</span>
+              </div>
+              <input
+                id="time"
+                type="range"
+                min="0"
+                max="1439"
+                step="10"
+                value="1260"
+                class="mt-1.5 w-full"
+              />
+              <div class="flex justify-between text-[9px] text-zinc-600 mt-1">
+                <span>00</span><span>06</span><span>12</span><span>18</span><span>24</span>
+              </div>
+            </label>
+
+            <div class="grid grid-cols-3 gap-1.5">
+              <button
+                data-jump="sunset"
+                class="jump text-[11px] py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700"
+              >
+                일몰
+              </button>
+              <button
+                data-jump="night"
+                class="jump text-[11px] py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700"
+              >
+                한밤
+              </button>
+              <button
+                data-jump="now"
+                class="jump text-[11px] py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700"
+              >
+                지금
+              </button>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4 space-y-3">
+            <h2 class="text-sm font-semibold text-zinc-200">하늘 (기상청 실황)</h2>
+            <div class="grid grid-cols-2 gap-1.5" id="kinds"></div>
+          </div>
+
+          <!-- 결정이 필요한 부분 -->
+          <div class="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3">
+            <h2 class="text-sm font-semibold text-amber-200">결정 필요</h2>
+
+            <label class="flex gap-2.5 cursor-pointer">
+              <input id="optGate" type="checkbox" checked class="mt-0.5 accent-amber-400" />
+              <span class="text-[11px] leading-relaxed">
+                <b class="text-zinc-200 text-xs">달이 졌으면 안 그린다</b><br />
+                <span class="text-zinc-500"
+                  >밤이어도 달 고도가 0° 아래면 하늘에 달이 없다. 끄면 없는 달을 그리게 된다.</span
+                >
+              </span>
+            </label>
+
+            <label class="flex gap-2.5 cursor-pointer">
+              <input id="optTilt" type="checkbox" checked class="mt-0.5 accent-amber-400" />
+              <span class="text-[11px] leading-relaxed">
+                <b class="text-zinc-200 text-xs">실제 기울기 적용</b><br />
+                <span class="text-zinc-500"
+                  >밝은 쪽이 해를 향한다. 끄면 항상 정확히 좌/우로만 찬다.</span
+                >
+              </span>
+            </label>
+
+            <label class="flex gap-2.5 cursor-pointer">
+              <input id="optShine" type="checkbox" checked class="mt-0.5 accent-amber-400" />
+              <span class="text-[11px] leading-relaxed">
+                <b class="text-zinc-200 text-xs">지구조(地球照)</b><br />
+                <span class="text-zinc-500"
+                  >초승·그믐달의 어두운 면이 지구 반사광에 희미하게 보이는 현상.</span
+                >
+              </span>
+            </label>
+
+            <label class="flex gap-2.5 cursor-pointer">
+              <input id="optLine" type="checkbox" class="mt-0.5 accent-amber-400" />
+              <span class="text-[11px] leading-relaxed">
+                <b class="text-zinc-200 text-xs">달 전체 윤곽선</b><br />
+                <span class="text-zinc-500"
+                  >안 보이는 부분까지 원으로 표시. 아이콘처럼 읽히지만 실제 하늘과는 다르다.</span
+                >
+              </span>
+            </label>
+          </div>
+
+          <div class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+            <h2 class="text-sm font-semibold text-zinc-200 mb-3">계산값</h2>
+            <dl id="info" class="text-[11px] space-y-1.5 font-mono"></dl>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-8 text-[11px] text-zinc-600 leading-relaxed">
+        위상 = Meeus <i>Astronomical Algorithms</i> 47·48장 — 2026년 삭·망 4개 시점 대조 시 오차
+        k&lt;0.0001. 고도 = 저정밀 태양/달 위치 → 지평좌표 변환(오차 ~0.3°). 월출·월몰은 10분 스캔
+        후 이분법. 운영 전 천문연(KASI) 공식값과 1회 대조 권장.
+      </p>
+    </div>
+
+    <script>
+      /* =========================================================
+       * 천문 계산 — 그대로 WeatherBadge.tsx로 옮길 부분
+       * ========================================================= */
+      const RAD = Math.PI / 180,
+        DEG = 180 / Math.PI;
+      const n360 = (x) => ((x % 360) + 360) % 360;
+      const jdOf = (d) => d.getTime() / 86400000 + 2440587.5;
+      const LAT = 37.8641,
+        LON = 126.9347; // 파주 초리골
+      const SYNODIC = 29.530588853; // 삭망월(일)
+
+      const gmst = (jd) => n360(280.46061837 + 360.98564736629 * (jd - 2451545));
+
+      /** 적도좌표 → 지평좌표 */
+      function horiz(ra, dec, jd) {
+        const ha = (gmst(jd) + LON) * RAD - ra;
+        const alt = Math.asin(
+          Math.sin(LAT * RAD) * Math.sin(dec) + Math.cos(LAT * RAD) * Math.cos(dec) * Math.cos(ha)
+        );
+        const az = Math.atan2(
+          -Math.sin(ha) * Math.cos(dec),
+          Math.sin(dec) * Math.cos(LAT * RAD) - Math.cos(dec) * Math.sin(LAT * RAD) * Math.cos(ha)
+        );
+        return { alt: alt * DEG, az: n360(az * DEG) };
+      }
+
+      function sunPos(jd) {
+        const n = jd - 2451545;
+        const L = n360(280.46 + 0.9856474 * n),
+          g = n360(357.528 + 0.9856003 * n);
+        const lam = (L + 1.915 * Math.sin(g * RAD) + 0.02 * Math.sin(2 * g * RAD)) * RAD;
+        const eps = 23.439 * RAD;
+        const ra = Math.atan2(Math.cos(eps) * Math.sin(lam), Math.cos(lam));
+        const dec = Math.asin(Math.sin(eps) * Math.sin(lam));
+        return horiz(ra, dec, jd);
+      }
+
+      function moonPos(jd) {
+        const T = (jd - 2451545) / 36525;
+        const Lp = n360(218.3164477 + 481267.88123421 * T - 0.0015786 * T ** 2 + T ** 3 / 538841);
+        const D = n360(297.8501921 + 445267.1114034 * T - 0.0018819 * T ** 2 + T ** 3 / 545868);
+        const M = n360(357.5291092 + 35999.0502909 * T - 0.0001536 * T ** 2);
+        const Mp = n360(134.9633964 + 477198.8675055 * T + 0.0087414 * T ** 2 + T ** 3 / 69699);
+        const F = n360(93.272095 + 483202.0175233 * T - 0.0036539 * T ** 2 - T ** 3 / 3526000);
+        const lam =
+          (Lp +
+            6.289 * Math.sin(Mp * RAD) +
+            1.274 * Math.sin((2 * D - Mp) * RAD) +
+            0.658 * Math.sin(2 * D * RAD) +
+            0.214 * Math.sin(2 * Mp * RAD) -
+            0.186 * Math.sin(M * RAD) -
+            0.114 * Math.sin(2 * F * RAD)) *
+          RAD;
+        const bet =
+          (5.128 * Math.sin(F * RAD) +
+            0.281 * Math.sin((Mp + F) * RAD) -
+            0.278 * Math.sin((F - Mp) * RAD) -
+            0.173 * Math.sin((2 * D - F) * RAD)) *
+          RAD;
+        const eps = 23.439 * RAD;
+        const ra = Math.atan2(
+          Math.sin(lam) * Math.cos(eps) - Math.tan(bet) * Math.sin(eps),
+          Math.cos(lam)
+        );
+        const dec = Math.asin(
+          Math.sin(bet) * Math.cos(eps) + Math.cos(bet) * Math.sin(eps) * Math.sin(lam)
+        );
+        return horiz(ra, dec, jd);
+      }
+
+      /** 위상: k=밝은 면적비(0삭~1망), waxing=차오르는 중 */
+      function moonPhase(jd) {
+        const T = (jd - 2451545) / 36525;
+        const D = n360(
+          297.8501921 +
+            445267.1114034 * T -
+            0.0018819 * T ** 2 +
+            T ** 3 / 545868 -
+            T ** 4 / 113065000
+        );
+        const M = n360(357.5291092 + 35999.0502909 * T - 0.0001536 * T ** 2 + T ** 3 / 24490000);
+        const Mp = n360(
+          134.9633964 + 477198.8675055 * T + 0.0087414 * T ** 2 + T ** 3 / 69699 - T ** 4 / 14712000
+        );
+        const i =
+          180 -
+          D -
+          6.289 * Math.sin(Mp * RAD) +
+          2.1 * Math.sin(M * RAD) -
+          1.274 * Math.sin((2 * D - Mp) * RAD) -
+          0.658 * Math.sin(2 * D * RAD) -
+          0.214 * Math.sin(2 * Mp * RAD) -
+          0.11 * Math.sin(D * RAD);
+        return { k: (1 + Math.cos(i * RAD)) / 2, waxing: D < 180, age: (D / 360) * SYNODIC };
+      }
+
+      /** 화면상 밝은 쪽 방향(천정에서 시계방향 deg). 달에서 본 해의 위치각. */
+      function limbAngle(jd) {
+        const s = sunPos(jd),
+          m = moonPos(jd);
+        const as = s.alt * RAD,
+          am = m.alt * RAD,
+          dA = (s.az - m.az) * RAD;
+        return (
+          Math.atan2(
+            Math.cos(as) * Math.sin(dA),
+            Math.cos(am) * Math.sin(as) - Math.sin(am) * Math.cos(as) * Math.cos(dA)
+          ) * DEG
+        );
+      }
+
+      /** 고도가 0을 지나는 순간을 이분법으로 찾는다 (일몰/월몰/월출) */
+      function crossing(jd0, jd1, posFn, target) {
+        let a = jd0,
+          b = jd1;
+        for (let i = 0; i < 40; i++) {
+          const m = (a + b) / 2;
+          if ((posFn(a).alt - target) * (posFn(m).alt - target) <= 0) b = m;
+          else a = m;
+        }
+        return (a + b) / 2;
+      }
+      /** 하루 안에서 고도가 target을 아래로/위로 지나는 시각들 */
+      function events(jdStart, posFn, target) {
+        const out = [];
+        const step = 1 / 144; // 10분
+        let prev = posFn(jdStart).alt - target;
+        for (let t = jdStart + step; t <= jdStart + 1.0001; t += step) {
+          const cur = posFn(t).alt - target;
+          if (prev > 0 && cur <= 0)
+            out.push({ type: "set", jd: crossing(t - step, t, posFn, target) });
+          if (prev <= 0 && cur > 0)
+            out.push({ type: "rise", jd: crossing(t - step, t, posFn, target) });
+          prev = cur;
+        }
+        return out;
+      }
+
+      const PHASE_NAMES = [
+        { max: 0.02, wax: "삭 (달 없음)", wan: "삭 (달 없음)" },
+        { max: 0.35, wax: "초승달", wan: "그믐달" },
+        { max: 0.65, wax: "상현달", wan: "하현달" },
+        { max: 0.98, wax: "볼록달 (차오름)", wan: "볼록달 (기움)" },
+        { max: 1.01, wax: "보름달", wan: "보름달" },
+      ];
+      const phaseName = (k, wax) => {
+        const e = PHASE_NAMES.find((p) => k < p.max);
+        return wax ? e.wax : e.wan;
+      };
+      const phaseEmoji = (k, wax) =>
+        k < 0.02
+          ? "🌑"
+          : k > 0.98
+            ? "🌕"
+            : wax
+              ? k < 0.35
+                ? "🌒"
+                : k < 0.65
+                  ? "🌓"
+                  : "🌔"
+              : k < 0.35
+                ? "🌘"
+                : k < 0.65
+                  ? "🌗"
+                  : "🌖";
+
+      /* =========================================================
+       * 달 그리기 — 핵심
+       * 명암경계선(터미네이터)은 반원이 아니라 반타원이다.
+       * x반지름 = r·|2k-1| — k>0.5면 어두운 쪽으로, k<0.5면 밝은 쪽으로 볼록.
+       * ========================================================= */
+      const MARIA = [
+        // 달의 바다. 있으면 원이 아니라 달로 읽힌다
+        { x: -0.3, y: -0.34, r: 0.3, a: 0.16 },
+        { x: 0.16, y: -0.42, r: 0.22, a: 0.13 },
+        { x: 0.3, y: -0.06, r: 0.3, a: 0.11 },
+        { x: -0.42, y: 0.1, r: 0.2, a: 0.1 },
+        { x: -0.06, y: -0.1, r: 0.26, a: 0.09 },
+        { x: 0.06, y: 0.4, r: 0.16, a: 0.07 },
+      ];
+
+      function drawMoon(c, cx, cy, r, k, waxing, tiltDeg, opt) {
+        const s = 2 * k - 1; // 터미네이터 x반지름 계수
+        c.save();
+        c.translate(cx, cy);
+
+        /* 달무리 — 밝을수록 넓게 */
+        const halo = c.createRadialGradient(0, 0, r * 0.7, 0, 0, r * (2.2 + k * 1.4));
+        halo.addColorStop(0, `rgba(214,230,255,${0.16 + k * 0.2})`);
+        halo.addColorStop(0.5, `rgba(190,214,255,${0.05 + k * 0.07})`);
+        halo.addColorStop(1, "rgba(180,205,255,0)");
+        c.fillStyle = halo;
+        c.beginPath();
+        c.arc(0, 0, r * (2.2 + k * 1.4), 0, Math.PI * 2);
+        c.fill();
+
+        c.rotate(tiltDeg * RAD);
+        if (!waxing) c.scale(-1, 1); // 기우는 달은 왼쪽이 밝다
+
+        /* 지구조 — 얇을수록 잘 보인다 */
+        if (opt.shine && k < 0.45) {
+          const a = ((0.45 - k) / 0.45) * 0.19;
+          const g = c.createRadialGradient(-r * 0.2, -r * 0.2, r * 0.1, 0, 0, r);
+          g.addColorStop(0, `rgba(150,175,215,${a})`);
+          g.addColorStop(1, `rgba(110,135,175,${a * 0.45})`);
+          c.fillStyle = g;
+          c.beginPath();
+          c.arc(0, 0, r * 0.985, 0, Math.PI * 2);
+          c.fill();
+        }
+
+        /* 전체 윤곽선 */
+        if (opt.line) {
+          c.strokeStyle = "rgba(190,210,245,.28)";
+          c.lineWidth = 1;
+          c.beginPath();
+          c.arc(0, 0, r, 0, Math.PI * 2);
+          c.stroke();
+        }
+
+        /* 밝은 면: 오른쪽 반원 + 터미네이터 반타원 */
+        const litPath = () => {
+          c.beginPath();
+          c.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, false); // 위 → 오른쪽 → 아래
+          c.ellipse(0, 0, r * Math.abs(s), r, 0, Math.PI / 2, -Math.PI / 2, s < 0);
+          c.closePath();
+        };
+
+        if (k > 0.005) {
+          c.save();
+          litPath();
+          c.clip();
+          const g = c.createRadialGradient(-r * 0.25, -r * 0.3, r * 0.05, 0, 0, r * 1.15);
+          g.addColorStop(0, "#fffdf4");
+          g.addColorStop(0.55, "#f3ecd8");
+          g.addColorStop(1, "#cdc3ab"); // 가장자리 어두워짐(주연감광)
+          c.fillStyle = g;
+          c.fillRect(-r, -r, r * 2, r * 2);
+          for (const m of MARIA) {
+            // 바다는 밝은 면 안에서만
+            const mg = c.createRadialGradient(m.x * r, m.y * r, 0, m.x * r, m.y * r, m.r * r);
+            mg.addColorStop(0, `rgba(122,116,104,${m.a})`);
+            mg.addColorStop(1, "rgba(122,116,104,0)");
+            c.fillStyle = mg;
+            c.fillRect(-r, -r, r * 2, r * 2);
+          }
+          c.restore();
+
+          /* 터미네이터를 살짝 흐리게 — 실제 명암경계는 칼처럼 끊기지 않는다 */
+          c.save();
+          litPath();
+          c.clip();
+          c.filter = "blur(1.6px)";
+          c.globalAlpha = 0.5;
+          c.strokeStyle = "rgba(60,66,80,.85)";
+          c.lineWidth = 2.4;
+          c.beginPath();
+          c.ellipse(0, 0, r * Math.abs(s), r, 0, Math.PI / 2, -Math.PI / 2, s < 0);
+          c.stroke();
+          c.restore();
+        }
+        c.restore();
+      }
+
+      /* =========================================================
+       * 구름 (WeatherBadge.tsx 원본) + 밤 팔레트
+       * ========================================================= */
+      function cloudPath(c) {
+        c.beginPath();
+        c.moveTo(46, 100);
+        c.bezierCurveTo(22, 100, 6, 86, 9, 65);
+        c.bezierCurveTo(12, 47, 29, 35, 46, 39);
+        c.bezierCurveTo(49, 17, 68, 3, 90, 6);
+        c.bezierCurveTo(110, 9, 126, 24, 129, 43);
+        c.bezierCurveTo(135, 37, 144, 34, 152, 36);
+        c.bezierCurveTo(174, 41, 186, 61, 179, 81);
+        c.bezierCurveTo(174, 94, 161, 100, 148, 100);
+        c.closePath();
+      }
+      const LOBES = [
+        { x: 40, y: 70, r: 30 },
+        { x: 88, y: 46, r: 38 },
+        { x: 150, y: 70, r: 30 },
+      ];
+
+      /** 밤에는 구름이 달빛만 받는다 — 낮 팔레트를 그대로 쓰면 종이처럼 뜬다 */
+      function palette(wx, night, moonK) {
+        const wet = wx.PTY > 0;
+        if (!night) {
+          if (wx.SKY <= 1)
+            return {
+              top: "#ffffff",
+              bot: "#d3dceb",
+              shade: "rgba(120,140,170,.17)",
+              rim: "rgba(255,255,255,.95)",
+            };
+          if (wx.SKY <= 3 && !wet)
+            return {
+              top: "#f4f7fc",
+              bot: "#bcc7d8",
+              shade: "rgba(96,116,148,.19)",
+              rim: "rgba(255,255,255,.9)",
+            };
+          if (!wet)
+            return {
+              top: "#c3cbd8",
+              bot: "#8b95a6",
+              shade: "rgba(58,70,90,.24)",
+              rim: "rgba(238,243,250,.75)",
+            };
+          return wx.RN1 >= 12
+            ? {
+                top: "#8b95a6",
+                bot: "#4e5766",
+                shade: "rgba(24,30,42,.28)",
+                rim: "rgba(206,216,230,.6)",
+              }
+            : {
+                top: "#a7b1c1",
+                bot: "#68727f",
+                shade: "rgba(34,42,56,.25)",
+                rim: "rgba(222,230,240,.65)",
+              };
+        }
+        // moonK: 달이 떠 있을 때만 0보다 크다. 달이 졌으면 달빛분이 통째로 빠진다.
+        const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+        const rgb = (a) => `rgb(${a[0]},${a[1]},${a[2]})`;
+        const heavy = wet && wx.RN1 >= 12;
+        // 달이 없어도 구름은 검은 덩어리가 아니다 — 파주 구름 배는 서울 불빛을 받아 뜬다
+        const dim = heavy
+          ? [64, 71, 90]
+          : wet
+            ? [70, 78, 98]
+            : wx.SKY <= 3
+              ? [88, 99, 126]
+              : [78, 88, 112];
+        return {
+          top: rgb(mix(dim, [175, 190, 218], moonK * 0.62)), // 달빛 받은 윗면
+          bot: rgb(mix(dim, [20, 24, 34], 0.7)),
+          shade: "rgba(10,14,24,.18)", // 로브 3개+바닥에 겹쳐 칠해진다. 낮보다 약해야 한다
+          // 밤 구름의 형태는 림라이트가 만든다. 달이 없어도 하늘빛만큼은 남겨야
+          // 어두운 히어로 사진 위에서 윤곽이 묻히지 않는다.
+          rim: `rgba(198,216,255,${0.22 + moonK * 0.38})`,
+          glow: `rgba(232,158,84,${heavy ? 0.12 : 0.2})`, // 광공해가 구름 배를 데운다
+        };
+      }
+
+      /* =========================================================
+       * 상태 & 렌더 루프
+       * ========================================================= */
+      const KINDS = [
+        {
+          id: "clear",
+          label: "맑음",
+          wx: { SKY: 1, PTY: 0, LGT: 0, RN1: 0, WSD: 1.4, VEC: 225, T1H: 24, REH: 70 },
+        },
+        {
+          id: "partly",
+          label: "구름 조금",
+          wx: { SKY: 3, PTY: 0, LGT: 0, RN1: 0, WSD: 2.1, VEC: 200, T1H: 23, REH: 74 },
+        },
+        {
+          id: "cloudy",
+          label: "흐림",
+          wx: { SKY: 4, PTY: 0, LGT: 0, RN1: 0, WSD: 2.8, VEC: 180, T1H: 22, REH: 82 },
+        },
+        {
+          id: "rain",
+          label: "비",
+          wx: { SKY: 4, PTY: 1, LGT: 0, RN1: 4, WSD: 3.2, VEC: 170, T1H: 21, REH: 92 },
+        },
+        {
+          id: "thunder",
+          label: "천둥·뇌우",
+          wx: { SKY: 4, PTY: 1, LGT: 1, RN1: 16, WSD: 6, VEC: 160, T1H: 20, REH: 95 },
+        },
+        {
+          id: "wind",
+          label: "강풍",
+          wx: { SKY: 3, PTY: 0, LGT: 0, RN1: 0, WSD: 9, VEC: 290, T1H: 19, REH: 60 },
+        },
+      ];
+      let kindId = "clear";
+      const opt = { gate: true, tilt: true, shine: true, line: false };
+
+      const $ = (s) => document.querySelector(s);
+      const cv = $("#cv"),
+        c = cv.getContext("2d");
+      const W = 210,
+        H = 300;
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      cv.style.width = W + "px";
+      cv.style.height = H + "px";
+      cv.width = W * dpr;
+      cv.height = H * dpr;
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const mask = c.createLinearGradient(0, 0, 0, H);
+      mask.addColorStop(0, "rgba(0,0,0,1)");
+      mask.addColorStop(0.55, "rgba(0,0,0,.9)");
+      mask.addColorStop(1, "rgba(0,0,0,0)");
+
+      let t = 0,
+        last = performance.now(),
+        flash = 0,
+        nextBolt = 1.2,
+        bolt = null,
+        parts = [],
+        baseY = 0;
+
+      /** 컨트롤 → 현재 Date (KST 고정) */
+      function currentDate() {
+        const [Y, M, D] = $("#date").value.split("-").map(Number);
+        const mins = +$("#time").value;
+        const hh = String(Math.floor(mins / 60)).padStart(2, "0"),
+          mm = String(mins % 60).padStart(2, "0");
+        return new Date(
+          `${Y}-${String(M).padStart(2, "0")}-${String(D).padStart(2, "0")}T${hh}:${mm}:00+09:00`
+        );
+      }
+      const fmtKST = (jd) => {
+        const d = new Date((jd - 2440587.5) * 86400000);
+        return d.toLocaleTimeString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+      };
+
+      function scene() {
+        const date = currentDate(),
+          jd = jdOf(date);
+        const sun = sunPos(jd),
+          moon = moonPos(jd),
+          ph = moonPhase(jd);
+        // 낮 1 → 밤 0. 시민박명(-6°)까지 부드럽게 넘긴다
+        const dayness = Math.max(0, Math.min(1, (sun.alt + 6) / 6));
+        const night = dayness < 1;
+        const moonUp = moon.alt > 0;
+        const showMoon = night && (opt.gate ? moonUp : true);
+        return {
+          date,
+          jd,
+          sun,
+          moon,
+          ph,
+          dayness,
+          night,
+          moonUp,
+          showMoon,
+          wx: KINDS.find((k) => k.id === kindId).wx,
+        };
+      }
+
+      function drawSun(x, y, r, alpha) {
+        c.save();
+        c.globalAlpha = alpha;
+        const g = c.createRadialGradient(x, y, 2, x, y, r * 1.9);
+        g.addColorStop(0, "rgba(255,214,120,1)");
+        g.addColorStop(0.42, "rgba(255,196,84,.95)");
+        g.addColorStop(1, "rgba(255,190,80,0)");
+        c.fillStyle = g;
+        c.beginPath();
+        c.arc(x, y, r * 1.9, 0, Math.PI * 2);
+        c.fill();
+        c.fillStyle = "#ffd36b";
+        c.beginPath();
+        c.arc(x, y, r * 0.62, 0, Math.PI * 2);
+        c.fill();
+        c.globalAlpha = alpha * 0.5;
+        c.strokeStyle = "#ffd36b";
+        c.lineWidth = 1.6;
+        c.lineCap = "round";
+        for (let i = 0; i < 8; i++) {
+          const a = t * 0.25 + (i * Math.PI) / 4;
+          c.beginPath();
+          c.moveTo(x + Math.cos(a) * r * 0.95, y + Math.sin(a) * r * 0.95);
+          c.lineTo(x + Math.cos(a) * r * 1.28, y + Math.sin(a) * r * 1.28);
+          c.stroke();
+        }
+        c.restore();
+      }
+
+      function drawCloud(S, ox, oy, S_, sc, pal, gale) {
+        c.save();
+        c.translate(ox, oy);
+        c.scale(S, S);
+        const br = 1 + Math.sin(t * 0.5) * 0.012,
+          sway = gale ? Math.sin(t * 1.6) * 2.2 : 0;
+        c.translate(100 + sway, 60);
+        c.scale(br, br);
+        c.translate(-100, -60);
+        cloudPath(c);
+        c.save();
+        c.clip();
+        const g = c.createLinearGradient(0, 6, 0, 100);
+        g.addColorStop(0, pal.top);
+        g.addColorStop(1, pal.bot);
+        c.fillStyle = g;
+        c.fillRect(0, 0, 200, 120);
+        for (const L of LOBES) {
+          const rg = c.createRadialGradient(L.x, L.y - L.r * 0.35, L.r * 0.2, L.x, L.y, L.r * 1.5);
+          rg.addColorStop(0, "rgba(0,0,0,0)");
+          rg.addColorStop(1, pal.shade);
+          c.fillStyle = rg;
+          c.fillRect(0, 0, 200, 120);
+        }
+        const bg = c.createLinearGradient(0, 74, 0, 102);
+        bg.addColorStop(0, "rgba(0,0,0,0)");
+        bg.addColorStop(1, pal.shade);
+        c.fillStyle = bg;
+        c.fillRect(0, 0, 200, 120);
+        if (pal.glow) {
+          // 광공해: 서울·파주 시가지 불빛이 구름 배에 반사돼 주황빛으로 뜬다.
+          // 밤 구름이 검은 덩어리로 안 보이는 진짜 이유가 이것이다.
+          const ug = c.createLinearGradient(0, 104, 0, 72);
+          ug.addColorStop(0, pal.glow);
+          ug.addColorStop(1, "rgba(232,158,84,0)");
+          c.fillStyle = ug;
+          c.fillRect(0, 0, 200, 120);
+        }
+        for (const L of LOBES) {
+          const hg = c.createRadialGradient(
+            L.x - 4,
+            L.y - L.r * 0.75,
+            1,
+            L.x - 4,
+            L.y - L.r * 0.75,
+            L.r * 0.9
+          );
+          hg.addColorStop(0, `rgba(255,255,255,${sc})`);
+          hg.addColorStop(1, "rgba(255,255,255,0)");
+          c.fillStyle = hg;
+          c.fillRect(0, 0, 200, 120);
+        }
+        if (flash > 0.01) {
+          const fg = c.createRadialGradient(95, 86, 2, 95, 86, 90);
+          fg.addColorStop(0, `rgba(226,238,255,${0.85 * flash})`);
+          fg.addColorStop(1, "rgba(190,214,255,0)");
+          c.fillStyle = fg;
+          c.fillRect(0, 0, 200, 120);
+        }
+        c.restore();
+        c.save();
+        cloudPath(c);
+        c.clip();
+        c.filter = "blur(2px)";
+        c.globalAlpha = 0.75;
+        c.strokeStyle = pal.rim;
+        c.lineWidth = 3.5;
+        c.translate(0, 3);
+        cloudPath(c);
+        c.stroke();
+        c.restore();
+        c.restore();
+        return oy + 100 * S;
+      }
+
+      function frame(now) {
+        const dt = Math.min((now - last) / 1000, 0.05);
+        last = now;
+        t += dt;
+        const S_ = scene();
+        const { wx, ph, dayness, night, showMoon } = S_;
+        c.clearRect(0, 0, W, H);
+
+        const K =
+          wx.LGT > 0 && wx.PTY > 0
+            ? "thunder"
+            : wx.PTY === 3
+              ? "snow"
+              : wx.PTY > 0
+                ? wx.RN1 >= 12
+                  ? "thunder"
+                  : "cloud"
+                : wx.WSD >= 7
+                  ? "wind"
+                  : wx.SKY <= 1
+                    ? "sun"
+                    : wx.SKY <= 3
+                      ? "sunCloud"
+                      : "cloud";
+        const showLight = K === "sun" || K === "sunCloud";
+        const showCloud = K !== "sun";
+        const gale = K === "wind";
+        const bolts = K === "thunder" && wx.LGT > 0;
+        const raining = wx.PTY === 1 || wx.PTY === 2;
+
+        const S = (W * 0.62) / 200,
+          ox = (W - 200 * S) / 2;
+
+        if (bolts) {
+          nextBolt -= dt;
+          if (nextBolt <= 0) {
+            const main = [];
+            let x = W * 0.36 + Math.random() * W * 0.28,
+              y = baseY;
+            const seg = 8,
+              step = (H * 0.82 - baseY) / seg;
+            for (let i = 0; i <= seg; i++) {
+              main.push({ x, y });
+              x += (Math.random() - 0.5) * W * 0.24;
+              y += step * (0.75 + Math.random() * 0.5);
+            }
+            bolt = main;
+            flash = 1;
+            nextBolt = 2.5 + Math.random() * 3.5;
+          }
+          flash = Math.max(0, flash - dt * 3.4);
+        }
+
+        /* ---- 해 / 달 ---- */
+        const lr = W * 0.125;
+        const lx = showCloud ? ox + 200 * S * 0.82 : W / 2;
+        const ly = showCloud ? 6 + lr : 10 + lr * 1.4;
+        if (showLight && dayness > 0.01) drawSun(lx, ly, lr, dayness);
+        if (showLight && showMoon && dayness < 1) {
+          c.save();
+          c.globalAlpha = 1 - dayness;
+          drawMoon(c, lx, ly, lr * 0.9, ph.k, ph.waxing, opt.tilt ? limbAngle(S_.jd) - 90 : 0, opt);
+          c.restore();
+        }
+
+        // 달이 졌으면 구름을 비출 달빛도 없다 — 없는 달을 안 그리기로 했으면 달빛도 빼야 앞뒤가 맞는다
+        const moonLight = night && S_.moonUp ? ph.k : 0;
+        const pal = palette(wx, night, night ? moonLight : 1);
+        const sc = night ? 0.06 + moonLight * 0.24 : 0.45; // 뭉치 하이라이트도 달빛에 비례
+        if (showCloud) baseY = drawCloud(S, ox, 2, S_, sc, pal, gale);
+
+        if (bolt && flash > 0.01) {
+          const a = Math.min(1, flash * 1.6);
+          for (const [w, col, al] of [
+            [9, "rgba(150,190,255,.30)", a * 0.7],
+            [3.2, "rgba(200,225,255,.95)", a],
+            [1.3, "rgba(255,255,255,1)", a],
+          ]) {
+            c.globalAlpha = al;
+            c.strokeStyle = col;
+            c.lineWidth = w;
+            c.lineCap = "round";
+            c.lineJoin = "round";
+            c.beginPath();
+            c.moveTo(bolt[0].x, bolt[0].y);
+            for (let i = 1; i < bolt.length; i++) c.lineTo(bolt[i].x, bolt[i].y);
+            c.stroke();
+          }
+          c.globalAlpha = 1;
+        }
+
+        /* ---- 비 ---- */
+        if (raining) {
+          if (parts.length !== 42)
+            parts = Array.from({ length: 42 }, () => ({
+              x: W * 0.16 + Math.random() * W * 0.68,
+              y: baseY + Math.random() * (H - baseY),
+              v: 130 + Math.random() * 70,
+            }));
+          const wind = wx.WSD * Math.sin((wx.VEC + 180) * RAD);
+          for (const p of parts) {
+            p.y += p.v * dt;
+            p.x += wind * 2.2 * dt;
+            if (p.y > H + 4) {
+              p.y = baseY - 2;
+              p.x = W * 0.16 + Math.random() * W * 0.68;
+            }
+            c.save();
+            c.shadowColor = "rgba(28,42,66,.5)";
+            c.shadowBlur = 4;
+            c.globalAlpha = 0.9 * Math.min(1, (p.y - baseY) / 14);
+            c.strokeStyle = night ? "rgba(170,200,235,1)" : "rgba(214,236,255,1)";
+            c.lineWidth = 1.9;
+            c.lineCap = "round";
+            c.beginPath();
+            c.moveTo(p.x, p.y);
+            c.lineTo(p.x - wind * 2.2 * 0.055, p.y - p.v * 0.055);
+            c.stroke();
+            c.restore();
+          }
+          c.globalAlpha = 1;
+        } else parts = [];
+
+        c.globalCompositeOperation = "destination-in";
+        c.fillStyle = mask;
+        c.fillRect(0, 0, W, H);
+        c.globalCompositeOperation = "source-over";
+
+        requestAnimationFrame(frame);
+      }
+
+      /* =========================================================
+       * UI
+       * ========================================================= */
+      function paintUI() {
+        const S = scene();
+        const { sun, moon, ph, dayness, night, moonUp, showMoon, date, jd, wx } = S;
+
+        const mins = +$("#time").value;
+        $("#timeVal").textContent =
+          `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(mins % 60).padStart(2, "0")}`;
+        $("#clock").textContent = `${$("#date").value} ${$("#timeVal").textContent} KST`;
+
+        // 밤 베일 — 히어로 사진이 실제로 어두워진다
+        $("#nightVeil").style.background =
+          `linear-gradient(180deg, rgba(6,10,26,${(1 - dayness) * 0.62}), rgba(2,4,14,${(1 - dayness) * 0.78}))`;
+
+        // 뱃지
+        const label =
+          wx.LGT > 0
+            ? "천둥 · 뇌우"
+            : wx.PTY > 0
+              ? "비"
+              : wx.WSD >= 7
+                ? "강풍"
+                : wx.SKY <= 1
+                  ? "맑음"
+                  : wx.SKY <= 3
+                    ? "구름 조금"
+                    : "흐림";
+        const icon =
+          wx.LGT > 0
+            ? "⛈️"
+            : wx.PTY > 0
+              ? "🌧️"
+              : wx.WSD >= 7
+                ? "💨"
+                : night
+                  ? // 밤: 하늘이 트였고 달이 떠 있으면 그날 위상. 달이 졌으면 별(맑음)/구름.
+                    // 여기서 낮 분기로 떨어지면 한밤중에 ☀️가 뜬다.
+                    wx.SKY <= 3
+                    ? showMoon
+                      ? phaseEmoji(ph.k, ph.waxing)
+                      : wx.SKY <= 1
+                        ? "✨"
+                        : "☁️"
+                    : "☁️"
+                  : wx.SKY <= 1
+                    ? "☀️"
+                    : wx.SKY <= 3
+                      ? "⛅"
+                      : "☁️";
+        $("#bIcon").textContent = icon;
+        $("#bMain").textContent = `${label} · ${Math.round(wx.T1H)}°`;
+        $("#bSub").textContent = `파주 초리골 · 바람 ${wx.WSD.toFixed(1)}m/s`;
+
+        // 월몰/월출
+        const jd0 = jdOf(new Date(`${$("#date").value}T00:00:00+09:00`));
+        const mEv = events(jd0, moonPos, 0);
+        const nextSet = mEv.find((e) => e.type === "set" && e.jd > jd);
+        const nextRise = mEv.find((e) => e.type === "rise" && e.jd > jd);
+
+        const moonLine = $("#bMoon");
+        if (night && showMoon) {
+          moonLine.className = "text-amber-200/70 text-[10px] truncate";
+          moonLine.textContent =
+            `${phaseName(ph.k, ph.waxing)} · 월령 ${ph.age.toFixed(1)}일 · ${Math.round(ph.k * 100)}%` +
+            (nextSet ? ` · ${fmtKST(nextSet.jd)} 짐` : "");
+        } else if (night && !moonUp) {
+          moonLine.className = "text-white/35 text-[10px] truncate";
+          moonLine.textContent = nextRise ? `달 없음 · ${fmtKST(nextRise.jd)} 뜸` : "달 없음";
+        } else {
+          moonLine.className = "hidden";
+        }
+
+        // 계산값
+        const sEv = events(jd0, sunPos, 0);
+        const row = (k, v, cls = "text-zinc-200") =>
+          `<div class="flex justify-between gap-3"><dt class="text-zinc-500">${k}</dt><dd class="${cls}">${v}</dd></div>`;
+        const state =
+          dayness >= 1
+            ? '<span class="text-amber-300">낮</span>'
+            : dayness > 0
+              ? '<span class="text-orange-400">박명</span>'
+              : '<span class="text-indigo-300">밤</span>';
+
+        $("#info").innerHTML =
+          row("상태", state) +
+          row(
+            "해 고도",
+            `${sun.alt.toFixed(1)}°`,
+            sun.alt > 0 ? "text-amber-300" : "text-zinc-400"
+          ) +
+          row("일몰", sEv.filter((e) => e.type === "set").map((e) => fmtKST(e.jd))[0] ?? "—") +
+          `<div class="h-2"></div>` +
+          row("위상", phaseName(ph.k, ph.waxing), "text-amber-200") +
+          row("월령", `${ph.age.toFixed(2)}일`) +
+          row("밝은 면", `${(ph.k * 100).toFixed(1)}%`) +
+          row("달 고도", `${moon.alt.toFixed(1)}°`, moonUp ? "text-indigo-300" : "text-rose-400") +
+          row("달 방위", `${moon.az.toFixed(0)}°`) +
+          row("기울기", `${(limbAngle(jd) - 90).toFixed(0)}°`) +
+          row(
+            "월출/월몰",
+            mEv.map((e) => `${e.type === "rise" ? "↑" : "↓"}${fmtKST(e.jd)}`).join(" ") || "—"
+          ) +
+          `<div class="h-2"></div>` +
+          row(
+            "그리는가",
+            showMoon
+              ? '<span class="text-emerald-400">달 O</span>'
+              : night
+                ? '<span class="text-rose-400">X (달이 짐)</span>'
+                : '<span class="text-zinc-500">해 O</span>'
+          );
+
+        buildStrip();
+      }
+
+      /* 한 달 위상 스트립 */
+      let stripKey = "";
+      function buildStrip() {
+        const base = new Date(`${$("#date").value}T21:00:00+09:00`);
+        const ph0 = moonPhase(jdOf(base));
+        const start = new Date(base.getTime() - ph0.age * 86400000); // 이번 삭
+        const key = start.toISOString().slice(0, 10);
+        if (key === stripKey) {
+          markStrip();
+          return;
+        }
+        stripKey = key;
+
+        const el = $("#strip");
+        el.innerHTML = "";
+        for (let i = 0; i < 30; i++) {
+          const d = new Date(start.getTime() + i * 86400000);
+          const iso = new Date(d.getTime() + 9 * 3600000).toISOString().slice(0, 10);
+          const jd = jdOf(new Date(`${iso}T21:00:00+09:00`));
+          const p = moonPhase(jd),
+            m = moonPos(jd);
+          const cell = document.createElement("button");
+          cell.dataset.iso = iso;
+          cell.className =
+            "strip-cell group relative aspect-square rounded-lg bg-zinc-950 border border-zinc-800 hover:border-amber-400/60 flex flex-col items-center justify-center p-0.5";
+          cell.title = `${iso} 21:00 · ${phaseName(p.k, p.waxing)} ${Math.round(p.k * 100)}% · 달 고도 ${m.alt.toFixed(0)}°`;
+          const cc = document.createElement("canvas");
+          cc.width = 64;
+          cc.height = 64;
+          cc.style.width = "100%";
+          cc.style.height = "auto";
+          const g = cc.getContext("2d");
+          drawMoon(g, 32, 32, 17, p.k, p.waxing, 0, { shine: true, line: true });
+          cell.appendChild(cc);
+          const lb = document.createElement("span");
+          lb.className =
+            "text-[8px] leading-none font-mono " +
+            (m.alt > 0 ? "text-zinc-500" : "text-rose-500/70");
+          lb.textContent = iso.slice(8);
+          cell.appendChild(lb);
+          cell.onclick = () => {
+            $("#date").value = iso;
+            paintUI();
+          };
+          el.appendChild(cell);
+        }
+        $("#stripRange").textContent = `— 21:00 기준 · 날짜가 빨강이면 그 시각 달이 지평선 아래`;
+        markStrip();
+      }
+      function markStrip() {
+        const cur = $("#date").value;
+        document.querySelectorAll(".strip-cell").forEach((el) => {
+          el.classList.toggle("ring-2", el.dataset.iso === cur);
+          el.classList.toggle("ring-amber-400", el.dataset.iso === cur);
+        });
+      }
+
+      /* 하늘 버튼 */
+      $("#kinds").innerHTML = KINDS.map(
+        (k) =>
+          `<button data-kind="${k.id}" class="kind text-[11px] py-1.5 rounded-lg border">${k.label}</button>`
+      ).join("");
+      function markKinds() {
+        document.querySelectorAll(".kind").forEach((b) => {
+          const on = b.dataset.kind === kindId;
+          b.className = `kind text-[11px] py-1.5 rounded-lg border ${
+            on
+              ? "bg-amber-400/15 border-amber-400/60 text-amber-200"
+              : "bg-zinc-800 border-zinc-700 text-zinc-400 hover:bg-zinc-700"
+          }`;
+        });
+      }
+      document.querySelectorAll(".kind").forEach(
+        (b) =>
+          (b.onclick = () => {
+            kindId = b.dataset.kind;
+            bolt = null; // 안 지우면 강풍으로 바꿔도 직전 번개가 남는다 (와이어프레임 전용 — 실제로는 날씨가 안 바뀐다)
+            flash = 0;
+            nextBolt = 1.2;
+            markKinds();
+            paintUI();
+          })
+      );
+      markKinds();
+
+      /* 바로가기 */
+      document.querySelectorAll(".jump").forEach(
+        (b) =>
+          (b.onclick = () => {
+            const jd0 = jdOf(new Date(`${$("#date").value}T00:00:00+09:00`));
+            if (b.dataset.jump === "now") {
+              const now = new Date();
+              const kst = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+              $("#date").value = new Date(now.getTime() + 9 * 3600000).toISOString().slice(0, 10);
+              $("#time").value = Math.round((kst.getHours() * 60 + kst.getMinutes()) / 10) * 10;
+            } else if (b.dataset.jump === "sunset") {
+              const set = events(jd0, sunPos, 0).find((e) => e.type === "set");
+              if (set) {
+                const d = new Date((set.jd - 2440587.5) * 86400000 + 20 * 60000);
+                const [hh, mm] = d
+                  .toLocaleTimeString("en-GB", {
+                    timeZone: "Asia/Seoul",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                  .split(":");
+                $("#time").value = +hh * 60 + +mm;
+              }
+            } else $("#time").value = 21 * 60;
+            paintUI();
+          })
+      );
+
+      ["#date", "#time"].forEach((s) => $(s).addEventListener("input", paintUI));
+      [
+        ["#optGate", "gate"],
+        ["#optTilt", "tilt"],
+        ["#optShine", "shine"],
+        ["#optLine", "line"],
+      ].forEach(([s, k]) =>
+        $(s).addEventListener("change", (e) => {
+          opt[k] = e.target.checked;
+          paintUI();
+        })
+      );
+
+      /* 히어로 사진 — 없으면 그라디언트로 */
+      const img = new Image();
+      img.onload = () => {
+        $("#hero").style.backgroundImage = `url(${img.src})`;
+        $("#hero").classList.remove("hero-fallback");
+      };
+      img.src = "../public/images/summer/webp/dsc05689.webp";
+
+      paintUI();
+      requestAnimationFrame(frame);
+    </script>
+  </body>
+</html>

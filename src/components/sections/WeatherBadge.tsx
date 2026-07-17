@@ -1,11 +1,25 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  events,
+  fmtKST,
+  julianDay,
+  limbAngle,
+  moonPhase,
+  moonPos,
+  phaseEmoji,
+  phaseName,
+  sunPos,
+  type Phase,
+} from "@/lib/astro";
 
 /* =============================================
  * 히어로 날씨: 뱃지 + 그 아래 컬럼
  * 기상청 실황값(SKY·PTY·LGT·RN1·WSD·VEC)을 그대로 시각으로 변환한다.
  * 전체화면이 아니라 뱃지 폭 안에서만 그리므로 부담이 작다.
+ *
+ * 밤에는 해 자리에 그날의 달이 뜬다. 위상·기울기·고도는 전부 계산값(@/lib/astro).
  * ============================================= */
 
 type Weather = {
@@ -23,6 +37,35 @@ type Weather = {
 
 /** 6종: 태양 / 구름에 가려진 태양 / 구름 / 천둥뇌우 / 바람 / 눈 */
 type Kind = "sun" | "sunCloud" | "cloud" | "thunder" | "wind" | "snow";
+
+/** 지금 파주 하늘의 해·달 */
+type Sky = {
+  /** 1=낮, 0=밤. 시민박명(-6°)까지 부드럽게 넘어간다 */
+  dayness: number;
+  night: boolean;
+  /** 달이 지평선 위에 있는가. 없는 달을 그리면 실제 하늘과 어긋난다 */
+  moonUp: boolean;
+  phase: Phase;
+  /** 화면상 밝은 쪽 기울기(deg). 밝은 면은 언제나 해를 향한다 */
+  tilt: number;
+  nextSet: number | null;
+  nextRise: number | null;
+};
+
+function readSky(now: Date): Sky {
+  const jd = julianDay(now);
+  const dayness = Math.max(0, Math.min(1, (sunPos(jd).alt + 6) / 6));
+  const ev = events(jd, moonPos);
+  return {
+    dayness,
+    night: dayness < 1,
+    moonUp: moonPos(jd).alt > 0,
+    phase: moonPhase(jd),
+    tilt: limbAngle(jd) - 90,
+    nextSet: ev.find((e) => e.type === "set")?.jd ?? null,
+    nextRise: ev.find((e) => e.type === "rise")?.jd ?? null,
+  };
+}
 
 const BADGE_W = 210; // 컬럼 폭의 기준. 상태에 따라 흔들리면 안 되므로 고정
 const COLUMN_BOTTOM = 0.78; // 컬럼이 끝나는 지점(히어로 높이 대비). 뱃지 위치가 바뀌어도 여기서 끝난다
@@ -49,11 +92,15 @@ function labelOf(w: Weather, k: Kind) {
   return "흐림";
 }
 
-function iconOf(w: Weather, k: Kind) {
+function iconOf(w: Weather, k: Kind, sky: Sky | null) {
   if (k === "thunder") return w.LGT > 0 ? "⛈️" : "🌧️";
   if (k === "snow") return "🌨️";
   if (k === "wind") return "💨";
   if (w.PTY > 0) return "🌧️";
+  // 밤에 하늘이 트였으면 그날 달. 달이 졌으면 별.
+  // 여기서 아래 낮 분기로 떨어지면 한밤중에 ☀️가 뜬다.
+  if (sky?.night && (k === "sun" || k === "sunCloud"))
+    return sky.moonUp ? phaseEmoji(sky.phase.k, sky.phase.waxing) : k === "sun" ? "✨" : "☁️";
   if (k === "sun") return "☀️";
   if (k === "sunCloud") return "⛅";
   return "☁️";
@@ -65,13 +112,23 @@ const dirName = (d: number) =>
 const SHOW_MS = 30_000; // 첫인상만 주고 사라진다. 계속 떠 있으면 히어로 사진을 가린다
 const FADE_MS = 1_200;
 
+/** glow(광공해)는 밤에만 있다 */
+type Pal = { top: string; bot: string; shade: string; rim: string; glow?: string };
+
 export function WeatherBadge() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [wx, setWx] = useState<Weather | null>(null);
+  const [sky, setSky] = useState<Sky | null>(null);
   const [hidden, setHidden] = useState(false);
   // 페이드가 끝나면 캔버스를 멈춰야 한다 — 안 보이는 걸 계속 그리면 배터리만 먹는다
   const hiddenAtRef = useRef<number>(0);
+
+  // 뱃지는 30초만 떠 있으므로 마운트 때 한 번 계산하면 된다.
+  // 클라이언트에서만 — 서버 시각으로 계산하면 하이드레이션이 어긋난다.
+  useEffect(() => {
+    setSky(readSky(new Date()));
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -98,7 +155,7 @@ export function WeatherBadge() {
   }, [wx]);
 
   useEffect(() => {
-    if (!wx) return;
+    if (!wx || !sky) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const c = canvas.getContext("2d");
@@ -106,7 +163,10 @@ export function WeatherBadge() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const K = kindOf(wx);
-    const showSun = K === "sun" || K === "sunCloud";
+    const night = sky.night;
+    // 하늘이 트인 낮에는 해, 밤에는 달. 달이 졌으면 아무것도 안 그린다.
+    const showSun = (K === "sun" || K === "sunCloud") && sky.dayness > 0.01;
+    const showMoon = (K === "sun" || K === "sunCloud") && night && sky.moonUp;
     const showCloud = K !== "sun";
     const gale = K === "wind";
     const bolts = K === "thunder" && wx.LGT > 0;
@@ -123,9 +183,34 @@ export function WeatherBadge() {
     const dirX = Math.sin(((wx.VEC + 180) * Math.PI) / 180);
     const windNow = () => wx.WSD * (1 + 0.25 * Math.sin(t * 0.8)) * dirX;
 
-    /* ---- 팔레트: 흰구름 → 먹구름 ---- */
-    const palette = () => {
+    /* ---- 팔레트: 흰구름 → 먹구름. 밤은 달빛+광공해로 따로 짠다 ---- */
+    // 달이 졌으면 구름을 비출 달빛도 없다. 없는 달을 안 그리기로 했으면 달빛도 빼야 앞뒤가 맞는다.
+    const moonLight = night && sky.moonUp ? sky.phase.k : 0;
+    const palette = (): Pal => {
       const wet = wx.PTY > 0;
+      if (night) {
+        const mix = (a: number[], b: number[], t: number) =>
+          a.map((v, i) => Math.round(v + (b[i] - v) * t));
+        const rgb = (a: number[]) => `rgb(${a[0]},${a[1]},${a[2]})`;
+        const heavy = wet && wx.RN1 >= 12;
+        // 달이 없어도 구름은 검은 덩어리가 아니다 — 파주 구름 배는 서울 불빛을 받아 뜬다
+        const dim = heavy
+          ? [64, 71, 90]
+          : wet
+            ? [70, 78, 98]
+            : wx.SKY <= 3
+              ? [88, 99, 126]
+              : [78, 88, 112];
+        return {
+          top: rgb(mix(dim, [175, 190, 218], moonLight * 0.62)), // 달빛 받은 윗면
+          bot: rgb(mix(dim, [20, 24, 34], 0.7)),
+          // 로브 3개+바닥에 겹쳐 칠해진다. 낮 값(.24~.34)을 쓰면 검게 눌어붙는다
+          shade: "rgba(10,14,24,.18)",
+          // 밤 구름의 형태는 림라이트가 만든다. 달이 없어도 하늘빛만큼은 남긴다
+          rim: `rgba(198,216,255,${0.22 + moonLight * 0.38})`,
+          glow: `rgba(232,158,84,${heavy ? 0.12 : 0.2})`, // 광공해가 구름 배를 데운다
+        };
+      }
       if (wx.SKY <= 1)
         return {
           top: "#ffffff",
@@ -213,6 +298,15 @@ export function WeatherBadge() {
       bg.addColorStop(1, pal.shade);
       c.fillStyle = bg;
       c.fillRect(0, 0, 200, 120);
+      if (pal.glow) {
+        // 광공해: 서울·파주 시가지 불빛이 구름 배에 반사돼 주황빛으로 뜬다.
+        // 달 없는 밤에도 구름이 검은 덩어리로 안 보이는 진짜 이유가 이것이다.
+        const ug = c.createLinearGradient(0, 104, 0, 72);
+        ug.addColorStop(0, pal.glow);
+        ug.addColorStop(1, "rgba(232,158,84,0)");
+        c.fillStyle = ug;
+        c.fillRect(0, 0, 200, 120);
+      }
       for (const L of LOBES) {
         const hg = c.createRadialGradient(
           L.x - 4,
@@ -222,7 +316,8 @@ export function WeatherBadge() {
           L.y - L.r * 0.75,
           L.r * 0.9
         );
-        hg.addColorStop(0, "rgba(255,255,255,.45)");
+        // 뭉치 하이라이트도 광량에 비례한다 — 밤에 낮 값을 쓰면 구름이 종이처럼 뜬다
+        hg.addColorStop(0, `rgba(255,255,255,${night ? 0.06 + moonLight * 0.24 : 0.45})`);
         hg.addColorStop(1, "rgba(255,255,255,0)");
         c.fillStyle = hg;
         c.fillRect(0, 0, 200, 120);
@@ -276,6 +371,94 @@ export function WeatherBadge() {
         c.moveTo(x + Math.cos(a) * r * 0.95, y + Math.sin(a) * r * 0.95);
         c.lineTo(x + Math.cos(a) * r * 1.28, y + Math.sin(a) * r * 1.28);
         c.stroke();
+      }
+      c.restore();
+    };
+
+    /* ---- 달 ----
+     * 명암경계선(터미네이터)은 반원이 아니라 반타원이다. x반지름 = r·|2k-1|.
+     * k>0.5면 어두운 쪽으로, k<0.5면 밝은 쪽으로 볼록해진다.
+     * 이 한 줄로 삭·초승·상현·망·하현·그믐이 전부 자동으로 맞는다.
+     */
+    const MARIA = [
+      // 달의 바다. 있으면 원이 아니라 달로 읽힌다
+      { x: -0.3, y: -0.34, r: 0.3, a: 0.16 },
+      { x: 0.16, y: -0.42, r: 0.22, a: 0.13 },
+      { x: 0.3, y: -0.06, r: 0.3, a: 0.11 },
+      { x: -0.42, y: 0.1, r: 0.2, a: 0.1 },
+      { x: -0.06, y: -0.1, r: 0.26, a: 0.09 },
+    ];
+
+    const drawMoon = (cx: number, cy: number, r: number) => {
+      const { k, waxing } = sky.phase;
+      const s = 2 * k - 1;
+      c.save();
+      c.translate(cx, cy);
+
+      // 달무리
+      const hr = r * (2.2 + k * 1.4);
+      const halo = c.createRadialGradient(0, 0, r * 0.7, 0, 0, hr);
+      halo.addColorStop(0, `rgba(214,230,255,${0.16 + k * 0.2})`);
+      halo.addColorStop(0.5, `rgba(190,214,255,${0.05 + k * 0.07})`);
+      halo.addColorStop(1, "rgba(180,205,255,0)");
+      c.fillStyle = halo;
+      c.beginPath();
+      c.arc(0, 0, hr, 0, Math.PI * 2);
+      c.fill();
+
+      c.rotate(sky.tilt * (Math.PI / 180)); // 밝은 면은 해를 향한다
+      if (!waxing) c.scale(-1, 1); // 기우는 달은 왼쪽이 밝다
+
+      // 지구조 — 얇은 달일수록 어두운 면이 지구 반사광에 뜬다
+      if (k < 0.45) {
+        const a = ((0.45 - k) / 0.45) * 0.19;
+        const eg = c.createRadialGradient(-r * 0.2, -r * 0.2, r * 0.1, 0, 0, r);
+        eg.addColorStop(0, `rgba(150,175,215,${a})`);
+        eg.addColorStop(1, `rgba(110,135,175,${a * 0.45})`);
+        c.fillStyle = eg;
+        c.beginPath();
+        c.arc(0, 0, r * 0.985, 0, Math.PI * 2);
+        c.fill();
+      }
+
+      const litPath = () => {
+        c.beginPath();
+        c.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, false); // 위 → 오른쪽 → 아래
+        c.ellipse(0, 0, r * Math.abs(s), r, 0, Math.PI / 2, -Math.PI / 2, s < 0);
+        c.closePath();
+      };
+
+      if (k > 0.005) {
+        c.save();
+        litPath();
+        c.clip();
+        const g = c.createRadialGradient(-r * 0.25, -r * 0.3, r * 0.05, 0, 0, r * 1.15);
+        g.addColorStop(0, "#fffdf4");
+        g.addColorStop(0.55, "#f3ecd8");
+        g.addColorStop(1, "#cdc3ab"); // 가장자리 어두워짐(주연감광)
+        c.fillStyle = g;
+        c.fillRect(-r, -r, r * 2, r * 2);
+        for (const m of MARIA) {
+          const mg = c.createRadialGradient(m.x * r, m.y * r, 0, m.x * r, m.y * r, m.r * r);
+          mg.addColorStop(0, `rgba(122,116,104,${m.a})`);
+          mg.addColorStop(1, "rgba(122,116,104,0)");
+          c.fillStyle = mg;
+          c.fillRect(-r, -r, r * 2, r * 2);
+        }
+        c.restore();
+
+        // 실제 명암경계는 칼처럼 끊기지 않는다
+        c.save();
+        litPath();
+        c.clip();
+        c.filter = "blur(1.6px)";
+        c.globalAlpha = 0.5;
+        c.strokeStyle = "rgba(60,66,80,.85)";
+        c.lineWidth = 2.4;
+        c.beginPath();
+        c.ellipse(0, 0, r * Math.abs(s), r, 0, Math.PI / 2, -Math.PI / 2, s < 0);
+        c.stroke();
+        c.restore();
       }
       c.restore();
     };
@@ -475,13 +658,22 @@ export function WeatherBadge() {
         if (flash > 0.3 && flash < 0.42 && Math.random() < 0.35) flash = Math.min(1, flash + 0.45);
       }
 
+      // 해와 달은 같은 자리를 쓴다. 박명에는 겹쳐서 교대한다.
       const sunR = W * 0.125;
-      if (showSun)
-        drawSun(
-          showCloud ? ox + 200 * S * 0.82 : W / 2,
-          showCloud ? 6 + sunR : 10 + sunR * 1.4,
-          sunR
-        );
+      const lx = showCloud ? ox + 200 * S * 0.82 : W / 2;
+      const ly = showCloud ? 6 + sunR : 10 + sunR * 1.4;
+      if (showSun) {
+        c.save();
+        c.globalAlpha = sky.dayness;
+        drawSun(lx, ly, sunR);
+        c.restore();
+      }
+      if (showMoon) {
+        c.save();
+        c.globalAlpha = 1 - sky.dayness;
+        drawMoon(lx, ly, sunR * 0.9);
+        c.restore();
+      }
       if (showCloud) baseY = drawCloud(S, ox, 2, flash);
       if (gale) drawGusts(dt);
       drawBolt();
@@ -546,10 +738,11 @@ export function WeatherBadge() {
       document.removeEventListener("visibilitychange", onVis);
       window.removeEventListener("resize", resize);
     };
-  }, [wx]);
+  }, [wx, sky]);
 
   if (!wx) return null;
   const K = kindOf(wx);
+  const moonInfo = sky?.night && (K === "sun" || K === "sunCloud") ? sky : null;
 
   return (
     <div
@@ -563,7 +756,7 @@ export function WeatherBadge() {
       aria-hidden={hidden}
     >
       <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-black/35 backdrop-blur-md border border-white/15">
-        <span className="text-xl leading-none">{iconOf(wx, K)}</span>
+        <span className="text-xl leading-none">{iconOf(wx, K, sky)}</span>
         <div className="leading-tight min-w-0">
           <div className="text-white text-sm font-semibold truncate">
             {labelOf(wx, K)} · {Math.round(wx.T1H)}°
@@ -571,6 +764,20 @@ export function WeatherBadge() {
           <div className="text-white/60 text-[10px] truncate">
             파주 초리골 · 바람 {wx.WSD.toFixed(1)}m/s {dirName(wx.VEC)}
           </div>
+          {/* 밤에 하늘이 트였을 때만. 달이 졌으면 언제 뜨는지 알려준다.
+              월령·%는 뺐다 — 뱃지 폭(텍스트 151px)에 "차오르는 달 · 월령 10.5일 · 05:48 짐"이
+              162px으로 넘쳐서 정작 중요한 지는 시각이 잘린다. 모양은 그림이 이미 보여준다. */}
+          {moonInfo &&
+            (moonInfo.moonUp ? (
+              <div className="text-amber-200/70 text-[10px] truncate">
+                {phaseName(moonInfo.phase.k, moonInfo.phase.waxing)}
+                {moonInfo.nextSet && ` · ${fmtKST(moonInfo.nextSet)} 짐`}
+              </div>
+            ) : (
+              <div className="text-white/35 text-[10px] truncate">
+                달 없음{moonInfo.nextRise && ` · ${fmtKST(moonInfo.nextRise)} 뜸`}
+              </div>
+            ))}
           {/* 기상특보는 있을 때만 표기 */}
           {wx.warning && (
             <div
