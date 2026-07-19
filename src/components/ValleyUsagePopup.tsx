@@ -81,12 +81,13 @@ export function ValleyUsagePopup() {
             <div className="p-5">
               <p className="text-[15px] text-neutral-700 leading-relaxed">
                 충분한 수량이 확보되어{" "}
-                <b style={{ color: "hsl(var(--primary))" }}>계곡 이용이 가능</b>합니다.
-                <br />
-                펜션 이용 고객에 한해 시원한 계곡에서 휴식을!
+                <b style={{ color: "hsl(var(--primary))" }}>계곡 이용이 가능</b>합니다. 펜션 이용
+                고객에 한해 시원한 계곡에서 휴식을!
               </p>
-              <div className="mt-3 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-[13px] text-amber-800">
+              <div className="mt-3 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-[13px] text-amber-800 leading-relaxed">
                 ⚠️ 계곡 내 음주 · 의자 · 테이블 이용은 제한됩니다.
+                <br />
+                기상상황에 따라 안전을 위해 출입이 제한될 수 있습니다.
               </div>
               <a
                 href={RESERVATION_URL}
