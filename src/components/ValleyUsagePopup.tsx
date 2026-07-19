@@ -91,9 +91,8 @@ export function ValleyUsagePopup() {
                 💧 수심은 발목~종아리 높이(깊은 곳 50~60cm)로 아이들이 놀기 좋아요.
               </div>
               <div className="mt-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-[13px] text-amber-800 leading-relaxed">
-                ⚠️ 계곡 내 음주 · 의자 · 테이블 이용은 제한됩니다.
-                <br />
-                기상상황에 따라 안전을 위해 출입이 제한될 수 있습니다.
+                ⚠️ 계곡 내 음주 · 의자 · 테이블 이용은 제한됩니다. 기상상황에 따라 안전을 위해
+                출입이 제한될 수 있습니다.
               </div>
               <a
                 href={RESERVATION_URL}
