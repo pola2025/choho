@@ -88,7 +88,7 @@ export function ValleyUsagePopup() {
                 className="mt-3 rounded-lg px-3 py-2 text-[13px] leading-relaxed"
                 style={{ background: "hsl(var(--primary-50))", color: "#1c3b2a" }}
               >
-                💧 수심은 발목~종아리 높이(깊은 곳 50~60cm)로 아이들이 놀기 좋아요.
+                💧 평상시 수심 20~40cm(깊은 곳 60~70cm), 아이들이 놀기 좋아요.
               </div>
               <div className="mt-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-[13px] text-amber-800 leading-relaxed">
                 ⚠️ 계곡 내 음주 · 의자 · 테이블 이용은 제한됩니다. 기상상황에 따라 안전을 위해
