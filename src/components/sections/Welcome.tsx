@@ -1,6 +1,3 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import { TreePine, Clock, Flower2, PawPrint, Leaf } from "lucide-react";
 
 // YouTube 영상 ID
@@ -38,37 +35,23 @@ const features = [
 ];
 
 export function Welcome() {
-  const [isMobile, setIsMobile] = useState(true);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
   return (
     <section className="relative py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Background - YouTube 영상 */}
-      {!isMobile && (
-        <div className="absolute inset-0 overflow-hidden">
-          <iframe
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-[56.25vw] pointer-events-none"
-            src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}&playsinline=1&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
-            title="Background Video"
-            allow="autoplay; encrypted-media"
-            allowFullScreen={false}
-          />
-        </div>
-      )}
+      {/* Background - YouTube 영상 (모바일 포함). 폴백 그라디언트 위에 영상이 덮음 */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* 영상 로드 전 / 자동재생 차단 시 폴백 배경 */}
+        <div className="absolute inset-0 bg-gradient-warm" />
+        <iframe
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-[56.25vw] pointer-events-none"
+          src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${YOUTUBE_VIDEO_ID}&playsinline=1&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+          title="Background Video"
+          allow="autoplay; encrypted-media"
+          allowFullScreen={false}
+        />
+      </div>
 
       {/* 어두운 오버레이 */}
       <div className="absolute inset-0 bg-black/30" />
-
-      {/* 모바일: 기존 그라디언트 배경 */}
-      {isMobile && <div className="absolute inset-0 bg-gradient-warm -z-10" />}
 
       {/* Decorative Elements */}
       <div className="absolute top-20 left-10 opacity-10">
