@@ -80,7 +80,8 @@ export function ValleyUsagePopup() {
             {/* 텍스트 패널 */}
             <div className="p-5">
               <p className="text-[15px] text-neutral-700 leading-relaxed">
-                충분한 수량이 확보되어 <b className="text-primary">계곡 이용이 가능</b>합니다.
+                충분한 수량이 확보되어{" "}
+                <b style={{ color: "hsl(var(--primary))" }}>계곡 이용이 가능</b>합니다.
                 <br />
                 펜션 이용 고객에 한해 시원한 계곡에서 휴식을!
               </p>
@@ -91,7 +92,8 @@ export function ValleyUsagePopup() {
                 href={RESERVATION_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full mt-4 py-3 bg-primary text-white text-base font-semibold rounded-xl text-center hover:bg-primary/90 transition-colors shadow-lg"
+                style={{ background: "hsl(var(--primary))" }}
+                className="block w-full mt-4 py-3 text-white text-base font-semibold rounded-xl text-center hover:brightness-95 transition-all shadow-lg"
               >
                 객실 예약하기
               </a>
