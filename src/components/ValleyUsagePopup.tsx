@@ -43,63 +43,25 @@ export function ValleyUsagePopup() {
       <div className="w-full max-w-[420px] mx-auto my-6">
         <div className="animate-fade-in-up">
           <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
-            {/* 사진 히어로 */}
-            <div className="relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/valley/valley-popup.webp"
-                alt="초호쉼터 계곡 - 충분한 수량 확보, 펜션 투숙객 전용 이용"
-                className="w-full h-[280px] object-cover"
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: "linear-gradient(180deg, rgba(0,0,0,.05) 40%, rgba(0,0,0,.78))",
-                }}
-              />
-              <div className="absolute left-0 right-0 bottom-0 p-5 text-white">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <span className="inline-block text-[11px] font-semibold bg-white/25 backdrop-blur px-2.5 py-1 rounded-full">
-                    여름 계곡 오픈
-                  </span>
-                  <span
-                    className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full"
-                    style={{ background: "hsl(var(--accent))", color: "#3a2e00" }}
-                  >
-                    펜션 투숙객 전용
-                  </span>
-                </div>
-                <h3 className="text-2xl font-extrabold leading-tight drop-shadow">
-                  시원한 계곡,
-                  <br />
-                  이제 이용하세요
-                </h3>
-              </div>
-            </div>
+            {/* 계곡 물높이 안내 그래픽 */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/valley/valley-smartplace-depth.webp"
+              alt="초호쉼터 계곡 이용 안내 - 평상시 수심 20~40cm, 깊은 곳 60~70cm, 펜션 투숙객 전용"
+              className="block w-full h-auto"
+            />
 
             {/* 텍스트 패널 */}
             <div className="p-5">
-              <p className="text-[15px] text-neutral-700 leading-relaxed">
-                충분한 수량이 확보되어{" "}
-                <b style={{ color: "hsl(var(--primary))" }}>계곡 이용이 가능</b>합니다. 펜션 이용
-                고객에 한해 시원한 계곡에서 휴식을!
-              </p>
-              <div
-                className="mt-3 rounded-lg px-3 py-2 text-[13px] leading-relaxed"
-                style={{ background: "hsl(var(--primary-50))", color: "#1c3b2a" }}
-              >
-                💧 평상시 수심 20~40cm(깊은 곳 60~70cm), 아이들이 놀기 좋아요.
-              </div>
-              <div className="mt-2 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-[13px] text-amber-800 leading-relaxed">
-                ⚠️ 계곡 내 음주 · 의자 · 테이블 이용은 제한됩니다. 기상상황에 따라 안전을 위해
-                출입이 제한될 수 있습니다.
+              <div className="rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-[13px] text-amber-800 leading-relaxed">
+                ⚠️ 기상상황에 따라 안전을 위해 계곡 출입이 제한될 수 있습니다.
               </div>
               <a
                 href={RESERVATION_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ background: "hsl(var(--primary))" }}
-                className="block w-full mt-4 py-3 text-white text-base font-semibold rounded-xl text-center hover:brightness-95 transition-all shadow-lg"
+                className="block w-full mt-3 py-3 text-white text-base font-semibold rounded-xl text-center hover:brightness-95 transition-all shadow-lg"
               >
                 객실 예약하기
               </a>
