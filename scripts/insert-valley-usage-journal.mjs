@@ -20,6 +20,7 @@ const base = `${R2}/journal/${slug}`;
 const localDir = "F:/choho_2025/public/images/journal/valley-open-0719";
 const assets = [
   { file: "thumb-1080.webp", key: `journal/${slug}/thumb-1080.webp` },
+  { file: "depth-800.webp", key: `journal/${slug}/depth-800.webp` },
   { file: "hero-1600.webp", key: `journal/${slug}/hero-1600.webp` },
 ];
 
@@ -55,7 +56,7 @@ const row = {
 문의: 010-7932-0029`,
   category: "notice",
   thumbnail: `${base}/thumb-1080.webp`,
-  images: [`${base}/hero-1600.webp`].join(", "),
+  images: [`${base}/depth-800.webp`, `${base}/hero-1600.webp`].join(", "),
   createdAt: "2026-07-19",
 };
 
