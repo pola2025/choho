@@ -19,7 +19,7 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="inline-flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded transition-colors"
+      className="inline-flex shrink-0 whitespace-nowrap items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 rounded transition-colors"
       title="복사하기"
     >
       {copied ? (

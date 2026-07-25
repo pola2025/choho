@@ -52,19 +52,19 @@ export default function LocationPage() {
                 <h3 className="font-bold text-foreground">주소</h3>
               </div>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start justify-between gap-2">
-                  <div>
+                <li>
+                  <div className="flex items-center justify-between gap-2">
                     <span className="text-xs text-primary font-medium">도로명</span>
-                    <p>{SITE_CONFIG.address.road}</p>
+                    <CopyButton text={SITE_CONFIG.address.road} label="도로명 주소" />
                   </div>
-                  <CopyButton text={SITE_CONFIG.address.road} label="도로명 주소" />
+                  <p className="break-keep">{SITE_CONFIG.address.road}</p>
                 </li>
-                <li className="flex items-start justify-between gap-2">
-                  <div>
+                <li>
+                  <div className="flex items-center justify-between gap-2">
                     <span className="text-xs text-primary font-medium">지번</span>
-                    <p>{SITE_CONFIG.address.jibun}</p>
+                    <CopyButton text={SITE_CONFIG.address.jibun} label="지번 주소" />
                   </div>
-                  <CopyButton text={SITE_CONFIG.address.jibun} label="지번 주소" />
+                  <p className="break-keep">{SITE_CONFIG.address.jibun}</p>
                 </li>
               </ul>
             </div>

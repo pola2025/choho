@@ -117,7 +117,7 @@ export function Footer() {
                   <div className="w-9 h-9 rounded-lg bg-white/10 group-hover:bg-emerald-500/30 flex items-center justify-center shrink-0 transition-colors">
                     <MapPin className="w-4 h-4 text-emerald-400" />
                   </div>
-                  <span className="pt-2">{SITE_CONFIG.address.road}</span>
+                  <span className="pt-2 break-keep">{SITE_CONFIG.address.road}</span>
                 </a>
               </li>
             </ul>
@@ -158,9 +158,7 @@ export function Footer() {
               © {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
             </p>
             <p className="text-xs text-white/50">
-              Made with{" "}
-              <span className="text-red-400">♥</span>
-              {" "}by{" "}
+              Made with <span className="text-red-400">♥</span> by{" "}
               <a
                 href="https://polarad.kr"
                 target="_blank"
