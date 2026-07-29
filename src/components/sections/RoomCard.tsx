@@ -12,10 +12,14 @@ interface RoomCardProps {
 // Helper to extract warning from extraPerson policies
 function getWarning(room: Room): string | null {
   // Prioritize "불가" warnings over "이용 가능"
-  const notAllowed = room.policies.extraPerson.find((p) => p.includes("어른만") && p.includes("불가"));
+  const notAllowed = room.policies.extraPerson.find(
+    (p) => p.includes("어른만") && p.includes("불가")
+  );
   if (notAllowed) return notAllowed;
 
-  const adultNotAllowed = room.policies.extraPerson.find((p) => p.includes("어른") && p.includes("불가"));
+  const adultNotAllowed = room.policies.extraPerson.find(
+    (p) => p.includes("어른") && p.includes("불가")
+  );
   if (adultNotAllowed) return adultNotAllowed;
 
   const onlyAllowed = room.policies.extraPerson.find((p) => p.includes("이용 가능"));
@@ -47,9 +51,7 @@ export function RoomCard({ room }: RoomCardProps) {
         <div className="absolute top-4 right-4">
           <span
             className={`px-3 py-1.5 text-xs font-semibold rounded-full backdrop-blur-md shadow-lg transition-all duration-300 ${
-              room.type === "bed"
-                ? "bg-blue-500/90 text-white"
-                : "bg-amber-500/90 text-white"
+              room.type === "bed" ? "bg-blue-500/90 text-white" : "bg-amber-500/90 text-white"
             }`}
           >
             {room.type === "bed" ? "침대" : "온돌"}
@@ -95,14 +97,16 @@ export function RoomCard({ room }: RoomCardProps) {
             <div className="flex items-center gap-1.5 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
               <Users className="w-4 h-4 text-green-600" />
               <span className="text-sm font-bold text-green-800">
-                기준 {room.capacity.standard}인
+                {room.capacity.label ?? `기준 ${room.capacity.standard}인`}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-2 bg-neutral-100 border border-neutral-200 rounded-lg">
-              <span className="text-sm font-medium text-neutral-600">
-                최대 {room.capacity.maximum}인
-              </span>
-            </div>
+            {!room.capacity.label && (
+              <div className="flex items-center gap-1.5 px-3 py-2 bg-neutral-100 border border-neutral-200 rounded-lg">
+                <span className="text-sm font-medium text-neutral-600">
+                  최대 {room.capacity.maximum}인
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Area - Secondary Info */}

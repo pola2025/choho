@@ -85,7 +85,7 @@ export default function RoomsPage() {
                         <div className="flex items-center gap-2">
                           <Users className="w-4 h-4" />
                           <span>
-                            기준 {room.capacity.standard}인 / 최대 {room.capacity.maximum}인
+                            {room.capacity.label ?? `기준 ${room.capacity.standard}인 / 최대 ${room.capacity.maximum}인`}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">

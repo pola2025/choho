@@ -16,6 +16,8 @@ export interface Room {
   capacity: {
     standard: number;
     maximum: number;
+    /** 지정 시 "기준 N인 / 최대 N인" 대신 이 문구를 노출 (예: 패밀리룸 "정원 4명 + 유아 1명") */
+    label?: string;
   };
   area: number;
   description: string;

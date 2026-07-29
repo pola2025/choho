@@ -91,7 +91,7 @@ export default async function RoomDetailPage({ params }: PageProps) {
                       <Users className="w-6 h-6 mx-auto mb-2 text-primary" />
                       <p className="text-sm text-muted-foreground">인원</p>
                       <p className="font-semibold">
-                        기준 {room.capacity.standard}인 / 최대 {room.capacity.maximum}인
+                        {room.capacity.label ?? `기준 ${room.capacity.standard}인 / 최대 ${room.capacity.maximum}인`}
                       </p>
                     </div>
                     <div className="text-center p-4 bg-neutral-50 rounded-lg">
@@ -221,7 +221,7 @@ export default async function RoomDetailPage({ params }: PageProps) {
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold mb-2">{room.name}</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      기준 {room.capacity.standard}인 / 최대 {room.capacity.maximum}인
+                      {room.capacity.label ?? `기준 ${room.capacity.standard}인 / 최대 ${room.capacity.maximum}인`}
                     </p>
                     <div className="space-y-3">
                       <Button asChild className="w-full" size="lg">

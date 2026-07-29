@@ -214,9 +214,12 @@ export function FamilyCapacityPopup() {
             {/* 하단 안내 */}
             <div className="px-5 pt-4 pb-5">
               <p className="text-[11.5px] text-stone-500 leading-relaxed break-keep">
-                · 36개월 미만 유아도 <b className="text-stone-700">인원에는 포함</b>되며, 요금만
-                부과되지 않습니다.
-                <br />· 예약 인원과 실제 입실 인원이 다를 경우 입실이 제한될 수 있습니다.
+                · 유아 기준은 <b className="text-stone-700">36개월 미만</b>입니다.
+                <br />· 36개월 미만 아동도 <b className="text-stone-700">인원에는 포함</b>되며,
+                요금만 부과되지 않습니다.
+                <br />· 36개월 이상 어린이·청소년은 모두 정원에 해당합니다.
+                <br />· <b className="text-stone-700">최대인원 초과 시 입실이 불가능</b>할 수
+                있으니, 기준 및 최대인원을 준수해 주세요.
               </p>
               <a
                 href={RESERVATION_URL}

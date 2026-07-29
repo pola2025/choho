@@ -182,7 +182,7 @@ export const rooms: Room[] = [
     name: "Forest 패밀리룸",
     slug: "forest-family",
     type: "ondol",
-    capacity: { standard: 5, maximum: 5 },
+    capacity: { standard: 5, maximum: 5, label: "정원 4명 + 유아 1명" },
     area: 12,
     description:
       "가족과 함께 즐기는 편안한 휴식. 정원 4명에 36개월 미만 유아 1명까지 추가할 수 있는 온돌 객실입니다.",
@@ -209,10 +209,13 @@ export const rooms: Room[] = [
       checkIn: "15:00 - 22:00",
       checkOut: "11:00",
       extraPerson: [
-        "정원 4명은 나이와 관계없이 계산 (어린이·청소년도 1명)",
-        "36개월 미만 유아 1명까지만 추가 가능 (총 5명)",
-        "36개월 미만 유아도 인원에 포함, 요금만 미부과",
-        "어른·어린이 5명 이용 불가",
+        "36개월 이상 어린이·청소년은 모두 정원에 해당",
+        "어른 5명 이용 불가",
+        "정원 4명 + 유아 1명까지만 가능",
+        "유아 기준: 36개월 미만",
+        "36개월 미만 아동도 인원에는 포함 (요금 미부과)",
+        "최대인원 초과 시 입실이 불가능할 수 있습니다",
+        "기준 및 최대인원 준수 바랍니다",
       ],
       refund: [
         { days: "7-9일 전", rate: "90%" },
@@ -242,7 +245,7 @@ export const rooms: Room[] = [
     name: "Forest Mini 패밀리룸",
     slug: "forest-mini-family",
     type: "ondol",
-    capacity: { standard: 3, maximum: 3 },
+    capacity: { standard: 3, maximum: 3, label: "정원 2명 + 유아 1명" },
     area: 8,
     description:
       "합리적으로 쉴 수 있는 객실. 정원 2명에 36개월 미만 유아 1명까지 추가할 수 있는 온돌 객실입니다.",
@@ -277,10 +280,13 @@ export const rooms: Room[] = [
       checkIn: "15:00 - 22:00",
       checkOut: "11:00",
       extraPerson: [
-        "정원 2명은 나이와 관계없이 계산 (어린이·청소년도 1명)",
-        "36개월 미만 유아 1명까지만 추가 가능 (총 3명)",
-        "36개월 미만 유아도 인원에 포함, 요금만 미부과",
-        "어른·어린이 3명 이용 불가",
+        "어른 2명 + 유아 1명, 한 가족만 이용 가능",
+        "어른 3명 이용 불가",
+        "36개월 이상 어린이·청소년은 모두 정원에 해당",
+        "유아 기준: 36개월 미만",
+        "36개월 미만 아동도 인원에는 포함 (요금 미부과)",
+        "최대인원 초과 시 입실이 불가능할 수 있습니다",
+        "기준 및 최대인원 준수 바랍니다",
       ],
       refund: [
         { days: "7-9일 전", rate: "90%" },
