@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>패밀리 객실 이용인원 안내 팝업 · 와이어프레임</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family:
+          "Pretendard Variable",
+          -apple-system,
+          sans-serif;
+      }
+      :root {
+        --primary: 152 60% 28%;
+      }
+      .bg-brand {
+        background: hsl(var(--primary));
+      }
+      .text-brand {
+        color: hsl(var(--primary));
+      }
+      .border-brand {
+        border-color: hsl(var(--primary));
+      }
+      .word-keep {
+        word-break: keep-all;
+      }
+      /* 인원 도식 아이콘 — 이모지 금지(색 지정 불가, 플랫폼 기본 보라색 실루엣으로 렌더됨) */
+      .ico-adult,
+      .ico-baby {
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .ico-adult {
+        width: 2.25rem;
+        height: 2.25rem;
+        background: hsl(var(--primary));
+      }
+      .ico-adult svg {
+        width: 18px;
+        height: 18px;
+        stroke: #fff;
+      }
+      .ico-baby {
+        width: 1.75rem;
+        height: 1.75rem;
+        background: #fef3c7;
+        border: 1px dashed #f59e0b;
+      }
+      .ico-baby svg {
+        width: 14px;
+        height: 14px;
+        stroke: #b45309;
+      }
+    </style>
+  </head>
+  <body class="bg-stone-800 py-10">
+    <!-- 스펙 메모 -->
+    <div class="max-w-[420px] mx-auto mb-6 px-4 text-white/50 text-xs leading-relaxed word-keep">
+      와이어프레임 · 패밀리 객실 이용인원 안내 팝업 (max-w-420, z-[59] 예정)<br />
+      실제 팝업은 어두운 오버레이 위에 렌더 / 우상단 X · 하단 "오늘 하루 보지 않기" 동일 패턴
+    </div>
+
+    <div class="max-w-[420px] mx-auto px-4">
+      <div class="bg-white rounded-2xl overflow-hidden shadow-2xl">
+        <!-- 헤더 -->
+        <div class="bg-brand px-5 py-4 text-center">
+          <p class="text-white/70 text-[11px] tracking-[0.2em] font-medium">FAMILY ROOM</p>
+          <h2 class="text-white text-[19px] font-bold mt-1">패밀리 객실 이용인원 안내</h2>
+        </div>
+
+        <!-- 핵심 규정 -->
+        <div class="px-5 pt-5">
+          <div class="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3.5">
+            <p class="text-[13px] font-bold text-amber-900 word-keep leading-relaxed">
+              정원에 포함되지 않는 "아이"는<br />
+              <span class="underline decoration-amber-400 decoration-2 underline-offset-2"
+                >36개월 미만 유아 1명</span
+              >뿐입니다.
+            </p>
+            <p class="text-[12.5px] text-amber-800/90 mt-2 word-keep leading-relaxed">
+              36개월 이상이면 어린이·청소년도 <b>성인과 똑같이 1명</b>으로 계산됩니다. 한 가족이어도
+              예외 없이 동일하게 적용됩니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- 객실 1 : 미니패밀리 -->
+        <div class="px-5 pt-5">
+          <div class="rounded-xl border border-stone-200 overflow-hidden">
+            <div
+              class="flex items-center justify-between px-4 py-2.5 bg-stone-50 border-b border-stone-200"
+            >
+              <span class="text-[14px] font-bold text-stone-800">Forest Mini 패밀리룸</span>
+              <span
+                class="text-[11.5px] font-semibold text-brand bg-white border border-stone-200 rounded-full px-2.5 py-0.5"
+                >최대 3명</span
+              >
+            </div>
+
+            <!-- 인원 도식 -->
+            <div class="px-4 py-3.5 flex items-center gap-2">
+              <div class="flex gap-1.5">
+                <span class="ico-adult"
+                  ><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="8" r="3.4" />
+                    <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" /></svg
+                ></span>
+                <span class="ico-adult"
+                  ><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="8" r="3.4" />
+                    <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" /></svg
+                ></span>
+              </div>
+              <span class="text-stone-400 text-sm font-bold">+</span>
+              <span class="ico-baby"
+                ><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round">
+                  <circle cx="12" cy="8" r="3.4" />
+                  <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" /></svg
+              ></span>
+              <div class="ml-1 text-[11.5px] text-stone-500 leading-tight word-keep">
+                36개월 이상 2명<br />+ 유아 1명
+              </div>
+            </div>
+
+            <!-- 가능 / 불가 -->
+            <div class="grid grid-cols-2 border-t border-stone-200 text-[12px]">
+              <div class="px-4 py-3 border-r border-stone-200">
+                <p class="text-[11px] font-bold text-emerald-700 mb-1.5">가능</p>
+                <p class="text-stone-600 leading-relaxed word-keep">
+                  어른 2명<br />어른 2명 + 유아 1명
+                </p>
+              </div>
+              <div class="px-4 py-3 bg-red-50/40">
+                <p class="text-[11px] font-bold text-red-600 mb-1.5">불가</p>
+                <p class="text-stone-600 leading-relaxed word-keep">
+                  어른 3명<br />어른 2명 + 어린이 1명
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 객실 2 : 패밀리 -->
+        <div class="px-5 pt-3">
+          <div class="rounded-xl border border-stone-200 overflow-hidden">
+            <div
+              class="flex items-center justify-between px-4 py-2.5 bg-stone-50 border-b border-stone-200"
+            >
+              <span class="text-[14px] font-bold text-stone-800">Forest 패밀리룸</span>
+              <span
+                class="text-[11.5px] font-semibold text-brand bg-white border border-stone-200 rounded-full px-2.5 py-0.5"
+                >최대 5명</span
+              >
+            </div>
+
+            <div class="px-4 py-3.5 flex items-center gap-2">
+              <div class="flex gap-1.5">
+                <span class="ico-adult"
+                  ><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="8" r="3.4" />
+                    <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" /></svg
+                ></span>
+                <span class="ico-adult"
+                  ><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="8" r="3.4" />
+                    <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" /></svg
+                ></span>
+                <span class="ico-adult"
+                  ><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="8" r="3.4" />
+                    <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" /></svg
+                ></span>
+                <span class="ico-adult"
+                  ><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+                    <circle cx="12" cy="8" r="3.4" />
+                    <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" /></svg
+                ></span>
+              </div>
+              <span class="text-stone-400 text-sm font-bold">+</span>
+              <span class="ico-baby"
+                ><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round">
+                  <circle cx="12" cy="8" r="3.4" />
+                  <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" /></svg
+              ></span>
+            </div>
+            <p class="px-4 pb-3 -mt-1 text-[11.5px] text-stone-500 word-keep">
+              36개월 이상 4명 + 유아 1명
+            </p>
+
+            <div class="grid grid-cols-2 border-t border-stone-200 text-[12px]">
+              <div class="px-4 py-3 border-r border-stone-200">
+                <p class="text-[11px] font-bold text-emerald-700 mb-1.5">가능</p>
+                <p class="text-stone-600 leading-relaxed word-keep">
+                  어른 4명<br />어른 4명 + 유아 1명
+                </p>
+              </div>
+              <div class="px-4 py-3 bg-red-50/40">
+                <p class="text-[11px] font-bold text-red-600 mb-1.5">불가</p>
+                <p class="text-stone-600 leading-relaxed word-keep">
+                  어른 5명<br />어른 2명 + 어린이·청소년 3명
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 오해하기 쉬운 사례 -->
+        <div class="px-5 pt-4">
+          <div class="rounded-xl bg-stone-50 border border-stone-200 px-4 py-3">
+            <p class="text-[12px] font-bold text-stone-700 mb-2">이런 경우 입실이 어렵습니다</p>
+            <div class="space-y-1.5 text-[12px] text-stone-600 word-keep leading-relaxed">
+              <p>
+                <span class="text-red-500 font-bold">✕</span> 어른 2명 + 초등학생 3명
+                <span class="text-stone-400">→ 5명 모두 정원 대상 (패밀리룸 불가)</span>
+              </p>
+              <p>
+                <span class="text-red-500 font-bold">✕</span> 어른 4명 + 5세 아동 1명
+                <span class="text-stone-400">→ 36개월 이상이라 5번째 인원</span>
+              </p>
+              <p>
+                <span class="text-emerald-600 font-bold">✓</span> 어른 4명 + 24개월 아기 1명
+                <span class="text-stone-400">→ 이용 가능 (요금 미부과)</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 하단 안내 -->
+        <div class="px-5 pt-4 pb-5">
+          <p class="text-[11.5px] text-stone-500 leading-relaxed word-keep">
+            · 36개월 미만 유아는 <b class="text-stone-700">인원에는 포함</b>되지만 요금은 부과되지
+            않습니다.<br />
+            · 예약 인원과 실제 입실 인원이 다를 경우 입실이 제한될 수 있습니다.
+          </p>
+          <a
+            href="#"
+            class="block w-full mt-3 py-3 bg-brand text-white text-base font-semibold rounded-xl text-center shadow-lg"
+          >
+            객실 예약하기
+          </a>
+        </div>
+      </div>
+
+      <button class="w-full mt-2 py-2 text-sm text-white/60 text-center">
+        오늘 하루 보지 않기
+      </button>
+    </div>
+  </body>
+</html>

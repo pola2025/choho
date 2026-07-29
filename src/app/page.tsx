@@ -7,6 +7,7 @@ import {
   Facilities,
   JournalPreview,
 } from "@/components/sections";
+import { FamilyCapacityPopup } from "@/components/FamilyCapacityPopup";
 import { ValleyUsagePopup } from "@/components/ValleyUsagePopup";
 import { PoolDiscountPopup } from "@/components/PoolDiscountPopup";
 import { SpringPopup } from "@/components/SpringPopup";
@@ -66,7 +67,8 @@ export default function Home() {
         <Facilities />
         <AnimalStrip animals={["black-rabbit", "white-rabbit"]} />
         <JournalPreview />
-        {/* 팝업 노출 순서: 계곡 이용안내(58) → 수영장(56) → 날벌레 안내(53) → 여름벌레 체크리스트(52) → 이용안내 와이드(51, SpringPopup=입실/음료/레이트체크아웃/바베큐) (z-index로 제어) */}
+        {/* 팝업 노출 순서: 패밀리 인원안내(59) → 계곡 이용안내(58) → 수영장(56) → 날벌레 안내(53) → 여름벌레 체크리스트(52) → 이용안내 와이드(51, SpringPopup=입실/음료/레이트체크아웃/바베큐) (z-index로 제어) */}
+        <FamilyCapacityPopup />
         <ValleyUsagePopup />
         <PoolDiscountPopup />
         <SummerInsectIndividualPopup />
