@@ -67,7 +67,7 @@ export default function Home() {
         <Facilities />
         <AnimalStrip animals={["black-rabbit", "white-rabbit"]} />
         <JournalPreview />
-        {/* 팝업 노출 순서: 패밀리 인원안내(59) → 계곡 이용안내(58) → 수영장(56) → 날벌레 안내(53) → 여름벌레 체크리스트(52) → 이용안내 와이드(51, SpringPopup=입실/음료/레이트체크아웃/바베큐) (z-index로 제어) */}
+        {/* 팝업 노출 순서: 패밀리 인원안내(59) → 계곡 이용안내(58) → 수영장(56, PoolDiscountPopup=2026 여름 프로모션 8/3~8/16) → 날벌레 안내(53) → 여름벌레 체크리스트(52) → 이용안내 와이드(51, SpringPopup=입실/음료/레이트체크아웃/바베큐) (z-index로 제어) */}
         <FamilyCapacityPopup />
         <ValleyUsagePopup />
         <PoolDiscountPopup />

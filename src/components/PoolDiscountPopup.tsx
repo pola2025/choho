@@ -4,11 +4,18 @@ import { useState, useEffect, useCallback } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
 
+/**
+ * 수영장 팝업 슬롯(z-56).
+ * 현재 내용: 2026 시원한 여름 프로모션 — 8/3(월)~8/16(일) 입실 고객
+ *            무료입장권 2매 + 추가 인원 50% 할인권 (기존 투숙객 50% 할인 혜택 통합)
+ * 프로모션 종료 시: 이미지를 /images/pool/popup-pool-discount-800.png (상시 50% 할인, 800×800)
+ *                  으로 되돌리거나 page.tsx에서 언마운트.
+ */
 export function PoolDiscountPopup() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const hideUntil = localStorage.getItem("poolDiscountPopupHideUntil");
+    const hideUntil = localStorage.getItem("summerPoolPromoPopupHideUntil");
     if (hideUntil && new Date() < new Date(hideUntil)) return;
     const timer = setTimeout(() => setIsOpen(true), 600);
     return () => clearTimeout(timer);
@@ -20,7 +27,7 @@ export function PoolDiscountPopup() {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
-    localStorage.setItem("poolDiscountPopupHideUntil", tomorrow.toISOString());
+    localStorage.setItem("summerPoolPromoPopupHideUntil", tomorrow.toISOString());
     setIsOpen(false);
   }, []);
 
@@ -42,10 +49,10 @@ export function PoolDiscountPopup() {
         <div className="animate-fade-in-up">
           {/* 800x800 팝업 이미지 */}
           <Image
-            src="/images/pool/popup-pool-discount-800.png"
-            alt="더초리골 수영장 입장권 50% 할인 - 초호펜션 객실 이용고객 전용"
+            src="/images/pool/popup-summer-promo-800.png"
+            alt="시원한 여름 프로모션 - 8월 3일부터 8월 16일 입실 고객 대상 더초리골 수영장 무료입장권 2매, 추가 인원 50% 할인권"
             width={800}
-            height={800}
+            height={1120}
             className="w-full h-auto drop-shadow-2xl"
             priority
           />

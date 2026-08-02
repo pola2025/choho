@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>시원한 여름 프로모션 팝업 — 시안 (800×1120)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        background: #0f172a;
+      }
+      .serif {
+        font-family: "Noto Serif KR", serif;
+      }
+      .canvas {
+        width: 800px;
+        height: 1120px;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+      /* 캡처 모드: ?capture=1 로 열면 캔버스만 800×1120 으로 노출 */
+      body.capture {
+        padding: 0;
+        background: transparent;
+      }
+      body.capture .chrome {
+        display: none;
+      }
+      body.capture .canvas {
+        box-shadow: none;
+      }
+    </style>
+  </head>
+  <body class="p-10">
+    <div class="max-w-[900px] mx-auto">
+      <div class="chrome">
+        <h1 class="text-white text-2xl font-bold mb-1">
+          시원한 여름 프로모션 — 팝업 시안 (800×1120)
+        </h1>
+        <p class="text-slate-400 text-sm mb-8">
+          8.3(월)~8.16(일) 입실 고객 · 무료입장권 2매 + 추가 인원 50% 할인권
+        </p>
+      </div>
+
+      <div class="canvas rounded-[44px] overflow-hidden shadow-2xl relative">
+        <!-- 실사 배경 -->
+        <img
+          src="../public/images/pool/pool-real-water.png"
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+        <!-- 가독성 오버레이 -->
+        <div
+          class="absolute inset-0"
+          style="
+            background: linear-gradient(
+              180deg,
+              rgba(6, 42, 68, 0.7) 0%,
+              rgba(6, 42, 68, 0.24) 20%,
+              rgba(6, 42, 68, 0.34) 44%,
+              rgba(3, 28, 48, 0.92) 78%,
+              rgba(3, 24, 42, 0.96) 100%
+            );
+          "
+        ></div>
+
+        <div class="relative h-full flex flex-col items-center text-center px-12 py-12">
+          <!-- ===== 상단 브랜드 ===== -->
+          <p class="text-white/80 tracking-[0.45em] text-[13px] font-semibold mb-3">
+            CHOHO&nbsp;PENSION
+          </p>
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 rounded-full px-8 py-2.5"
+          >
+            <span class="text-white text-[22px] font-bold tracking-tight"
+              >시원한 여름 프로모션</span
+            >
+          </div>
+          <p class="text-cyan-200 text-[17px] font-semibold mt-3 num">
+            8월 3일(월) ~ 8월 16일(일) 입실 고객
+          </p>
+
+          <!-- ===== 중앙 티켓 ===== -->
+          <div class="w-full mt-7">
+            <div class="bg-white rounded-[30px] shadow-2xl w-full relative px-11 pt-8 pb-8">
+              <p class="text-cyan-600 text-[12px] font-bold tracking-[0.35em] mb-2">
+                ADMISSION&nbsp;TICKET
+              </p>
+              <h3 class="serif text-stone-800 font-black text-[27px] leading-tight">
+                더초리골 수영장 무료입장권
+              </h3>
+
+              <!-- 무료 2매 : '2'와 '매' 동일 크기 / 우측 FREE+무료입장 스택 높이 = '2매' 높이 -->
+              <div class="flex items-center justify-center gap-6 mt-4">
+                <span
+                  class="serif font-black text-cyan-600 num"
+                  style="font-size: 104px; line-height: 0.76"
+                  >2매</span
+                >
+                <div class="text-left">
+                  <p
+                    class="text-cyan-500 font-black tracking-wide"
+                    style="font-size: 56px; line-height: 0.86"
+                  >
+                    FREE
+                  </p>
+                  <p class="text-stone-500 font-bold" style="font-size: 42px; line-height: 1.05">
+                    무료 입장
+                  </p>
+                </div>
+              </div>
+
+              <!-- 절취선 + 양끝 노치 -->
+              <div class="relative my-5">
+                <div class="border-t-2 border-dashed border-cyan-200"></div>
+                <span
+                  class="absolute -left-11 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#0d3a5c]"
+                ></span>
+                <span
+                  class="absolute -right-11 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-[#0d3a5c]"
+                ></span>
+              </div>
+
+              <!-- 추가 인원 50% -->
+              <div class="flex items-center justify-center gap-3">
+                <span class="text-stone-300 font-black text-[38px] leading-none">+</span>
+                <p class="text-stone-700 text-[24px] font-bold leading-snug">
+                  추가 인원은
+                  <span class="text-cyan-600 font-black text-[30px] num">50%</span> 할인권
+                </p>
+              </div>
+              <p class="text-stone-400 text-[15px] mt-1.5">
+                객실 이용인원 기준 · 무료 2매를 제외한 나머지 인원
+              </p>
+
+              <!-- 이용 예시 -->
+              <div
+                class="mt-5 bg-cyan-50/70 border border-cyan-100 rounded-2xl px-6 py-4 text-left"
+              >
+                <p class="text-cyan-700 text-[13px] font-bold tracking-[0.2em] mb-2.5">이용 예시</p>
+                <div class="flex items-center gap-3 text-[16px] text-stone-700 leading-relaxed">
+                  <span class="w-[112px] shrink-0 font-bold text-stone-800">Forest 4인</span>
+                  <span class="text-stone-300">→</span>
+                  <span
+                    >무료 <b class="text-cyan-700">2매</b> + 50% 할인
+                    <b class="text-cyan-700">2매</b></span
+                  >
+                </div>
+                <div
+                  class="flex items-center gap-3 text-[16px] text-stone-700 leading-relaxed mt-2 pt-2 border-t border-cyan-100"
+                >
+                  <span class="w-[112px] shrink-0 font-bold text-stone-800">호수뷰 6인</span>
+                  <span class="text-stone-300">→</span>
+                  <span
+                    >무료 <b class="text-cyan-700">2매</b> + 50% 할인
+                    <b class="text-cyan-700">4매</b></span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== 하단 안내 ===== -->
+          <div
+            class="w-full mt-6 bg-white/12 backdrop-blur-md border border-white/20 rounded-2xl px-7 py-5 text-left"
+          >
+            <div class="grid grid-cols-1 gap-y-[7px]">
+              <div class="flex items-start gap-2.5 text-white text-[16px] leading-relaxed">
+                <span class="text-cyan-300 font-bold mt-0.5">✔</span>
+                <p><b>객실 예약 시 사전 신청 필수</b> · 당일 입실 시 신청 불가</p>
+              </div>
+              <div class="flex items-start gap-2.5 text-white text-[16px] leading-relaxed">
+                <span class="text-cyan-300 font-bold mt-0.5">✔</span>
+                <p>무료입장권은 <b>주간 / 야간 중 택 1</b> (종일 사용 불가)</p>
+              </div>
+              <div class="flex items-start gap-2.5 text-white text-[16px] leading-relaxed">
+                <span class="text-cyan-300 font-bold mt-0.5">✔</span>
+                <p>50% 할인권은 <b>종일권으로도 할인 구매 가능</b></p>
+              </div>
+              <div class="flex items-start gap-2.5 text-white text-[16px] leading-relaxed">
+                <span class="text-cyan-300 font-bold mt-0.5">✔</span>
+                <p>수영장 방문 전 <b>관리자에게 쿠폰 수령</b> 후 입장</p>
+              </div>
+              <div class="flex items-start gap-2.5 text-white/80 text-[15px] leading-relaxed">
+                <span class="text-cyan-300 font-bold mt-0.5">·</span>
+                <p>수영장 <b class="text-white">야간개장은 주말만</b> 운영 (평일 야간 미운영)</p>
+              </div>
+              <div class="flex items-start gap-2.5 text-white/80 text-[15px] leading-relaxed">
+                <span class="text-cyan-300 font-bold mt-0.5">·</span>
+                <p>호수뷰 객실 미오픈 평일 이용 희망 시 관리자에게 개별 연락</p>
+              </div>
+              <div class="flex items-start gap-2.5 text-white/80 text-[15px] leading-relaxed">
+                <span class="text-cyan-300 font-bold mt-0.5">·</span>
+                <p>평상은 더초리골 현장에서 직접 결제·이용 (예약 불가, 더초리골 규정)</p>
+              </div>
+            </div>
+            <div
+              class="flex items-start gap-2.5 text-amber-200 text-[16px] font-semibold leading-relaxed mt-3 pt-3 border-t border-white/15"
+            >
+              <span class="text-amber-300 font-bold mt-0.5">⚠</span>
+              <p>
+                쿠폰 신청·문의는 <b class="text-amber-100">초호펜션 관리자</b> ·
+                <span class="num">010-7932-0029</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="chrome text-slate-500 text-sm mt-8 text-center">
+        기존 투숙객 50% 할인 혜택은 "추가 인원 50% 할인권"으로 통합 안내 · 평상 규정 문구 유지
+      </p>
+    </div>
+
+    <script>
+      if (new URLSearchParams(location.search).get("capture") === "1") {
+        document.body.classList.add("capture");
+      }
+    </script>
+  </body>
+</html>

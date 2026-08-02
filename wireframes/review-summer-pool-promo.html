@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>시원한 여름 프로모션 — 산출물 통합 검토</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        background: #0b1220;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+      /* 인스타 캡션: 모바일 피드 폭 재현 */
+      .ig-cap {
+        width: 360px;
+        font-size: 14px;
+        line-height: 1.5;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 28px;
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+        transition: all 0.22s ease;
+        pointer-events: none;
+      }
+      .toast.on {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    </style>
+  </head>
+  <body class="text-slate-200">
+    <div class="max-w-[1200px] mx-auto px-8 py-12">
+      <!-- ===== 헤더 ===== -->
+      <header class="mb-10">
+        <p class="text-cyan-400 text-xs font-bold tracking-[0.3em] mb-2">CHOHO&nbsp;2026</p>
+        <h1 class="text-white text-3xl font-black">시원한 여름 프로모션 — 산출물 통합 검토</h1>
+        <p class="text-slate-400 mt-2">
+          8월 3일(월) ~ 8월 16일(일) 입실 고객 · 더초리골 수영장 무료입장권 2매 + 추가 인원 50%
+          할인권
+        </p>
+      </header>
+
+      <!-- ===== 상태 요약 ===== -->
+      <section class="mb-14 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-slate-900/70 border border-slate-700 rounded-2xl p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span class="text-amber-300 text-xs font-bold tracking-wider">배포 대기</span>
+          </div>
+          <p class="text-white font-bold">① 홈 팝업</p>
+          <p class="text-slate-400 text-sm mt-1">
+            코드 반영 + 빌드 통과. <b class="text-slate-200">아직 배포 안 함</b>
+          </p>
+        </div>
+        <div class="bg-slate-900/70 border border-emerald-800 rounded-2xl p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="text-emerald-300 text-xs font-bold tracking-wider">라이브</span>
+          </div>
+          <p class="text-white font-bold">② 초호저널</p>
+          <p class="text-slate-400 text-sm mt-1">
+            D1 INSERT 완료 → <b class="text-slate-200">이미 공개 중</b>
+          </p>
+        </div>
+        <div class="bg-slate-900/70 border border-slate-700 rounded-2xl p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+            <span class="text-slate-400 text-xs font-bold tracking-wider">발행 대기</span>
+          </div>
+          <p class="text-white font-bold">③ 인스타</p>
+          <p class="text-slate-400 text-sm mt-1">
+            소재 + 캡션 준비 완료. <b class="text-slate-200">업로드 안 함</b>
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- ① 홈 팝업                                                     -->
+      <!-- ============================================================ -->
+      <section class="mb-16">
+        <div class="flex items-baseline gap-3 mb-1">
+          <h2 class="text-white text-2xl font-black">① 홈 팝업</h2>
+          <span class="text-slate-500 text-sm num">800 × 1120 · z-56 슬롯</span>
+        </div>
+        <p class="text-slate-400 text-sm mb-6">
+          기존 <code class="text-cyan-300">PoolDiscountPopup</code>(상시 50% 할인) 슬롯을 이번
+          프로모션으로 교체. localStorage 키를
+          <code class="text-cyan-300">summerPoolPromoPopupHideUntil</code> 로 변경해, 예전에 "오늘
+          하루 보지 않기"를 누른 고객도 새 팝업을 봅니다.
+        </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- 모바일 미리보기 -->
+          <div>
+            <p class="text-slate-300 text-sm font-bold mb-3">
+              모바일 실제 노출 <span class="text-slate-500 font-normal">(max-w 420px)</span>
+            </p>
+            <div class="bg-black/70 rounded-2xl p-4 flex justify-center">
+              <div class="w-[420px] max-w-full">
+                <img
+                  src="../public/images/pool/popup-summer-promo-800.png"
+                  alt="여름 프로모션 팝업"
+                  class="w-full h-auto drop-shadow-2xl"
+                />
+                <div
+                  class="block w-full mt-4 py-3 bg-cyan-600 text-white text-base font-semibold rounded-xl text-center"
+                >
+                  객실 예약하기
+                </div>
+                <div class="w-full mt-2 py-2 text-sm text-white/60 text-center">
+                  오늘 하루 보지 않기
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PC 미리보기 -->
+          <div>
+            <p class="text-slate-300 text-sm font-bold mb-3">
+              PC 실제 노출
+              <span class="text-slate-500 font-normal">(md:max-w 588px, 축소 표시)</span>
+            </p>
+            <div class="bg-black/70 rounded-2xl p-4 flex justify-center">
+              <div class="w-[420px] max-w-full">
+                <img
+                  src="../public/images/pool/popup-summer-promo-800.png"
+                  alt="여름 프로모션 팝업 PC"
+                  class="w-full h-auto drop-shadow-2xl"
+                />
+                <div
+                  class="block w-full mt-4 py-3 bg-cyan-600 text-white text-base font-semibold rounded-xl text-center"
+                >
+                  객실 예약하기
+                </div>
+                <div class="w-full mt-2 py-2 text-sm text-white/60 text-center">
+                  오늘 하루 보지 않기
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 bg-slate-900/70 border border-slate-700 rounded-xl p-4 text-sm">
+              <p class="text-slate-300 font-bold mb-2">수정된 파일</p>
+              <ul class="text-slate-400 space-y-1 leading-relaxed">
+                <li>
+                  <code class="text-cyan-300">src/components/PoolDiscountPopup.tsx</code> — 이미지
+                  경로·크기(800×1120)·alt·localStorage 키
+                </li>
+                <li><code class="text-cyan-300">src/app/page.tsx</code> — 팝업 순서 주석</li>
+                <li>
+                  <code class="text-cyan-300">public/images/pool/popup-summer-promo-800.png</code> —
+                  신규
+                </li>
+              </ul>
+              <p class="text-slate-500 mt-3 text-xs">
+                기존 <code>popup-pool-discount-800.png</code>(상시 50%)는 삭제하지 않음 → 8/16 이후
+                되돌리기 가능
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- ② 초호저널                                                    -->
+      <!-- ============================================================ -->
+      <section class="mb-16">
+        <div class="flex items-baseline gap-3 mb-1">
+          <h2 class="text-white text-2xl font-black">② 초호저널</h2>
+          <span class="text-emerald-400 text-sm font-bold">이미 라이브</span>
+        </div>
+        <p class="text-slate-400 text-sm mb-6">
+          D1 <code class="text-cyan-300">journals</code> 테이블 · id
+          <code class="text-cyan-300">summer-pool-promo-2026</code> ·
+          <a
+            href="https://www.chorigol.co.kr/about/journal/summer-pool-promo-2026"
+            target="_blank"
+            class="text-cyan-400 underline"
+            >실제 페이지 열기 ↗</a
+          >
+        </p>
+
+        <div class="bg-white rounded-2xl p-8 md:p-10 text-stone-800">
+          <span
+            class="inline-block bg-cyan-50 text-cyan-700 text-xs font-bold px-3 py-1 rounded-full mb-3"
+            >공지</span
+          >
+          <h3 class="text-2xl md:text-3xl font-black leading-snug">
+            시원한 여름 프로모션 — 더초리골 수영장 무료입장권 안내
+          </h3>
+          <p class="text-stone-400 text-sm mt-2 num">2026-08-02</p>
+
+          <img
+            src="../public/images/pool/popup-summer-promo-800.png"
+            alt="여름 프로모션 안내 이미지"
+            class="w-full max-w-[420px] h-auto rounded-xl my-7 shadow-lg"
+          />
+
+          <p
+            class="text-stone-500 bg-stone-50 border-l-4 border-cyan-400 px-5 py-4 rounded-r-lg leading-relaxed"
+          >
+            8월 3일(월)부터 8월 16일(일)까지 입실하시는 고객님께 더초리골 수영장 무료입장권 2매를
+            드립니다. 무료 2매를 제외한 나머지 인원은 50% 할인권으로 제공되며, 객실 예약 시 사전
+            신청이 필요합니다.
+          </p>
+
+          <div
+            id="journal-body"
+            class="mt-7 leading-[1.9] text-[15px] text-stone-700"
+            style="white-space: pre-wrap"
+          ></div>
+
+          <button
+            data-copy="#journal-body"
+            class="mt-6 px-5 py-2.5 bg-stone-800 hover:bg-stone-700 text-white text-sm font-bold rounded-lg transition-colors"
+          >
+            저널 본문 복사
+          </button>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- ③ 인스타                                                      -->
+      <!-- ============================================================ -->
+      <section class="mb-16">
+        <div class="flex items-baseline gap-3 mb-1">
+          <h2 class="text-white text-2xl font-black">③ 인스타그램</h2>
+          <span class="text-slate-500 text-sm num">1080 × 1350 (4:5) · @choho1947</span>
+        </div>
+        <p class="text-slate-400 text-sm mb-6">
+          소재와 캡션만 준비된 상태입니다.
+          <b class="text-slate-200">업로드는 진행하지 않았습니다.</b>
+        </p>
+
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-8 items-start">
+          <!-- 소재 -->
+          <div>
+            <p class="text-slate-300 text-sm font-bold mb-3">피드 소재 (4:5)</p>
+            <img
+              src="capsheet-img/ig-summer-pool-promo-1080x1350.png"
+              alt="인스타 4:5 소재"
+              class="w-full h-auto rounded-2xl shadow-2xl border border-slate-700"
+            />
+            <p class="text-slate-500 text-xs mt-3">
+              팝업 대비: 이용 조건을 카드 안에 모두 넣고 세로 중앙 정렬로 재배치
+            </p>
+          </div>
+
+          <!-- 캡션 -->
+          <div>
+            <p class="text-slate-300 text-sm font-bold mb-3">
+              캡션 <span class="text-slate-500 font-normal">(모바일 피드 폭 360px 재현)</span>
+            </p>
+            <div class="bg-white rounded-2xl p-5 text-stone-800">
+              <div class="flex items-center gap-2 pb-3 border-b border-stone-100">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600"></div>
+                <span class="text-sm font-bold">choho1947</span>
+              </div>
+              <div id="ig-caption" class="ig-cap mt-3 max-w-full"></div>
+              <button
+                data-copy="#ig-caption"
+                class="mt-4 w-full py-2.5 bg-stone-800 hover:bg-stone-700 text-white text-sm font-bold rounded-lg transition-colors"
+              >
+                캡션 복사 (줄바꿈 포함)
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 다음 액션                                                     -->
+      <!-- ============================================================ -->
+      <section class="mb-10">
+        <h2 class="text-white text-2xl font-black mb-4">확인 부탁드릴 것</h2>
+        <div class="bg-slate-900/70 border border-slate-700 rounded-2xl p-6 space-y-3 text-[15px]">
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" class="mt-1.5 accent-cyan-500 w-4 h-4" />
+            <span class="text-slate-300"
+              >팝업 이미지 문구·디자인 확정
+              <span class="text-slate-500">(수정할 곳 있으면 지시)</span></span
+            >
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" class="mt-1.5 accent-cyan-500 w-4 h-4" />
+            <span class="text-slate-300"
+              >저널 글 그대로 유지 여부
+              <span class="text-amber-400"
+                >(이미 공개 중 — 수정/내림 필요 시 알려주세요)</span
+              ></span
+            >
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" class="mt-1.5 accent-cyan-500 w-4 h-4" />
+            <span class="text-slate-300">인스타 소재·캡션 확정 및 업로드 진행 여부</span>
+          </label>
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" class="mt-1.5 accent-cyan-500 w-4 h-4" />
+            <span class="text-slate-300"
+              >홈 팝업 배포 시점
+              <span class="text-slate-500">(git push → Vercel 자동배포)</span></span
+            >
+          </label>
+        </div>
+      </section>
+
+      <!-- ===== 파일 경로 ===== -->
+      <section>
+        <h2 class="text-white text-lg font-black mb-3">산출물 경로</h2>
+        <div
+          class="bg-slate-900/70 border border-slate-700 rounded-2xl p-5 text-[13px] font-mono text-slate-400 space-y-1.5 overflow-x-auto"
+        >
+          <p>F:\choho_2025\public\images\pool\popup-summer-promo-800.png</p>
+          <p>F:\choho_2025\wireframes\popup-summer-pool-promo.html</p>
+          <p>F:\choho_2025\wireframes\ig-summer-pool-promo-1080.html</p>
+          <p>F:\choho_2025\wireframes\capsheet-img\ig-summer-pool-promo-1080x1350.png</p>
+          <p>F:\choho_2025\scripts\insert-summer-pool-promo-journal.mjs</p>
+        </div>
+      </section>
+    </div>
+
+    <div
+      id="toast"
+      class="toast bg-cyan-500 text-white text-sm font-bold px-5 py-3 rounded-full shadow-2xl"
+    >
+      복사되었습니다
+    </div>
+
+    <script>
+      // 줄바꿈이 의미를 갖는 텍스트는 HTML이 아닌 JS로 주입한다.
+      // (HTML에 직접 쓰면 포매터가 재정렬하면서 하드 줄바꿈이 소실됨)
+      const JOURNAL_BODY = [
+        "무더위가 이어지는 8월, 초호펜션에서 시원한 여름 프로모션을 준비했습니다.",
+        "8월 3일(월)부터 8월 16일(일)까지 입실하시는 고객님께 더초리골 수영장 입장권을 드립니다.",
+        "",
+        "■ 제공 혜택",
+        "- 무료입장권 2매",
+        "- 무료 2매를 제외한 나머지 인원은 50% 할인권으로 제공 (객실 이용인원 기준)",
+        "",
+        "■ 이용 예시",
+        "- Forest 4인 예약 → 무료입장권 2매 + 50% 할인권 2매",
+        "- 호수뷰 객실 6인 예약 → 무료입장권 2매 + 50% 할인권 4매",
+        "",
+        "■ 신청 방법",
+        "- 객실 예약 시 사전 신청해 주셔야 합니다.",
+        "- 당일 입실 시에는 신청이 불가합니다.",
+        "- 수영장 방문 전 초호펜션 관리자에게 쿠폰을 수령하신 뒤 입장해 주세요.",
+        "",
+        "■ 이용 조건",
+        "- 무료입장권은 주간 / 야간 중 하나를 선택해 사용하실 수 있습니다. (종일 사용 불가)",
+        "- 50% 할인권은 종일권 구매 시에도 할인 적용이 가능합니다.",
+        "- 수영장 야간개장은 주말에만 운영합니다. (평일 야간 미운영)",
+        "- 호수뷰 객실이 미오픈인 평일에 이용을 원하시면 관리자에게 개별 연락 부탁드립니다.",
+        "- 평상은 더초리골 현장에서 직접 결제·이용하시며 사전 예약은 불가합니다. (더초리골 규정)",
+        "",
+        "시원한 물놀이와 함께 여름 휴가 보내시길 바랍니다.",
+        "",
+        "문의: 010-7932-0029",
+      ].join("\n");
+
+      const IG_CAPTION = [
+        "8월, 물놀이 예약하셨나요?",
+        "",
+        "8월 3일(월)부터",
+        "8월 16일(일)까지",
+        "입실하시는 고객님께",
+        "더초리골 수영장",
+        "무료입장권 2매를 드립니다.",
+        "",
+        "무료 2매를 제외한",
+        "나머지 인원은",
+        "50% 할인권으로 제공돼요.",
+        "(객실 이용인원 기준)",
+        "",
+        "▪ 이용 예시",
+        "Forest 4인 → 무료 2매 + 50% 할인 2매",
+        "호수뷰 6인 → 무료 2매 + 50% 할인 4매",
+        "",
+        "▪ 신청 방법",
+        "객실 예약 시 사전 신청 필수",
+        "당일 입실 시에는 신청 불가",
+        "수영장 방문 전 관리자에게",
+        "쿠폰을 수령해 주세요.",
+        "",
+        "▪ 이용 조건",
+        "무료입장권은 주간/야간 중 택 1",
+        "(종일 사용은 불가합니다)",
+        "50% 할인권은 종일권 구매 시에도",
+        "할인 적용이 가능합니다",
+        "수영장 야간개장은 주말만 운영해요",
+        "호수뷰 객실 미오픈 평일 이용은",
+        "관리자에게 개별 연락 부탁드립니다",
+        "",
+        "문의 010-7932-0029",
+        "",
+        "#초호펜션 #파주펜션 #초리골164 #더초리골 #파주수영장 #여름휴가 #물놀이 #파주가볼만한곳 #가족펜션 #호수뷰펜션 #파주숙소",
+      ].join("\n");
+
+      document.getElementById("journal-body").textContent = JOURNAL_BODY;
+      document.getElementById("ig-caption").textContent = IG_CAPTION;
+
+      const toast = document.getElementById("toast");
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add("on");
+        setTimeout(() => toast.classList.remove("on"), 1400);
+      }
+      document.querySelectorAll("[data-copy]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const text = document.querySelector(btn.dataset.copy).innerText;
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(
+              () => showToast("복사되었습니다"),
+              () => fallback(text)
+            );
+          } else fallback(text);
+        });
+      });
+      function fallback(text) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+          showToast("복사되었습니다");
+        } catch (e) {
+          showToast("복사 실패 — 직접 선택해 주세요");
+        }
+        document.body.removeChild(ta);
+      }
+    </script>
+  </body>
+</html>
