@@ -5,7 +5,9 @@ import { X } from "lucide-react";
 import Image from "next/image";
 
 /**
- * 수영장 팝업 슬롯(z-56).
+ * 수영장 팝업 슬롯(z-70 = 홈 팝업 중 최상단).
+ * z 규칙: 오버레이 N / 닫기버튼 N+10. 다음으로 높은 게 FamilyCapacity(59/69)이고
+ * SummerInsect·Spring의 닫기버튼이 z-60이라, 60이 아니라 70/80을 써야 안 겹친다.
  * 현재 내용: 2026 시원한 여름 프로모션 — 8/3(월)~8/16(일) 입실 고객
  *            무료입장권 2매 + 추가 인원 50% 할인권 (기존 투숙객 50% 할인 혜택 통합)
  * 프로모션 종료 시: 이미지를 /images/pool/popup-pool-discount-800.png (상시 50% 할인, 800×800)
@@ -34,11 +36,11 @@ export function PoolDiscountPopup() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[56] flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto p-4">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto p-4">
       {/* Close */}
       <button
         onClick={handleClose}
-        className="fixed top-3 right-3 md:top-4 md:right-4 z-[66] w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all shadow-sm border border-stone-200"
+        className="fixed top-3 right-3 md:top-4 md:right-4 z-[80] w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all shadow-sm border border-stone-200"
         aria-label="닫기"
       >
         <X className="w-4 h-4 text-stone-700" />
