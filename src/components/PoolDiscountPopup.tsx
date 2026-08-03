@@ -9,7 +9,7 @@ import Image from "next/image";
  * z 규칙: 오버레이 N / 닫기버튼 N+10. 다음으로 높은 게 FamilyCapacity(59/69)이고
  * SummerInsect·Spring의 닫기버튼이 z-60이라, 60이 아니라 70/80을 써야 안 겹친다.
  * 현재 내용: 2026 시원한 여름 프로모션 — 8/3(월)~8/16(일) 입실 고객
- *            무료입장권 2매 + 추가 인원 50% 할인권 (기존 투숙객 50% 할인 혜택 통합)
+ *            무료입장 2인권 + 추가 인원 50% 할인권 (기존 투숙객 50% 할인 혜택 통합)
  * 프로모션 종료 시: 이미지를 /images/pool/popup-pool-discount-800.png (상시 50% 할인, 800×800)
  *                  으로 되돌리거나 page.tsx에서 언마운트.
  */
@@ -52,7 +52,7 @@ export function PoolDiscountPopup() {
           {/* 800x800 팝업 이미지 */}
           <Image
             src="/images/pool/popup-summer-promo-800.png"
-            alt="시원한 여름 프로모션 - 8월 3일부터 8월 16일 입실 고객 대상 더초리골 수영장 무료입장권 2매, 추가 인원 50% 할인권"
+            alt="시원한 여름 프로모션 - 8월 3일부터 8월 16일 입실 고객 대상 더초리골 수영장 무료입장 2인권, 추가 인원 50% 할인권"
             width={800}
             height={1120}
             className="w-full h-auto drop-shadow-2xl"
