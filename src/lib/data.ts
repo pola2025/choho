@@ -72,10 +72,14 @@ export const rooms: Room[] = [
       "숲속 산새 소리와 함께 하는 힐링 스테이. 숲속에서 즐기는 편안한 휴식을 위한 침대 객실입니다.",
     thumbnail: "/images/rooms/forest/main.webp",
     images: [
-      { src: "/images/rooms/forest/0062fb88ef43a.webp", alt: "Forest 객실 전경" },
-      { src: "/images/rooms/forest/10e393b267d20.webp", alt: "Forest 객실 내부" },
-      { src: "/images/rooms/forest/15fddc2a64e6c.webp", alt: "Forest 객실 테라스" },
-      { src: "/images/rooms/forest/2779cfff43741.webp", alt: "Forest 객실 욕실" },
+      { src: "/images/rooms/forest/bed-01.webp", alt: "Forest 객실 침실" },
+      { src: "/images/rooms/forest/bed-03.webp", alt: "Forest 객실 침실 및 주방" },
+      { src: "/images/rooms/forest/bed-02.webp", alt: "Forest 객실 침실 전경" },
+      { src: "/images/rooms/forest/bed-detail.webp", alt: "Forest 객실 침대" },
+      { src: "/images/rooms/forest/0062fb88ef43a.webp", alt: "Forest 객실 외관" },
+      { src: "/images/rooms/forest/10e393b267d20.webp", alt: "Forest 객실 테라스" },
+      { src: "/images/rooms/forest/15fddc2a64e6c.webp", alt: "Forest 객실 창밖 전망" },
+      { src: "/images/rooms/forest/2779cfff43741.webp", alt: "Forest 객실 테라스 전경" },
     ],
     amenities: {
       provided: [
@@ -130,9 +134,12 @@ export const rooms: Room[] = [
     description: "초리골 숲에서 보내는 프라이빗한 휴식. 2인만을 위한 아늑한 침대 객실입니다.",
     thumbnail: "/images/rooms/forest-mini/main.webp",
     images: [
-      { src: "/images/rooms/forest-mini/022d94fa1e442.webp", alt: "Forest Mini 객실 전경" },
-      { src: "/images/rooms/forest-mini/0397a69dd4d14.webp", alt: "Forest Mini 객실 내부" },
-      { src: "/images/rooms/forest-mini/0c3490a0b45aa.webp", alt: "Forest Mini 객실 테라스" },
+      { src: "/images/rooms/forest-mini/bed-03.webp", alt: "Forest Mini 객실 침실" },
+      { src: "/images/rooms/forest-mini/bed-01.webp", alt: "Forest Mini 객실 침실 전경" },
+      { src: "/images/rooms/forest-mini/bed-02.webp", alt: "Forest Mini 객실 침대" },
+      { src: "/images/rooms/forest-mini/022d94fa1e442.webp", alt: "Forest Mini 객실 주변 전경" },
+      { src: "/images/rooms/forest-mini/0397a69dd4d14.webp", alt: "Forest Mini 객실 외관" },
+      { src: "/images/rooms/forest-mini/0c3490a0b45aa.webp", alt: "Forest Mini 객실 계곡 전망" },
     ],
     amenities: {
       provided: [
