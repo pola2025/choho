@@ -8,8 +8,6 @@ import {
   JournalPreview,
 } from "@/components/sections";
 import { FamilyCapacityPopup } from "@/components/FamilyCapacityPopup";
-import { ValleyUsagePopup } from "@/components/ValleyUsagePopup";
-import { PoolDiscountPopup } from "@/components/PoolDiscountPopup";
 import { SpringPopup } from "@/components/SpringPopup";
 import { SummerInsectPopup } from "@/components/SummerInsectPopup";
 import { SummerInsectIndividualPopup } from "@/components/SummerInsectIndividualPopup";
@@ -67,10 +65,11 @@ export default function Home() {
         <Facilities />
         <AnimalStrip animals={["black-rabbit", "white-rabbit"]} />
         <JournalPreview />
-        {/* 팝업 노출 순서: 여름 프로모션(70, PoolDiscountPopup=2026 수영장 프로모션 8/3~8/16) → 패밀리 인원안내(59) → 계곡 이용안내(58) → 날벌레 안내(53) → 여름벌레 체크리스트(52) → 이용안내 와이드(51, SpringPopup=입실/음료/레이트체크아웃/바베큐) (z-index로 제어) */}
-        <PoolDiscountPopup />
+        {/* 팝업 노출 순서: 패밀리 인원안내(59) → 날벌레 안내(53) → 여름벌레 체크리스트(52) → 이용안내 와이드(51, SpringPopup=입실/음료/레이트체크아웃/바베큐) (z-index로 제어)
+            내린 팝업(컴포넌트는 유지, 재사용 시 import+마운트만 하면 됨):
+            - PoolDiscountPopup(z-70) 수영장 무료입장 2인권 프로모션 8/3~8/16 → 2026-08-19 종료
+            - ValleyUsagePopup(z-58) 계곡 이용안내 → 2026-08-19 내림 */}
         <FamilyCapacityPopup />
-        <ValleyUsagePopup />
         <SummerInsectIndividualPopup />
         <SummerInsectPopup />
         <SpringPopup />
