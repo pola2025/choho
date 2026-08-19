@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>밤·도토리 지붕 소리 안내 배너 800×800</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        background: #f3efe8;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 40px 20px;
+        word-break: keep-all;
+      }
+      .stage-label {
+        font-size: 13px;
+        color: #78716c;
+        letter-spacing: 0.08em;
+      }
+
+      /* ===== 배너 본체 800×800 ===== */
+      #banner {
+        width: 800px;
+        height: 800px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(160deg, #fffdf8 0%, #fdf5e7 55%, #f8ead0 100%);
+        box-shadow: 0 20px 60px rgba(120, 85, 40, 0.18);
+      }
+      .blob {
+        position: absolute;
+        border-radius: 9999px;
+        pointer-events: none;
+      }
+      .blob-a {
+        width: 420px;
+        height: 420px;
+        top: -180px;
+        right: -150px;
+        background: rgba(250, 220, 165, 0.5);
+      }
+      .blob-b {
+        width: 330px;
+        height: 330px;
+        bottom: -130px;
+        left: -120px;
+        background: rgba(253, 236, 205, 0.8);
+      }
+      .blob-c {
+        width: 150px;
+        height: 150px;
+        top: 330px;
+        left: 30px;
+        background: rgba(217, 119, 6, 0.08);
+      }
+
+      .inner {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 52px 56px 44px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ===== 상단 브랜드 ===== */
+      .brandline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand-name {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 17px;
+        color: #92400e;
+        letter-spacing: 0.02em;
+      }
+      .brand-sub {
+        font-size: 11px;
+        color: #b08a5a;
+        letter-spacing: 0.26em;
+        margin-top: 3px;
+      }
+      .badge-season {
+        background: #ffffff;
+        border: 1px solid #f3d9a4;
+        color: #b45309;
+        font-size: 12.5px;
+        font-weight: 700;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(180, 83, 9, 0.08);
+      }
+
+      /* ===== 아이콘 ===== */
+      .icon-wrap {
+        margin-top: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+      }
+      .sound-wave {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: center;
+      }
+      .sound-wave span {
+        display: block;
+        height: 2.5px;
+        border-radius: 9999px;
+        background: #e0a75c;
+      }
+      .sound-wave span:nth-child(1) {
+        width: 16px;
+        opacity: 0.35;
+      }
+      .sound-wave span:nth-child(2) {
+        width: 26px;
+        opacity: 0.6;
+      }
+      .sound-wave span:nth-child(3) {
+        width: 16px;
+        opacity: 0.35;
+      }
+      .acorn-circle {
+        width: 108px;
+        height: 108px;
+        border-radius: 9999px;
+        background: #ffffff;
+        border: 1px solid #f3d9a4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 26px rgba(146, 64, 14, 0.12);
+      }
+      .acorn-circle svg {
+        width: 52px;
+        height: 52px;
+      }
+
+      /* ===== 메인 카피 ===== */
+      .headline {
+        margin-top: 24px;
+        text-align: center;
+      }
+      .eyebrow {
+        display: inline-block;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #a37b45;
+        letter-spacing: 0.14em;
+        margin-bottom: 12px;
+      }
+      .title {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 900;
+        font-size: 50px;
+        line-height: 1.22;
+        color: #2b1f14;
+        letter-spacing: -0.02em;
+      }
+      .title .accent {
+        color: #b45309;
+        position: relative;
+        white-space: nowrap;
+      }
+      .title .accent::after {
+        content: "";
+        position: absolute;
+        left: -2px;
+        right: -2px;
+        bottom: 5px;
+        height: 13px;
+        background: rgba(250, 214, 158, 0.6);
+        border-radius: 3px;
+        z-index: -1;
+      }
+
+      /* ===== 설명 카드 ===== */
+      .body-card {
+        margin-top: 26px;
+        background: #ffffff;
+        border: 1px solid #f0e0c2;
+        border-radius: 22px;
+        padding: 24px 28px;
+        box-shadow: 0 8px 22px rgba(146, 64, 14, 0.07);
+      }
+      .body-card p {
+        font-size: 16px;
+        line-height: 1.72;
+        color: #5b4a34;
+        text-align: center;
+      }
+      .body-card p strong {
+        color: #2b1f14;
+        font-weight: 700;
+      }
+
+      /* ===== 안심 밴드 ===== */
+      .assure {
+        margin-top: 18px;
+        background: linear-gradient(100deg, #b45309 0%, #92400e 100%);
+        border-radius: 20px;
+        padding: 20px 26px;
+        text-align: center;
+        box-shadow: 0 10px 26px rgba(146, 64, 14, 0.24);
+      }
+      .assure .a1 {
+        font-family: "Noto Serif KR", serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.01em;
+      }
+      .assure .a2 {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.82);
+        margin-top: 6px;
+        line-height: 1.5;
+      }
+
+      /* ===== 하단 안내 ===== */
+      .footer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid #f0e0c2;
+        border-radius: 9999px;
+        padding: 13px 22px;
+      }
+      .footer svg {
+        width: 17px;
+        height: 17px;
+        stroke: #b45309;
+        fill: none;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .footer p {
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #7a6244;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="stage-label">밤&middot;도토리 지붕 소리 안내 배너 &middot; 800 × 800px</p>
+
+    <div id="banner">
+      <div class="blob blob-a"></div>
+      <div class="blob blob-b"></div>
+      <div class="blob blob-c"></div>
+
+      <div class="inner">
+        <!-- 상단 브랜드 -->
+        <div class="brandline">
+          <div>
+            <p class="brand-name">초호쉼터</p>
+            <p class="brand-sub">CHOHO</p>
+          </div>
+          <span class="badge-season">가을철 안내</span>
+        </div>
+
+        <!-- 아이콘 -->
+        <div class="icon-wrap">
+          <div class="sound-wave"><span></span><span></span><span></span></div>
+          <div class="acorn-circle">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2.2v2"
+                stroke="#92400e"
+                stroke-width="1.7"
+                stroke-linecap="round"
+                fill="none"
+              />
+              <path d="M4.8 8.6c0-3.1 3.2-5.4 7.2-5.4s7.2 2.3 7.2 5.4z" fill="#c2803a" />
+              <path d="M4.8 8.6h14.4c0 5.4-3 10.2-7.2 12.6C8 18.8 4.8 14 4.8 8.6z" fill="#e0a75c" />
+              <path
+                d="M9.6 11.4c0 2.6.8 5 2.4 6.9"
+                stroke="#c2803a"
+                stroke-width="1.3"
+                stroke-linecap="round"
+                fill="none"
+                opacity="0.55"
+              />
+            </svg>
+          </div>
+          <div class="sound-wave"><span></span><span></span><span></span></div>
+        </div>
+
+        <!-- 메인 카피 -->
+        <div class="headline">
+          <span class="eyebrow">지붕에서 소리가 나더라도 놀라지 마세요</span>
+          <h1 class="title">밤과 도토리가<br /><span class="accent">떨어지는 소리</span>입니다</h1>
+        </div>
+
+        <!-- 설명 -->
+        <div class="body-card">
+          <p>
+            초호쉼터는 밤나무와 참나무 숲에 둘러싸여 있습니다.<br />
+            가을이면 잘 익은 밤과 도토리가 <strong>객실 지붕으로 떨어지며</strong><br />
+            툭, 툭 하는 소리가 납니다.
+          </p>
+        </div>
+
+        <!-- 안심 밴드 -->
+        <div class="assure">
+          <p class="a1">시설 이상이 아닙니다</p>
+          <p class="a2">
+            밤늦은 시간이나 이른 아침에도 소리가 날 수 있습니다. 숲속에서만 들을 수 있는 계절
+            소리이니 편히 쉬어 주세요.
+          </p>
+        </div>
+
+        <!-- 하단 안내 -->
+        <div class="footer">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3 4 9v11h16V9z" />
+            <path d="M9 20v-6h6v6" />
+          </svg>
+          <p>9월 &ndash; 10월 &middot; 숲속 객실 공통 안내</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

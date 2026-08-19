@@ -151,6 +151,19 @@ function CoffeeCard() {
           </p>
         </div>
 
+        {/* 호수뷰 객실 제외 안내 */}
+        <div className="bg-stone-50 rounded-xl p-3 md:p-3.5 mb-3 md:mb-4 border border-stone-200 flex items-start gap-2 md:gap-2.5">
+          <span className="w-5 h-5 md:w-6 md:h-6 bg-stone-400 text-white rounded-lg flex items-center justify-center text-xs md:text-sm flex-shrink-0">
+            &#10005;
+          </span>
+          <div>
+            <p className="font-semibold text-stone-700 text-xs md:text-sm">호수뷰 객실 제외</p>
+            <p className="text-stone-500 text-[10px] md:text-xs mt-0.5">
+              호수뷰 객실은 무료 음료 제공 대상이 아니며, 20% 할인만 적용됩니다.
+            </p>
+          </div>
+        </div>
+
         {/* 객실키 필수 안내 */}
         <div className="bg-red-50 rounded-xl p-3 md:p-3.5 mb-3 md:mb-4 border border-red-100 flex items-start gap-2 md:gap-2.5">
           <span className="w-5 h-5 md:w-6 md:h-6 bg-red-500 text-white rounded-lg flex items-center justify-center text-xs md:text-sm flex-shrink-0">

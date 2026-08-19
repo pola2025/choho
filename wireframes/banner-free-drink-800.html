@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>무료 음료 제공 배너 800×800</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        background: #f5f2ef;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 40px 20px;
+        word-break: keep-all;
+      }
+      .stage-label {
+        font-size: 13px;
+        color: #78716c;
+        letter-spacing: 0.08em;
+      }
+
+      /* ===== 배너 본체 800×800 ===== */
+      #banner {
+        width: 800px;
+        height: 800px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(160deg, #fffdfc 0%, #fef5f2 55%, #fce9e3 100%);
+        box-shadow: 0 20px 60px rgba(120, 60, 60, 0.18);
+      }
+      .blob {
+        position: absolute;
+        border-radius: 9999px;
+        pointer-events: none;
+      }
+      .blob-a {
+        width: 420px;
+        height: 420px;
+        top: -170px;
+        right: -140px;
+        background: rgba(249, 199, 188, 0.45);
+      }
+      .blob-b {
+        width: 320px;
+        height: 320px;
+        bottom: -120px;
+        left: -110px;
+        background: rgba(252, 228, 222, 0.75);
+      }
+      .blob-c {
+        width: 160px;
+        height: 160px;
+        top: 300px;
+        right: 40px;
+        background: rgba(242, 160, 142, 0.14);
+      }
+
+      .inner {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 54px 56px 46px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ===== 상단 브랜드 ===== */
+      .brandline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand-name {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 17px;
+        color: #a33548;
+        letter-spacing: 0.02em;
+      }
+      .brand-sub {
+        font-size: 11px;
+        color: #b8827c;
+        letter-spacing: 0.26em;
+        margin-top: 3px;
+      }
+      .badge-guest {
+        background: #ffffff;
+        border: 1px solid #f9c7bc;
+        color: #c24458;
+        font-size: 12.5px;
+        font-weight: 700;
+        padding: 8px 16px;
+        border-radius: 9999px;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(194, 68, 88, 0.08);
+      }
+
+      /* ===== 메인 카피 ===== */
+      .headline {
+        margin-top: 40px;
+        text-align: center;
+      }
+      .eyebrow {
+        display: inline-block;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #a8756e;
+        letter-spacing: 0.14em;
+        margin-bottom: 14px;
+      }
+      .title {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 900;
+        font-size: 60px;
+        line-height: 1.16;
+        color: #2b1b1b;
+        letter-spacing: -0.02em;
+      }
+      .title .accent {
+        color: #d9576a;
+        position: relative;
+        white-space: nowrap;
+      }
+      .title .accent::after {
+        content: "";
+        position: absolute;
+        left: -2px;
+        right: -2px;
+        bottom: 6px;
+        height: 14px;
+        background: rgba(249, 199, 188, 0.55);
+        border-radius: 3px;
+        z-index: -1;
+      }
+      .subtitle {
+        margin-top: 16px;
+        font-size: 16px;
+        color: #6b5b57;
+        line-height: 1.55;
+      }
+
+      /* ===== 음료 선택 카드 ===== */
+      .choices {
+        margin-top: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+      }
+      .choice {
+        flex: 1 1 0;
+        max-width: 268px;
+        background: #ffffff;
+        border: 1px solid #f7d9d1;
+        border-radius: 22px;
+        padding: 24px 18px 22px;
+        text-align: center;
+        box-shadow: 0 8px 22px rgba(163, 53, 72, 0.08);
+      }
+      .choice-icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 12px;
+        border-radius: 9999px;
+        background: #fef5f2;
+        border: 1px solid #fce4de;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .choice-icon svg {
+        width: 27px;
+        height: 27px;
+        stroke: #d9576a;
+        fill: none;
+        stroke-width: 1.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .choice-name {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 23px;
+        color: #2b1b1b;
+        letter-spacing: -0.01em;
+      }
+      .choice-note {
+        margin-top: 7px;
+        font-size: 12px;
+        color: #9c8580;
+        letter-spacing: 0.04em;
+      }
+      .choice-or {
+        flex: 0 0 auto;
+        width: 44px;
+        height: 44px;
+        border-radius: 9999px;
+        background: #ffffff;
+        border: 1px solid #f2a08e;
+        color: #c24458;
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(194, 68, 88, 0.12);
+      }
+
+      /* ===== 20% 할인 밴드 ===== */
+      .discount {
+        margin-top: 26px;
+        background: linear-gradient(100deg, #d9576a 0%, #c24458 100%);
+        border-radius: 20px;
+        padding: 20px 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        box-shadow: 0 10px 26px rgba(194, 68, 88, 0.26);
+      }
+      .discount-text {
+        text-align: right;
+        line-height: 1.45;
+      }
+      .discount-text .l1 {
+        font-size: 16.5px;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.01em;
+      }
+      .discount-text .l2 {
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.82);
+        margin-top: 2px;
+      }
+      .discount-divider {
+        width: 1px;
+        height: 44px;
+        background: rgba(255, 255, 255, 0.32);
+      }
+      .discount-rate {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 900;
+        font-size: 44px;
+        color: #ffffff;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+      }
+      .discount-rate span {
+        font-size: 21px;
+        font-weight: 700;
+        margin-left: 4px;
+      }
+
+      /* ===== 호수뷰 예외 안내 ===== */
+      .exception {
+        margin-top: 16px;
+        background: #ffffff;
+        border: 1px solid #e7ded9;
+        border-radius: 18px;
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .exception-tag {
+        flex: 0 0 auto;
+        background: #f5f0ec;
+        border: 1px solid #e0d5ce;
+        color: #6b5b57;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 7px 14px;
+        border-radius: 9999px;
+        white-space: nowrap;
+      }
+      .exception-text {
+        line-height: 1.45;
+      }
+      .exception-text .e1 {
+        font-size: 15px;
+        font-weight: 700;
+        color: #3f2f2c;
+        letter-spacing: -0.01em;
+      }
+      .exception-text .e1 em {
+        font-style: normal;
+        color: #c24458;
+      }
+      .exception-text .e2 {
+        font-size: 12px;
+        color: #9c8580;
+        margin-top: 2px;
+      }
+
+      /* ===== 하단 안내 ===== */
+      .footer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid #f7d9d1;
+        border-radius: 9999px;
+        padding: 13px 22px;
+      }
+      .footer svg {
+        width: 17px;
+        height: 17px;
+        stroke: #c24458;
+        fill: none;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .footer p {
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #8a5f5f;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="stage-label">무료 음료 제공 배너 &middot; 800 × 800px</p>
+
+    <div id="banner">
+      <div class="blob blob-a"></div>
+      <div class="blob blob-b"></div>
+      <div class="blob blob-c"></div>
+
+      <div class="inner">
+        <!-- 상단 브랜드 -->
+        <div class="brandline">
+          <div>
+            <p class="brand-name">초리골164 베이커리 카페</p>
+            <p class="brand-sub">CHORIGOL 164</p>
+          </div>
+          <span class="badge-guest">객실 이용 고객 전용</span>
+        </div>
+
+        <!-- 메인 카피 -->
+        <div class="headline">
+          <span class="eyebrow">호수뷰 객실 무료 음료 제외</span>
+          <h1 class="title"><span class="accent">무료 음료</span> 제공</h1>
+          <p class="subtitle">아메리카노와 아이스티 중에서<br />원하시는 음료로 골라 드세요</p>
+        </div>
+
+        <!-- 음료 선택 -->
+        <div class="choices">
+          <div class="choice">
+            <div class="choice-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                <path d="M6 1v3M10 1v3M14 1v3" />
+              </svg>
+            </div>
+            <p class="choice-name">아메리카노</p>
+            <p class="choice-note">HOT &middot; ICE</p>
+          </div>
+
+          <div class="choice-or">또는</div>
+
+          <div class="choice">
+            <div class="choice-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M5 4h14l-1.4 15.1A2 2 0 0 1 15.6 21H8.4a2 2 0 0 1-2-1.9L5 4z" />
+                <path d="M6 10h12" />
+                <path d="M12 4V2" />
+              </svg>
+            </div>
+            <p class="choice-name">아이스티</p>
+            <p class="choice-note">ICE</p>
+          </div>
+        </div>
+
+        <!-- 20% 할인 -->
+        <div class="discount">
+          <div class="discount-text">
+            <p class="l1">그 외 음료</p>
+            <p class="l2">쿠폰 음료 외 전 메뉴에 적용됩니다</p>
+          </div>
+          <div class="discount-divider"></div>
+          <p class="discount-rate">20<span>% 할인</span></p>
+        </div>
+
+        <!-- 호수뷰 예외 안내 -->
+        <div class="exception">
+          <span class="exception-tag">호수뷰 객실</span>
+          <div class="exception-text">
+            <p class="e1">무료 음료 제외 &middot; <em>20% 할인만</em> 적용됩니다</p>
+            <p class="e2">
+              Forest &middot; Forest Mini &middot; 패밀리룸은 무료 음료 제공 대상입니다
+            </p>
+          </div>
+        </div>
+
+        <!-- 하단 안내 -->
+        <div class="footer">
+          <svg viewBox="0 0 24 24">
+            <circle cx="8" cy="15" r="4" />
+            <path d="M10.85 12.15 19 4M18 5l2 2M15 8l2 2" />
+          </svg>
+          <p>객실키 지참 시 제공 &middot; 매주 수요일 휴무</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
