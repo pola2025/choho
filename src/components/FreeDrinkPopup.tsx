@@ -35,7 +35,7 @@ export function FreeDrinkPopup() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[58] flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto p-4">
+    <div className="fixed inset-0 z-[58] flex items-center justify-center bg-black/70 backdrop-blur-sm overflow-y-auto p-3 md:p-4">
       {/* Close */}
       <button
         onClick={handleClose}
@@ -46,7 +46,7 @@ export function FreeDrinkPopup() {
       </button>
 
       {/* 팝업 본체 */}
-      <div className="w-full max-w-[420px] md:max-w-[520px] mx-auto my-4">
+      <div className="w-full max-w-[460px] md:max-w-[min(720px,72vh)] mx-auto my-3 md:my-4">
         <div className="animate-fade-in-up">
           {/* 1600x1600 팝업 이미지 (800x800 배너의 2배 해상도) */}
           <Image
