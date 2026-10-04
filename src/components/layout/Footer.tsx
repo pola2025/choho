@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, MapPin, ChevronUp, Mail, Clock } from "lucide-react";
+import { Phone, MapPin, ChevronUp, Clock } from "lucide-react";
 import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
 
 export function Footer() {
@@ -150,6 +150,36 @@ export function Footer() {
             </ul>
           </div>
         </div>
+
+        {/* Business Information */}
+        <section
+          aria-labelledby="footer-business-heading"
+          className="border-t border-white/10 pt-8 pb-8"
+        >
+          <h3
+            id="footer-business-heading"
+            className="text-sm font-semibold text-white mb-5"
+          >
+            사업자 정보
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {SITE_CONFIG.businesses.map((business) => (
+              <div
+                key={business.registrationNumber}
+                className="space-y-2 text-sm text-neutral-400 break-keep"
+              >
+                <h4 className="font-semibold text-white">{business.name}</h4>
+                <p>대표자: {business.representative}</p>
+                <p>
+                  사업자등록번호:{" "}
+                  <span className="whitespace-nowrap">
+                    {business.registrationNumber}
+                  </span>
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* Divider */}
         <div className="border-t border-white/10 pt-8">

@@ -7,6 +7,18 @@ export const SITE_CONFIG = {
   url: "https://www.chorigol.co.kr",
   phone: "031-584-8377",
   mobilePhone: "010-7932-0029",
+  businesses: [
+    {
+      name: "초호",
+      representative: "우능제",
+      registrationNumber: "190-17-01483",
+    },
+    {
+      name: "초호가든",
+      representative: "우능제",
+      registrationNumber: "128-06-97668",
+    },
+  ],
   address: {
     road: "경기도 파주시 법원읍 초리골길 134",
     jibun: "경기도 파주시 법원읍 법원리 168",
